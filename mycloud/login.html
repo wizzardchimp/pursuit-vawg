@@ -378,7 +378,7 @@
                         type="password" 
                         id="password" 
                         class="form-input" 
-                        placeholder="Password (Case Sensitive)" 
+                        placeholder="Password" 
                         autocomplete="current-password" 
                         required
                     >
@@ -440,9 +440,9 @@
             const passwordInput = document.getElementById("password");
             
             const inputUser = usernameInput.value.trim().toLowerCase();
-            const inputPass = passwordInput.value;
+            const inputPass = passwordInput.value.trim().toLowerCase();
             const validUser = "thelonerover";
-            const validPass = "MadMax1";
+            const validPass = "madmax1";
 
             errorMessage.style.display = "none";
             
