@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Financial Activity - MyCloudHome</title>
+    <title>Payment Notifications - MyCloudHome</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
@@ -25,55 +25,54 @@
         .back-btn { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:#fff; padding:8px 14px; border-radius:10px; cursor:pointer; margin-bottom:16px; display:inline-flex; align-items:center; gap:6px; }
         .section { background:rgba(255,255,255,0.12); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.25); border-radius:18px; padding:16px; margin-bottom:16px; }
         .section h2 { font-size:1.1rem; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
-        .txn { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.1); }
-        .txn:last-child { border-bottom:none; }
-        .txn .meta { font-size:0.85rem; opacity:0.8; }
-        .txn .amount { font-weight:700; }
-        .txn .amount.out { color:#ff6b6b; }
-        .txn .amount.in { color:#4caf50; }
-        .flag { font-size:0.7rem; background:rgba(255,107,107,0.3); padding:2px 6px; border-radius:6px; margin-left:6px; }
-        .wallet { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.1); }
-        .wallet:last-child { border-bottom:none; }
-        .msg { background:rgba(255,255,255,0.08); border-radius:10px; padding:10px; margin-bottom:8px; font-size:0.9rem; }
-        .msg .from { font-weight:700; font-size:0.8rem; opacity:0.8; margin-bottom:4px; }
+        .notif { display:flex; align-items:flex-start; gap:12px; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.1); }
+        .notif:last-child { border-bottom:none; }
+        .notif-icon { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+        .notif-icon.apple { background:#000; color:#fff; }
+        .notif-icon.google { background:#fff; color:#4285f4; }
+        .notif-body { flex:1; min-width:0; }
+        .notif-title { font-weight:600; font-size:0.95rem; }
+        .notif-detail { font-size:0.85rem; opacity:0.85; margin-top:2px; }
+        .notif-time { font-size:0.75rem; opacity:0.7; margin-top:4px; }
+        .notif-amt { font-weight:700; font-size:0.95rem; white-space:nowrap; }
         .footer { text-align:center; margin-top:20px; opacity:0.7; font-size:0.8rem; }
     </style>
 </head>
 <body>
     <div class="container">
         <button class="back-btn" onclick="location.href='mycloudhome.html';"><i class="fas fa-arrow-left"></i> Home</button>
-        <div class="header"><h1>Financial Activity</h1></div>
+        <div class="header"><h1>Payment Notifications</h1></div>
 
         <div class="section">
-            <h2><i class="fas fa-exchange-alt"></i> Recent Transactions</h2>
-            <div class="txn"><div><div>Online transfer to "M. Mitchell"</div><div class="meta">14 Oct 2026 · 22:14 <span class="flag">SUSPICIOUS</span></div></div><div class="amount out">-£1,250.00</div></div>
-            <div class="txn"><div><div>Crypto purchase (BTC)</div><div class="meta">13 Oct 2026 · 19:42 <span class="flag">SUSPICIOUS</span></div></div><div class="amount out">-£890.00</div></div>
-            <div class="txn"><div><div>Salary deposit</div><div class="meta">12 Oct 2026 · 09:00</div></div><div class="amount in">+£2,340.00</div></div>
-            <div class="txn"><div><div>Card payment - Touchwood</div><div class="meta">11 Oct 2026 · 15:22</div></div><div class="amount out">-£64.50</div></div>
-            <div class="txn"><div><div>Standing order - rent</div><div class="meta">01 Oct 2026 · 00:01</div></div><div class="amount out">-£750.00</div></div>
-        </div>
+            <h2><i class="fas fa-bell"></i> Notification History</h2>
 
-        <div class="section">
-            <h2><i class="fab fa-bitcoin"></i> Crypto Wallet</h2>
-            <div class="wallet"><span>BTC</span><span>0.0142 BTC (£812.40)</span></div>
-            <div class="wallet"><span>ETH</span><span>0.32 ETH (£540.10)</span></div>
-            <div class="wallet"><span>Last sync</span><span>14 Oct 2026 · 22:30</span></div>
-        </div>
+            <div class="notif"><div class="notif-icon apple"><i class="fab fa-apple-pay"></i></div><div class="notif-body"><div class="notif-title">Apple Pay · British Gas</div><div class="notif-detail">Payment confirmed · £84.20</div><div class="notif-time">2 hours ago</div></div><div class="notif-amt">£84.20</div></div>
+            <div class="notif"><div class="notif-icon google"><i class="fab fa-google-pay"></i></div><div class="notif-body"><div class="notif-title">Google Pay · Thames Water</div><div class="notif-detail">Payment confirmed · £41.15</div><div class="notif-time">5 hours ago</div></div><div class="notif-amt">£41.15</div></div>
+            <div class="notif"><div class="notif-icon apple"><i class="fab fa-apple-pay"></i></div><div class="notif-body"><div class="notif-title">Apple Pay · Zara</div><div class="notif-detail">Payment confirmed · £59.99</div><div class="notif-time">1 day ago</div></div><div class="notif-amt">£59.99</div></div>
+            <div class="notif"><div class="notif-icon google"><i class="fab fa-google-pay"></i></div><div class="notif-body"><div class="notif-title">Google Pay · H&M</div><div class="notif-detail">Payment confirmed · £34.50</div><div class="notif-time">1 day ago</div></div><div class="notif-amt">£34.50</div></div>
+            <div class="notif"><div class="notif-icon apple"><i class="fab fa-apple-pay"></i></div><div class="notif-body"><div class="notif-title">Apple Pay · O2</div><div class="notif-detail">Payment confirmed · £28.00</div><div class="notif-time">2 days ago</div></div><div class="notif-amt">£28.00</div></div>
+            <div class="notif"><div class="notif-icon google"><i class="fab fa-google-pay"></i></div><div class="notif-body"><div class="notif-title">Google Pay · Next</div><div class="notif-detail">Payment confirmed · £72.00</div><div class="notif-time">3 days ago</div></div><div class="notif-amt">£72.00</div></div>
+            <div class="notif"><div class="notif-icon apple"><i class="fab fa-apple-pay"></i></div><div class="notif-body"><div class="notif-title">Apple Pay · Vodafone</div><div class="notif-detail">Payment confirmed · £35.00</div><div class="notif-time">4 days ago</div></div><div class="notif-amt">£35.00</div></div>
+            <div class="notif"><div class="notif-icon apple"><i class="fab fa-apple-pay"></i></div><div class="notif-body"><div class="notif-title">Apple Pay · ASOS</div><div class="notif-detail">Payment confirmed · £91.40</div><div class="notif-time">5 days ago</div></div><div class="notif-amt">£91.40</div></div>
+            <div class="notif"><div class="notif-icon google"><i class="fab fa-google-pay"></i></div><div class="notif-body"><div class="notif-title">Google Pay · Primark</div><div class="notif-detail">Payment confirmed · £22.80</div><div class="notif-time">6 days ago</div></div><div class="notif-amt">£22.80</div></div>
+            <div class="notif"><div class="notif-icon apple"><i class="fab fa-apple-pay"></i></div><div class="notif-body"><div class="notif-title">Apple Pay · M&S</div><div class="notif-detail">Payment confirmed · £48.60</div><div class="notif-time">7 days ago</div></div><div class="notif-amt">£48.60</div></div>
+            <div class="notif"><div class="notif-icon google"><i class="fab fa-google-pay"></i></div><div class="notif-body"><div class="notif-title">Google Pay · British Gas</div><div class="notif-detail">Payment confirmed · £84.20</div><div class="notif-time">8 days ago</div></div><div class="notif-amt">£84.20</div></div>
+            <div class="notif"><div class="notif-icon apple"><i class="fab fa-apple-pay"></i></div><div class="notif-body"><div class="notif-title">Apple Pay · Thames Water</div><div class="notif-detail">Payment confirmed · £41.15</div><div class="notif-time">9 days ago</div></div><div class="notif-amt">£41.15</div></div>
+            <div class="notif"><div class="notif-icon google"><i class="fab fa-google-pay"></i></div><div class="notif-body"><div class="notif-title">Google Pay · Zara</div><div class="notif-detail">Payment confirmed · £66.00</div><div class="notif-time">10 days ago</div></div><div class="notif-amt">£66.00</div></div>
+            <div class="notif"><div class="notif-icon apple"><i class="fab fa-apple-pay"></i></div><div class="notif-body"><div class="notif-title">Apple Pay · H&M</div><div class="notif-detail">Payment confirmed · £29.99</div><div class="notif-time">11 days ago</div></div><div class="notif-amt">£29.99</div></div>
+            <div class="notif"><div class="notif-icon google"><i class="fab fa-google-pay"></i></div><div class="notif-body"><div class="notif-title">Google Pay · O2</div><div class="notif-detail">Payment confirmed · £28.00</div><div class="notif-time">12 days ago</div></div><div class="notif-amt">£28.00</div></div>
+            <div class="notif"><div class="notif-icon apple"><i class="fab fa-apple-pay"></i></div><div class="notif-body"><div class="notif-title">Apple Pay · Next</div><div class="notif-detail">Payment confirmed · £88.00</div><div class="notif-time">13 days ago</div></div><div class="notif-amt">£88.00</div></div>
+            <div class="notif"><div class="notif-icon google"><i class="fab fa-google-pay"></i></div><div class="notif-body"><div class="notif-title">Google Pay · Vodafone</div><div class="notif-detail">Payment confirmed · £35.00</div><div class="notif-time">14 days ago</div></div><div class="notif-amt">£35.00</div></div>
+            <div class="notif"><div class="notif-icon apple"><i class="fab fa-apple-pay"></i></div><div class="notif-body"><div class="notif-title">Apple Pay · ASOS</div><div class="notif-detail">Payment confirmed · £45.00</div><div class="notif-time">15 days ago</div></div><div class="notif-amt">£45.00</div></div>
+            <div class="notif"><div class="notif-icon google"><i class="fab fa-google-pay"></i></div><div class="notif-body"><div class="notif-title">Google Pay · Primark</div><div class="notif-detail">Payment confirmed · £18.20</div><div class="notif-time">17 days ago</div></div><div class="notif-amt">£18.20</div></div>
+            <div class="notif"><div class="notif-icon apple"><i class="fab fa-apple-pay"></i></div><div class="notif-body"><div class="notif-title">Apple Pay · M&S</div><div class="notif-detail">Payment confirmed · £52.30</div><div class="notif-time">19 days ago</div></div><div class="notif-amt">£52.30</div></div>
+            <div class="notif"><div class="notif-icon google"><i class="fab fa-google-pay"></i></div><div class="notif-body"><div class="notif-title">Google Pay · British Gas</div><div class="notif-detail">Payment confirmed · £84.20</div><div class="notif-time">21 days ago</div></div><div class="notif-amt">£84.20</div></div>
 
-        <div class="section">
-            <h2><i class="fas fa-link"></i> Linked Accounts</h2>
-            <div class="wallet"><span>AutoStore Payroll</span><span>marcus@autostore.co.uk</span></div>
-            <div class="wallet"><span>Deliveroo</span><span>marcusg@autostore.co.uk</span></div>
-            <div class="wallet"><span>Just Eat</span><span>marcog....</span></div>
-        </div>
-
-        <div class="section">
-            <h2><i class="fas fa-comments"></i> Messages</h2>
-            <div class="msg"><div class="from">M. Mitchell · 14 Oct 2026</div>Send me your location when you get there. Don't forget.</div>
-            <div class="msg"><div class="from">Unknown · 13 Oct 2026</div>Payment received. As agreed.</div>
         </div>
 
         <div class="footer">© 2025 myCloud remote network solutions LLC</div>
     </div>
 </body>
 </html>
+EOF
+echo done
