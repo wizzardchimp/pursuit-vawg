@@ -24,8 +24,11 @@
 
 6. **MyCloud** (`/mycloud/login.html`) — click **MyCloud** tile
    → Username: **thelonerover**
-   → Password: **MadMax1**
+   → Password: **MadMax1** (case-insensitive)
    Dashboard (`/mycloud/mycloudhome.html`): Photos, Contacts, Settings, Map Tracker, CCTV, Android Keylogger, Financial Activity.
+
+   - Financial Activity shows a 3-week Apple Pay / Google Pay notification history (utilities + clothing retail) with relative timestamps — demonstrates that a third party with account access can see transaction confirmations.
+   - Map Tracker uses an embedded map (Esri tiles) showing geofenced locations.
 
 ## Full Answer Key
 
@@ -35,7 +38,7 @@
 | AutoStore password | `nandos.spicy.tango` |
 | Personal Drive PIN | `1486` |
 | MyCloud username | `thelonerover` |
-| MyCloud password | `MadMax1` |
+| MyCloud password | `MadMax1` (case-insensitive) |
 | Map tracker login | `Loneranger` |
 | Map tracker password | `Logman1.` |
 | Tracker phone | `071486090181` |
@@ -45,3 +48,5 @@
 Across: 1-PASSWORD, 3-DOXXING, 5-IMPERSONATE, 8-CYBERFLASHING, 10-SURVEILLANCE, 11-REVENGE, 12-ABUSE, 14-HACKING, 15-TRACKER
 
 Down: 2-SEXTORTION, 4-CYBERSTALKING, 6-HARASSMENT, 7-IOT, 9-DEEPFAKE, 13-PRISON
+EOF
+echo done
