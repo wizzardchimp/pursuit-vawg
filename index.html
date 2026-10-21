@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>System Boot</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            color: #00ff00;
+            font-family: 'Courier Prime', monospace;
+            font-size: 16px;
+            line-height: 1.5;
+            height: 100dvh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        /* ===================== */
+        /* === STEP 1: POPUP === */
+        /* ===================== */
+
+        #welcomePopup {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw;
+            height: 100dvh;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 28px 24px;
+            gap: 0;
+        }
+
+        #welcomePopup .logo {
+            width: 75vw;
+            max-width: 280px;
+            height: auto;
+            margin-bottom: 28px;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
+        .divider {
+            width: 100%;
+            max-width: 420px;
+            border: none;
+            border-top: 1px solid #00ff00;
+            margin-bottom: 28px;
+            opacity: 0.5;
+        }
+
+        #welcomePopup .welcome-text {
+            text-align: center;
+            margin-bottom: 32px;
+            font-size: 15px;
+            line-height: 2;
+            letter-spacing: 0.06em;
+            color: #00ff00;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        #welcomePopup .welcome-text .label {
+            color: #44ff44;
+            font-size: 12px;
+            letter-spacing: 0.14em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        #welcomePopup .passphrase-input {
+            display: flex;
+            align-items: center;
+            background: #000;
+            border: 1px solid #00ff00;
+            padding: 14px 14px;
+            width: 100%;
+            max-width: 420px;
+            min-height: 56px;
+        }
+
+        #welcomePopup .prompt {
+            color: #44ff44;
+            margin-right: 10px;
+            font-size: 14px;
+            white-space: nowrap;
+            letter-spacing: 0.06em;
+            font-weight: 700;
+        }
+
+        #passphraseField {
+            background: transparent;
+            border: none;
+            color: #00ff00;
+            font-family: 'Courier Prime', monospace;
+            font-size: 18px;
+            outline: none;
+            flex: 1;
+            caret-color: #00ff00;
+            min-height: 28px;
+        }
+
+        #passphraseField::placeholder {
+            color: #004d00;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background: #00ff00;
+            animation: blink 1s infinite;
+            margin-left: 2px;
+            flex-shrink: 0;
+        }
+
+        .error-msg {
+            color: #ff3333;
+            margin-top: 16px;
+            font-size: 13px;
+            min-height: 22px;
+            text-align: center;
+            padding: 0 10px;
+            letter-spacing: 0.06em;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        /* ========================= */
+        /* === STEP 2: LOADER    === */
+        /* ========================= */
+
+        .terminal {
+            flex: 1;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100dvh;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            overflow: hidden;
+            padding: 36px 28px;
+        }
+
+        .terminal.unlocked { opacity: 1; }
+
+        .loader-wrap {
+            width: 100%;
+            max-width: 420px;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .loader-wrap.visible {
+            animation: boxAppear 0.4s ease-out forwards;
+        }
+
+        @keyframes boxAppear {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .loader-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 32px;
+            border-bottom: 1px solid #00ff00;
+            padding-bottom: 14px;
+        }
+
+        .loader-header .dot {
+            width: 10px; height: 10px;
+            border: 1px solid #00ff00;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .loader-header .dot.active { background: #00ff00; }
+
+        .loader-header-title {
+            font-size: 14px;
+            letter-spacing: 0.1em;
+            color: #44ff44;
+        }
+
+        .process-log {
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+            margin-bottom: 32px;
+            min-height: 168px;
+        }
+
+        .proc-line {
+            font-size: 15px;
+            color: #44ff44;
+            letter-spacing: 0.04em;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .proc-line.show { opacity: 1; }
+        .proc-prefix { color: #007700; flex-shrink: 0; }
+
+        .proc-status {
+            margin-left: auto;
+            flex-shrink: 0;
+            font-weight: 700;
+        }
+
+        .proc-status.ok   { color: #00ff00; }
+        .proc-status.pend { color: #ffaa00; animation: blink 0.8s infinite; }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #007700;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+
+        .progress-label .pct { color: #44ff44; font-weight: 700; }
+
+        .progress-track {
+            width: 100%;
+            height: 10px;
+            border: 1px solid #00ff00;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #00ff00;
+            width: 0%;
+            transition: width 0.25s linear;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 20px; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 0.6s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0%   { transform: translateX(-20px); }
+            100% { transform: translateX(20px); }
+        }
+
+        .progress-done .progress-fill::after { display: none; }
+
+        .access-granted {
+            margin-top: 22px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            color: #00ff00;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .access-granted.show { opacity: 1; }
+
+        /* ===================== */
+        /* === ANIMATIONS     === */
+        /* ===================== */
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===================== -->
+    <!-- === STEP 1: POPUP === -->
+    <!-- ===================== -->
+    <div id="welcomePopup">
+        <img src="rocu.png" alt="ROCU Logo" class="logo">
+        <hr class="divider">
+        <div class="welcome-text">
+            <div class="label">// RESTRICTED SYSTEM ACCESS</div>
+            <div>WM ROCU COVERT REMOTE ACCESS</div>
+            <div>VPN INTERFACE — ONLY AUTHORISED ACCESS ALLOWED</div>
+        </div>
+        <div class="passphrase-input">
+            <span class="prompt">PASSPHRASE:&nbsp;</span>
+            <input type="password" id="passphraseField" placeholder="enter code..." autocomplete="off" spellcheck="false">
+            <span class="cursor"></span>
+        </div>
+        <div class="error-msg" id="errorMsg"></div>
+    </div>
+
+    <!-- ========================== -->
+    <!-- === STEP 2: LOADER      === -->
+    <!-- ========================== -->
+    <div class="terminal" id="terminal">
+        <div class="loader-wrap" id="loaderWrap">
+
+            <div class="loader-header">
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <span class="loader-header-title">// REMOTE SYSTEM — INITIALISING</span>
+            </div>
+
+            <div class="process-log" id="processLog">
+                <div class="proc-line" id="proc0"><span class="proc-prefix">»</span> Establishing VPN tunnel...<span class="proc-status pend" id="ps0">WAIT</span></div>
+                <div class="proc-line" id="proc1"><span class="proc-prefix">»</span> Authenticating credentials...<span class="proc-status pend" id="ps1">WAIT</span></div>
+                <div class="proc-line" id="proc2"><span class="proc-prefix">»</span> Loading Autostore modules...<span class="proc-status pend" id="ps2">WAIT</span></div>
+                <div class="proc-line" id="proc3"><span class="proc-prefix">»</span> Syncing remote file index...<span class="proc-status pend" id="ps3">WAIT</span></div>
+                <div class="proc-line" id="proc4"><span class="proc-prefix">»</span> Securing covert channel...<span class="proc-status pend" id="ps4">WAIT</span></div>
+                <div class="proc-line" id="proc5"><span class="proc-prefix">»</span> System ready.<span class="proc-status pend" id="ps5">WAIT</span></div>
+            </div>
+
+            <div class="progress-label">
+                <span>// BOOT PROGRESS</span>
+                <span class="pct" id="pctLabel">0%</span>
+            </div>
+            <div class="progress-track" id="progressTrack">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div class="access-granted" id="accessGranted">// ACCESS GRANTED — CONNECTING</div>
+
+        </div>
+    </div>
+
+    <script>
+        const passphraseField = document.getElementById('passphraseField');
+        const errorMsg        = document.getElementById('errorMsg');
+        const welcomePopup    = document.getElementById('welcomePopup');
+        const terminal        = document.getElementById('terminal');
+        const loaderWrap      = document.getElementById('loaderWrap');
+
+        passphraseField.focus();
+
+        passphraseField.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const input = passphraseField.value.trim().toLowerCase();
+                if (input === 'police') {
+                    welcomePopup.style.display = 'none';
+                    terminal.classList.add('unlocked');
+                    setTimeout(() => {
+                        loaderWrap.classList.add('visible');
+                        startLoader();
+                    }, 200);
+                } else {
+                    errorMsg.textContent = '// ACCESS DENIED — INVALID PASSPHRASE';
+                    passphraseField.value = '';
+                    setTimeout(() => { errorMsg.textContent = ''; }, 3000);
+                }
+            }
+        });
+
+        // ── LOADER SEQUENCE (5 seconds total) ──
+        // 6 process lines, each revealed + resolved across the 5s window,
+        // progress bar ticks smoothly from 0→100%.
+
+        const TOTAL_MS = 5000;
+
+        // [show_at_ms, resolve_at_ms, resolve_label]
+        const steps = [
+            [  100,  600, 'OK'],
+            [  700, 1200, 'OK'],
+            [ 1300, 1900, 'OK'],
+            [ 2000, 2700, 'OK'],
+            [ 2800, 3600, 'OK'],
+            [ 3700, 4400, 'OK'],
+        ];
+
+        function startLoader() {
+            const fill    = document.getElementById('progressFill');
+            const track   = document.getElementById('progressTrack');
+            const pct     = document.getElementById('pctLabel');
+            const granted = document.getElementById('accessGranted');
+
+            const startTime = performance.now();
+
+            // Smooth progress bar via rAF
+            function tickBar(now) {
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / TOTAL_MS, 1);
+                const pctVal = Math.round(progress * 100);
+                fill.style.width = pctVal + '%';
+                pct.textContent  = pctVal + '%';
+                if (progress < 1) {
+                    requestAnimationFrame(tickBar);
+                } else {
+                    track.classList.add('progress-done');
+                }
+            }
+            requestAnimationFrame(tickBar);
+
+            // Show each process line, then mark it OK
+            steps.forEach(([showAt, resolveAt, label], i) => {
+                const line   = document.getElementById('proc' + i);
+                const status = document.getElementById('ps'   + i);
+
+                setTimeout(() => {
+                    line.classList.add('show');
+                    status.textContent  = '...';
+                    status.className    = 'proc-status pend';
+                }, showAt);
+
+                setTimeout(() => {
+                    status.textContent  = '[' + label + ']';
+                    status.className    = 'proc-status ok';
+                }, resolveAt);
+            });
+
+            // Access granted flash, then redirect
+            setTimeout(() => {
+                granted.classList.add('show');
+            }, TOTAL_MS - 300);
+
+            setTimeout(() => {
+                window.location.href = './autostore/as_login.html';
+            }, TOTAL_MS + 400);
+        }
+
+        // Prevent double-tap zoom
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) e.preventDefault();
+            lastTouchEnd = now;
+        }, false);
+    </script>
+</body>
+</html>

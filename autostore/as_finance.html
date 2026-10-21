@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Finance Calculator — AutoStore</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Exo+2:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --blue:       #1e8fff;
+            --blue-dark:  #0a6fcf;
+            --blue-glow:  rgba(30, 143, 255, 0.35);
+            --bg:         #050b14;
+            --surface:    #0c1829;
+            --surface2:   #0f2040;
+            --border:     rgba(30, 143, 255, 0.2);
+            --text:       #e8f4ff;
+            --text-dim:   rgba(232, 244, 255, 0.45);
+            --green:      #00e676;
+            --green-dim:  rgba(0, 230, 118, 0.15);
+        }
+
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Exo 2', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 0 90px 0;
+            opacity: 0;
+            animation: pageIn 0.6s ease forwards;
+        }
+
+        @keyframes pageIn {
+            to { opacity: 1; }
+        }
+
+        /* Background grid */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(30, 143, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 143, 255, 0.04) 1px, transparent 1px);
+            background-size: 32px 32px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* === HEADER === */
+        .header {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 28px 20px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-wrap {
+            width: 300px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 6px;
+            opacity: 0;
+            transform: translateY(-12px);
+            animation: dropIn 0.5s ease 0.2s forwards;
+        }
+
+        .logo-wrap img {
+            width: 300px;
+            height: 80px;
+            object-fit: contain;
+        }
+
+        @keyframes dropIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header-divider {
+            width: 90%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--blue), transparent);
+            margin: 14px 0 4px;
+            opacity: 0;
+            animation: fadeIn 0.4s ease 0.5s forwards;
+        }
+
+        .header-sub {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.22em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeIn 0.4s ease 0.6s forwards;
+        }
+
+        /* === CALCULATOR CONTAINER === */
+        .calc-container {
+            width: 100%;
+            max-width: 440px;
+            padding: 0 16px;
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            animation: fadeIn 0.4s ease 0.7s forwards;
+        }
+
+        .calc-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Top accent line */
+        .calc-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 15%; right: 15%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--blue), transparent);
+            opacity: 0.5;
+        }
+
+        /* === INPUT SECTIONS === */
+        .section-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            margin-bottom: 14px;
+            padding-left: 2px;
+        }
+
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border), transparent);
+            margin: 24px 0 20px;
+        }
+
+        /* === INPUT FIELD === */
+        .field-group {
+            margin-bottom: 18px;
+        }
+
+        .field-label {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            color: var(--text);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .field-input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .field-prefix {
+            position: absolute;
+            left: 14px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--blue);
+            pointer-events: none;
+        }
+
+        .field-suffix {
+            position: absolute;
+            right: 14px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dim);
+            pointer-events: none;
+        }
+
+        .field-input {
+            width: 100%;
+            background: rgba(30, 143, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 48px 14px 14px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text);
+            outline: none;
+            transition: background 0.2s, border-color 0.2s;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .field-input.has-prefix {
+            padding-left: 32px;
+        }
+
+        .field-input:focus {
+            background: rgba(30, 143, 255, 0.1);
+            border-color: var(--blue);
+        }
+
+        .field-input::placeholder {
+            color: var(--text-dim);
+            opacity: 0.4;
+        }
+
+        /* === OUTPUT FIELDS (readonly) === */
+        .field-output {
+            background: rgba(0, 230, 118, 0.08);
+            border: 1px solid rgba(0, 230, 118, 0.25);
+            color: var(--green);
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .field-output.total {
+            background: rgba(30, 143, 255, 0.1);
+            border-color: rgba(30, 143, 255, 0.3);
+            color: var(--blue);
+        }
+
+        /* === CALCULATE BUTTON === */
+        .calc-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--blue);
+            border: 1px solid var(--blue-dark);
+            border-radius: 10px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            color: #000;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 24px;
+            transition: background 0.15s, transform 0.1s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .calc-btn:active {
+            background: var(--blue-dark);
+            transform: scale(0.98);
+        }
+
+        /* === BACK BUTTON === */
+        .back-wrap {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 12px 16px 16px;
+            display: flex;
+            justify-content: center;
+            z-index: 100;
+            background: linear-gradient(to top, #050b14 60%, transparent);
+            opacity: 0;
+            animation: fadeIn 0.4s ease 1.2s forwards;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 420px;
+            padding: 14px 20px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-dim);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            text-decoration: none;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+        }
+
+        .back-btn svg {
+            stroke: var(--text-dim);
+            transition: stroke 0.15s;
+            flex-shrink: 0;
+        }
+
+        .back-btn:hover {
+            background: rgba(30, 143, 255, 0.07);
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        .back-btn:active {
+            background: rgba(30, 143, 255, 0.14);
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        .back-btn:active svg,
+        .back-btn:hover svg {
+            stroke: var(--blue);
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* === RESPONSIVE === */
+        @media screen and (max-width: 360px) {
+            .calc-box {
+                padding: 20px 16px;
+            }
+
+            .field-input {
+                font-size: 16px;
+                padding: 12px 44px 12px 12px;
+            }
+
+            .field-input.has-prefix {
+                padding-left: 28px;
+            }
+
+            .field-prefix {
+                font-size: 14px;
+                left: 12px;
+            }
+
+            .field-suffix {
+                font-size: 12px;
+                right: 12px;
+            }
+
+            .logo-wrap {
+                width: 240px;
+                height: 64px;
+            }
+
+            .logo-wrap img {
+                width: 240px;
+                height: 64px;
+            }
+        }
+
+        @media screen and (min-width: 420px) {
+            .calc-container {
+                padding: 0 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo-wrap">
+            <img src="ashomelogo.png" alt="AutoStore Logo">
+        </div>
+        <div class="header-divider"></div>
+        <div class="header-sub">Finance Calculator</div>
+    </div>
+
+    <!-- CALCULATOR -->
+    <div class="calc-container">
+        <div class="calc-box">
+            
+            <!-- INPUT SECTION -->
+            <div class="section-title">// Enter Vehicle Details</div>
+
+            <div class="field-group">
+                <label class="field-label" for="cashPrice">Cash Price</label>
+                <div class="field-input-wrap">
+                    <span class="field-prefix">£</span>
+                    <input 
+                        type="number" 
+                        id="cashPrice" 
+                        class="field-input has-prefix" 
+                        placeholder="25000"
+                        step="100"
+                    >
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label class="field-label" for="deposit">Deposit</label>
+                <div class="field-input-wrap">
+                    <span class="field-prefix">£</span>
+                    <input 
+                        type="number" 
+                        id="deposit" 
+                        class="field-input has-prefix" 
+                        placeholder="5000"
+                        step="100"
+                    >
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label class="field-label" for="interestRate">Interest Rate</label>
+                <div class="field-input-wrap">
+                    <input 
+                        type="number" 
+                        id="interestRate" 
+                        class="field-input" 
+                        placeholder="7.9"
+                        step="0.1"
+                    >
+                    <span class="field-suffix">% APR</span>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label class="field-label" for="term">Term</label>
+                <div class="field-input-wrap">
+                    <input 
+                        type="number" 
+                        id="term" 
+                        class="field-input" 
+                        placeholder="48"
+                        step="1"
+                    >
+                    <span class="field-suffix">months</span>
+                </div>
+            </div>
+
+            <button class="calc-btn" id="calculateBtn">Calculate Finance</button>
+
+            <!-- RESULTS SECTION -->
+            <div class="divider"></div>
+            <div class="section-title">// Calculation Results</div>
+
+            <div class="field-group">
+                <label class="field-label" for="monthlyPayment">Monthly Payment</label>
+                <div class="field-input-wrap">
+                    <span class="field-prefix">£</span>
+                    <input 
+                        type="text" 
+                        id="monthlyPayment" 
+                        class="field-input field-output has-prefix" 
+                        value="—"
+                        readonly
+                    >
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label class="field-label" for="totalCost">Total Cost</label>
+                <div class="field-input-wrap">
+                    <span class="field-prefix">£</span>
+                    <input 
+                        type="text" 
+                        id="totalCost" 
+                        class="field-input field-output total has-prefix" 
+                        value="—"
+                        readonly
+                    >
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label class="field-label" for="totalInterest">Total Cost of Interest</label>
+                <div class="field-input-wrap">
+                    <span class="field-prefix">£</span>
+                    <input 
+                        type="text" 
+                        id="totalInterest" 
+                        class="field-input field-output has-prefix" 
+                        value="—"
+                        readonly
+                    >
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label class="field-label" for="dealerMargin">Dealer Margin</label>
+                <div class="field-input-wrap">
+                    <span class="field-prefix">£</span>
+                    <input 
+                        type="text" 
+                        id="dealerMargin" 
+                        class="field-input field-output has-prefix" 
+                        value="—"
+                        readonly
+                    >
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- BACK BUTTON -->
+    <div class="back-wrap">
+        <a class="back-btn" href="as_home.html">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"/>
+            </svg>
+            Back to Home
+        </a>
+    </div>
+
+    <script>
+        const calculateBtn = document.getElementById('calculateBtn');
+        const cashPriceInput = document.getElementById('cashPrice');
+        const depositInput = document.getElementById('deposit');
+        const interestRateInput = document.getElementById('interestRate');
+        const termInput = document.getElementById('term');
+        
+        const monthlyPaymentOutput = document.getElementById('monthlyPayment');
+        const totalCostOutput = document.getElementById('totalCost');
+        const totalInterestOutput = document.getElementById('totalInterest');
+        const dealerMarginOutput = document.getElementById('dealerMargin');
+
+        calculateBtn.addEventListener('click', function() {
+            const cashPrice = parseFloat(cashPriceInput.value) || 0;
+            const deposit = parseFloat(depositInput.value) || 0;
+            const annualRate = parseFloat(interestRateInput.value) || 0;
+            const termMonths = parseFloat(termInput.value) || 0;
+
+            if (cashPrice <= 0 || termMonths <= 0) {
+                alert('Please enter valid cash price and term values.');
+                return;
+            }
+
+            // Amount to finance
+            const principal = cashPrice - deposit;
+
+            if (principal <= 0) {
+                alert('Deposit cannot be greater than or equal to cash price.');
+                return;
+            }
+
+            // Monthly interest rate
+            const monthlyRate = (annualRate / 100) / 12;
+
+            // Calculate monthly payment using standard loan formula
+            // M = P * [r(1+r)^n] / [(1+r)^n - 1]
+            let monthlyPayment;
+            if (monthlyRate === 0) {
+                monthlyPayment = principal / termMonths;
+            } else {
+                const powerTerm = Math.pow(1 + monthlyRate, termMonths);
+                monthlyPayment = principal * (monthlyRate * powerTerm) / (powerTerm - 1);
+            }
+
+            // Total amount paid
+            const totalPaid = monthlyPayment * termMonths + deposit;
+            
+            // Total interest
+            const totalInterest = totalPaid - cashPrice;
+
+            // Dealer margin (simple estimate: 1.5% of principal)
+            const dealerMargin = principal * 0.015;
+
+            // Update outputs
+            monthlyPaymentOutput.value = monthlyPayment.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            totalCostOutput.value = totalPaid.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            totalInterestOutput.value = totalInterest.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            dealerMarginOutput.value = dealerMargin.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        });
+
+        // Allow Enter key in input fields to trigger calculation
+        [cashPriceInput, depositInput, interestRateInput, termInput].forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    calculateBtn.click();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

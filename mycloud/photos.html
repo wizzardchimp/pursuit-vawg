@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Photo Gallery</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            position: sticky;
+            top: 0;
+            background-color: #ffffff;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .home-btn {
+            background-color: #28a745; /* Green */
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* Gallery Grid */
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 columns for tiles */
+            gap: 5px;
+            padding: 5px;
+        }
+
+        .tile {
+            aspect-ratio: 1 / 1; /* Keep tiles square */
+            overflow: hidden;
+            background-color: #ddd;
+            cursor: pointer;
+        }
+
+        .tile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Crop to fit square */
+            display: block;
+        }
+
+        /* Popup / Modal */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 80%;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        .close-btn {
+            margin-top: 20px;
+            color: white;
+            background: none;
+            border: 2px solid white;
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="toolbar">
+        <a href="mycloudhome.html" class="home-btn">Home</a>
+    </header>
+
+    <main class="gallery-container" id="gallery">
+        </main>
+
+    <div class="modal" id="photoModal">
+        <img class="modal-content" id="modalImg" src="" alt="Full view">
+        <button class="close-btn" onclick="closeModal()">Close</button>
+    </div>
+
+    <script>
+        const gallery = document.getElementById('gallery');
+        const modal = document.getElementById('photoModal');
+        const modalImg = document.getElementById('modalImg');
+
+        // 1. Dynamically generate the 29 images (Photo0 to Photo28)
+        for (let i = 0; i <= 28; i++) {
+            const tile = document.createElement('div');
+            tile.className = 'tile';
+            
+            const img = document.createElement('img');
+            img.src = `./Images/Photos/Photo${i}.jpg`;
+            img.alt = `Photo ${i}`;
+            
+            // Open modal on click
+            tile.onclick = () => openModal(img.src);
+            
+            tile.appendChild(img);
+            gallery.appendChild(tile);
+        }
+
+        // 2. Modal Functions
+        function openModal(src) {
+            modalImg.src = src;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        // Close modal if user clicks the dark background instead of the image
+        modal.onclick = function(event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

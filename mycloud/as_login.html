@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Login - Marcus's PC</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            width: 100vw;
+            background: url('asloginbg.png') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 20px;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeInFromBlack 2s ease-out forwards;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        @keyframes fadeInFromBlack {
+            0% {
+                opacity: 0;
+                background-color: #000000;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 1;
+                background-color: transparent;
+            }
+        }
+
+        .login-container {
+            background: rgba(0, 0, 0, 0.80);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 32px 28px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideInUp 1.5s ease-out 0.5s forwards;
+        }
+
+        @keyframes slideInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .welcome-text {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #cccccc;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+            min-height: 48px;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .password-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #0096FF;
+            box-shadow: 0 0 0 2px rgba(0, 150, 255, 0.2);
+        }
+
+        .password-input::placeholder {
+            color: #888888;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 14px 12px;
+            background: #0096FF;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 48px;
+            -webkit-appearance: none;
+            appearance: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .login-button:hover {
+            background: #0080e6;
+        }
+
+        .login-button:active {
+            transform: scale(0.98);
+            background: #0070cc;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            font-size: 14px;
+            margin-top: 12px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            line-height: 1.4;
+        }
+
+        .error-message.show {
+            opacity: 1;
+        }
+
+        /* Loading animation */
+        .login-button.loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .login-button.loading::after {
+            content: '';
+            width: 16px;
+            height: 16px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Mobile optimizations */
+        @media screen and (max-width: 480px) {
+            .login-container {
+                padding: 28px 22px;
+            }
+
+            .welcome-text {
+                font-size: 22px;
+                margin-bottom: 20px;
+            }
+
+            .password-input,
+            .login-button {
+                font-size: 16px;
+            }
+        }
+
+        @media screen and (max-width: 360px) {
+            .login-container {
+                padding: 24px 18px;
+            }
+
+            .welcome-text {
+                font-size: 20px;
+                margin-bottom: 16px;
+            }
+
+            .input-group label {
+                font-size: 13px;
+            }
+
+            .error-message {
+                font-size: 13px;
+            }
+        }
+
+        /* Portrait mode — ensure container stays centred */
+        @media screen and (orientation: portrait) {
+            body {
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        /* Landscape on mobile */
+        @media screen and (max-height: 500px) and (orientation: landscape) {
+            body {
+                align-items: flex-start;
+                padding-top: 16px;
+                overflow-y: auto;
+            }
+
+            .login-container {
+                padding: 20px;
+                margin: 0 auto;
+            }
+
+            .welcome-text {
+                font-size: 18px;
+                margin-bottom: 12px;
+            }
+
+            .input-group {
+                margin-bottom: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="welcome-text">Drive the deal...</div>
+        
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    class="password-input" 
+                    placeholder="Enter your username"
+                    autocomplete="username"
+                >
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    class="password-input" 
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                >
+            </div>
+            
+            <button type="submit" class="login-button" id="loginBtn">Login</button>
+            
+            <div class="error-message" id="errorMessage">
+                Incorrect password. Please try again.
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Focus on username input after animations complete
+        setTimeout(() => {
+            usernameInput.focus();
+        }, 2000);
+
+        // Handle form submission
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = usernameInput.value.toLowerCase().trim();
+            const password = passwordInput.value.toLowerCase().trim();
+            const correctUsername = 'marcus@autostore.co.uk';
+            const correctPassword = 'nandos.spicy.tango';
+            
+            // Check username first
+            if (username !== correctUsername) {
+                // Show "no user found" error
+                errorMessage.textContent = 'No user found. Please check your username.';
+                errorMessage.classList.add('show');
+                usernameInput.value = '';
+                passwordInput.value = '';
+                usernameInput.focus();
+                
+                // Add shake animation to login container
+                const container = document.querySelector('.login-container');
+                container.style.animation = 'shake 0.5s ease-in-out, slideInUp 1.5s ease-out 0.5s forwards';
+                setTimeout(() => {
+                    container.style.animation = 'slideInUp 1.5s ease-out 0.5s forwards';
+                }, 500);
+            } else if (password !== correctPassword) {
+                // Username is correct, but password is wrong
+                errorMessage.textContent = 'Incorrect password. Please try again.';
+                errorMessage.classList.add('show');
+                passwordInput.value = '';
+                passwordInput.focus();
+                
+                // Add shake animation to login container
+                const container = document.querySelector('.login-container');
+                container.style.animation = 'shake 0.5s ease-in-out, slideInUp 1.5s ease-out 0.5s forwards';
+                setTimeout(() => {
+                    container.style.animation = 'slideInUp 1.5s ease-out 0.5s forwards';
+                }, 500);
+            } else {
+                // Success - both username and password are correct
+                loginBtn.classList.add('loading');
+                loginBtn.textContent = 'Logging in';
+                errorMessage.classList.remove('show');
+                
+                // Simulate brief loading then redirect
+                setTimeout(() => {
+                    window.location.href = 'as_home.html';
+                }, 1500);
+            }
+        });
+
+        // Hide error message when user starts typing in either field
+        usernameInput.addEventListener('input', () => {
+            errorMessage.classList.remove('show');
+        });
+
+        passwordInput.addEventListener('input', () => {
+            errorMessage.classList.remove('show');
+        });
+
+        // Prevent double-tap zoom on buttons
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+    </script>
+</body>
+</html>

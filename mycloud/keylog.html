@@ -1,0 +1,622 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checklist - MyCloudHome</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0V4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    /* General styles copied from MyCloudHome Dashboard for consistency */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #ffffff;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Animated background particles */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                  radial-gradient(circle at 40% 40%, rgba(120, 219, 226, 0.2) 0%, transparent 50%);
+      animation: float 150s ease-in-out infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(30px, -30px) rotate(120deg); }
+      66% { transform: translate(-20px, 20px) rotate(240deg); }
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      width: 100%;
+      max-width: 800px;
+      margin-bottom: 2rem;
+      text-align: center;
+      opacity: 0;
+      animation: slideDown 0.8s ease-out 0.2s forwards;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .checklist-section {
+      width: 100%;
+      max-width: 700px;
+      margin-bottom: 120px;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      width: 100%;
+      max-width: 700px;
+    }
+
+    .action-btn {
+      background: linear-gradient(135deg, #007bff, #0056b3); /* Blue gradient */
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .action-btn.red {
+      background: linear-gradient(135deg, #dc3545, #b02a37); /* Red gradient */
+      box-shadow: 0 10px 20px rgba(220, 53, 69, 0.3);
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px rgba(0, 123, 255, 0.4);
+    }
+
+    .action-btn.red:hover {
+      box-shadow: 0 15px 30px rgba(220, 53, 69, 0.4);
+    }
+
+    .action-btn:active {
+      transform: translateY(0);
+    }
+
+    .checklist-items {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .checklist-item {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      color: inherit;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .checklist-item.hidden {
+      display: none;
+    }
+
+    .checklist-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    .checklist-item:hover::before {
+      left: 100%;
+    }
+
+    .checklist-item:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .checklist-item input[type="checkbox"] {
+      appearance: none; /* Hide default checkbox */
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border: 2px solid white;
+      border-radius: 5px;
+      margin-right: 1rem;
+      cursor: pointer;
+      position: relative;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+
+    .checklist-item input[type="checkbox"]:checked {
+      background-color: #4CAF50; /* Green check */
+      border-color: #4CAF50;
+    }
+
+    .checklist-item input[type="checkbox"]:checked::after {
+      content: '\2713'; /* Checkmark icon */
+      font-size: 16px;
+      color: white;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .checklist-item-text {
+      flex-grow: 1;
+      font-size: 1.1rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+    }
+
+    .checklist-item input[type="checkbox"]:checked + .checklist-item-text {
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+
+    .checklist-date-header {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+      text-align: left;
+      width: 100%;
+      max-width: 700px; /* Align with checklist items */
+      padding-left: 1rem; /* Indent slightly */
+    }
+
+    /* Footer styles copied from MyCloudHome Dashboard */
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1.5rem 0;
+      text-align: center;
+      z-index: 1000;
+      display: flex; /* Use flexbox for alignment */
+      flex-direction: column; /* Stack items by default */
+      align-items: center; /* Center items horizontally */
+      gap: 0.5rem; /* Space between items */
+    }
+
+    .footer .button-group-footer { /* New class for footer buttons */
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 0.5rem; /* Space between buttons and copyright */
+      flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+    }
+
+    .logout-btn, .back-btn { /* Apply common styles to both buttons */
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 2rem; /* Consistent padding */
+      border: none; /* Ensure no default border */
+      color: white; /* Ensure text color is white */
+    }
+
+    .logout-btn {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+    }
+
+    .logout-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px rgba(255, 107, 107, 0.4);
+      background: linear-gradient(135deg, #ff5252, #d63031);
+    }
+
+    .logout-btn:active {
+      transform: translateY(0);
+    }
+
+    .copyright {
+      font-size: 0.85rem;
+      opacity: 0.8;
+      margin-top: 0; /* Adjusted for flex container */
+      font-weight: 300;
+    }
+
+    /* Back to Dashboard button styles - moved and adjusted */
+    .back-btn {
+      background: linear-gradient(135deg, #4CAF50, #2E8B57); /* Greenish gradient */
+      box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
+      /* Removed margin-top and margin-bottom as it's now in a flex container */
+    }
+
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px rgba(76, 175, 80, 0.4);
+      background: linear-gradient(135deg, #4CAF50, #228B22);
+    }
+
+    .back-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      .button-group {
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+
+      .action-btn {
+        width: 100%;
+      }
+
+      .checklist-item {
+        padding: 1rem 1.5rem;
+      }
+
+      .checklist-item input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+      }
+
+      .checklist-item-text {
+        font-size: 1rem;
+      }
+
+      /* Footer responsive adjustments */
+      .footer .button-group-footer {
+        flex-direction: column; /* Stack buttons vertically in footer on small screens */
+        width: 100%;
+        padding: 0 1rem; /* Add some horizontal padding */
+      }
+
+      .logout-btn, .back-btn {
+        width: 100%; /* Make buttons full width when stacked */
+        padding: 0.6rem 1.5rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      /* No specific changes needed beyond 768px for checklist items, as they already stack well */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Android Keylogger</h1>
+      </div>
+
+    <div class="checklist-section">
+      <div class="button-group">
+        <button class="action-btn" onclick="hideCheckedItems()">
+          <i class="fas fa-eye-slash"></i> Delete Selected Items
+        </button>
+        <button class="action-btn red" onclick="clearAllItems()">
+          <i class="fas fa-trash-alt"></i> Clear All Items
+        </button>
+      </div>
+
+      <div class="checklist-items" id="checklistContainer">
+        </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="button-group-footer">
+      <button class="back-btn" onclick="location.href='mycloudhome.html';">
+        <i class="fas fa-arrow-left"></i> Home 
+      </button>
+      <button class="logout-btn" onclick="location.href='login.html';">
+        <svg width="16" height="16" viewBox="0 0 512 512" style="fill: currentColor;">
+          <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"/>
+        </svg>
+        Log Out
+      </button>
+    </div>
+    <p class="copyright">© 2025 myCloud remote network solutions LLC</p>
+  </div>
+
+  <script>
+    // Define the initial list of items
+    const initialChecklistData = [
+      { type: 'header', text: '1 Day Ago' },
+      { type: 'item', text: '2300: I dont think you should go to that. It\'s best to buy new.' },
+      { type: 'item', text: '2259: healthy lunch ideas for work' },
+      { type: 'item', text: '2238: You look terribl in that picture. Take it down lol!.' },
+      { type: 'item', text: '2236: sourdough bread online' },
+      { type: 'item', text: '2235: summer dresses' },
+      { type: 'item', text: '2232: blue wedding guest dress' },
+      { type: 'item', text: '2229: fresh seafood platter' },
+      { type: 'item', text: '2229: Who are you talking to? Is it are they a supervisor?' },
+      { type: 'item', text: '2207: Running a bit late, be there in 5!' },
+      { type: 'item', text: '2158: Can you beleive this weather?!' },
+      { type: 'item', text: '2129: workwear women\'s suits' },
+      { type: 'item', text: '2119: I\'m so cold!.' },
+      { type: 'item', text: '2115: organic chicken breast' },
+      { type: 'item', text: '2112: Why is your phone on silent? were you asleep again!?' },
+      { type: 'item', text: '2111: Don\'t use emojis with anyone else. They\'re only for me xxx.' },
+      { type: 'item', text: '2102: I need a holiday!.' },
+      { type: 'item', text: '2052: Good luck with the review tomorrow!' },
+      { type: 'item', text: '2041: I\'m off now for three days! Yass!' },
+      { type: 'item', text: '2033: coffee beans starbucks' },
+      { type: 'item', text: '2024: Tell me about it...' },
+      { type: 'header', text: '2 Days Ago' },
+      { type: 'item', text: '2010: vegan meal kits' },
+      { type: 'item', text: '2009: winter coat women\'s' },
+      { type: 'item', text: '2009: I\'m coming over. Be ready with snacks!.' },
+      { type: 'item', text: '2009: You need to make it up to me.' },
+      { type: 'item', text: '1952: I saw you were online.' },
+      { type: 'item', text: '1942: organic eggs delivery' },
+      { type: 'item', text: '1937: Happy cake day! Any exciting plans?' },
+      { type: 'item', text: '1921: I\'m just woried about you' },
+      { type: 'item', text: '1909: You owe me an explanation for that.' },
+      { type: 'item', text: '1906: swimwear trends' },
+      { type: 'item', text: '1841: too tired!' },
+      { type: 'item', text: '1826: Why are you out Get home old lady!!!' },
+      { type: 'item', text: '1825: What are you up to this weekend?' },
+      { type: 'item', text: '1813: gluten free pasta' },
+      { type: 'item', text: '1805: Just send me your location.' },
+      { type: 'item', text: '1801: ecoactivewear' },
+      { type: 'item', text: '1800: running trainers' },
+      { type: 'item', text: '1756: artisanal cheese delivery' },
+      { type: 'item', text: '1747: trainers for running' },
+      { type: 'item', text: '1704: Hey, how are you doing?' },
+      { type: 'header', text: '3 Days Ago' },
+      { type: 'item', text: '1655: Are you sure u ok for later?' },
+      { type: 'item', text: '1654: tinder funny stories' },
+      { type: 'item', text: '1629: healthy breakfast ideas' },
+      { type: 'item', text: '1621: wedding formal dress' },
+      { type: 'item', text: '1541: sustainable wedding fashion brands' },
+      { type: 'item', text: '1524: If you leave me, with dave i\'ll kill you! lol.' },
+      { type: 'item', text: '1515: Long time no coffee! We should catch up soon.' },
+      { type: 'item', text: '1514: police harrasment.' },
+      { type: 'item', text: '1509: online grocery delivery' },
+      { type: 'item', text: '1508: I\'m so exhausted, ready for bed.' },
+      { type: 'item', text: '1449: If you loved me, you\'d buy me krisy creme!.' },
+      { type: 'item', text: '1442: Youre letting the team dfown!.' },
+      { type: 'item', text: '1425: Feeling a bit down today, need hugs.' },
+      { type: 'item', text: '1352: Send me a pictur of where yo\'ll be on maps.' },
+      { type: 'item', text: '1327: Why didn\'t you answer my call? man in town? lol.' },
+      { type: 'item', text: '1315: My phone die! Just got power back.' },
+      { type: 'item', text: '1306: gluten free pasta' },
+      { type: 'item', text: '1305: party dress ideas' },
+      { type: 'item', text: '1301: Remember that time we... 😂' },
+      { type: 'header', text: '4 Days Ago' },
+      { type: 'item', text: '1253: Thinking of you! Hope youre having a great week.' },
+      { type: 'item', text: '1250: healthy snack options' },
+      { type: 'item', text: '1246: You shoud have told me you were doing that.' },
+      { type: 'item', text: '1244: Just finished that book you recommended, loved it!' },
+      { type: 'item', text: '1227: affordable denim jacket' },
+      { type: 'item', text: '1218: You wouldn\'t want me to get upset, would you?' },
+      { type: 'item', text: '1216: Just saw the funiest thing, had to share!' },
+      { type: 'item', text: '1212: Found a dress i think!' },
+      { type: 'item', text: '1206: You need to block shaz. I don\'t trust her.' },
+      { type: 'item', text: '1203: fresh fruit and veg box' },
+      { type: 'item', text: '1200: plant-based milk alternatives' },
+      { type: 'item', text: '1156: dairy free desserts' },
+      { type: 'item', text: '1143: My phone is low' },
+      { type: 'item', text: '1142: Just wanted to say thanks again for everything.' },
+      { type: 'item', text: '1104: Just wanted to say I love you, checking you\'re okay. Call me when you get this.' },
+      { type: 'item', text: '1100: bed casual shirts' },
+      { type: 'item', text: '1053: Have you watched derek? It\'s so good!' },
+      { type: 'item', text: '1040: petite trousers' },
+      { type: 'item', text: '1034: ready meals for one' },
+      { type: 'item', text: '1020: quick dinner recipes' },
+      { type: 'header', text: '5 Days Ago' },
+      { type: 'item', text: '0951: You\'re always on your phone. except when i call!?' },
+      { type: 'item', text: '0936: You never listen to me!.' },
+      { type: 'item', text: '0933: weekly meal planner ideas' },
+      { type: 'item', text: '0926: plus size dresses' },
+      { type: 'item', text: '0924: women\'s jeans sale' },
+      { type: 'item', text: '0915: Looking for vintage clothes online' },
+      { type: 'item', text: '0833: Gues what happened?! You won\'t believe it.' },
+      { type: 'item', text: '0833: Just planng my holiday, any tips?' },
+      { type: 'item', text: '0822: low carb meal prep' },
+      { type: 'item', text: '0741: Im watchng derek so good but so saaad!..' },
+      { type: 'item', text: '0729: Ugh, my day is dragng. Send help!' },
+      { type: 'item', text: '0729: I don\'t think you should staywith me.' },
+      { type: 'item', text: '0727: I need your advice on somthing...' },
+      { type: 'item', text: '0722: You know I get worried..' },
+      { type: 'item', text: '0715: womens smart casual outfit' },
+      { type: 'item', text: '0711: bulk dry goods' }
+    ];
+
+    document.addEventListener('DOMContentLoaded', function() {
+      loadChecklistItems();
+    });
+
+    /**
+     * Creates and appends a checklist item or header to the container.
+     * @param {string} text The text content for the item/header.
+     * @param {boolean} [isChecked=false] Whether the item is checked (only applicable for 'item' type).
+     * @param {string} type The type of element: 'item' or 'header'.
+     */
+    function createChecklistItemElement(text, isChecked, type) {
+      const checklistContainer = document.getElementById('checklistContainer');
+      
+      if (type === 'header') {
+        const headerDiv = document.createElement('div');
+        headerDiv.classList.add('checklist-date-header');
+        headerDiv.textContent = text;
+        checklistContainer.appendChild(headerDiv);
+      } else {
+        const itemDiv = document.createElement('div');
+        itemDiv.classList.add('checklist-item');
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        // Set checked state based on the passed isChecked parameter
+        checkbox.checked = isChecked; 
+        // Save state on change
+        checkbox.onchange = saveChecklistItems; 
+
+        const textSpan = document.createElement('span');
+        textSpan.classList.add('checklist-item-text');
+        textSpan.textContent = text;
+
+        itemDiv.appendChild(checkbox);
+        itemDiv.appendChild(textSpan);
+        checklistContainer.appendChild(itemDiv);
+
+        // Apply strikethrough and opacity if initially checked
+        if (isChecked) {
+          textSpan.style.textDecoration = 'line-through';
+          textSpan.style.opacity = '0.7';
+        }
+      }
+    }
+
+    /**
+     * Hides (or shows) checked checklist items.
+     */
+    function hideCheckedItems() {
+      const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+      checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+          checkbox.closest('.checklist-item').classList.add('hidden');
+        } else {
+          // Ensure unchecked items are visible if they were previously hidden
+          checkbox.closest('.checklist-item').classList.remove('hidden'); 
+        }
+      });
+      // After hiding, save the current state to localStorage
+      saveChecklistItems();
+    }
+
+    /**
+     * Clears all checklist items from the display and local storage.
+     */
+    function clearAllItems() {
+      if (confirm('Are you sure you want to clear all checklist items? This cannot be undone!')) {
+        document.getElementById('checklistContainer').innerHTML = ''; // Clears all items
+        localStorage.removeItem('checklistItems'); // Remove from local storage
+      }
+    }
+
+    /**
+     * Saves the current state of checklist items (including headers) to local storage.
+     */
+    function saveChecklistItems() {
+      const items = [];
+      // Iterate through all direct children of the checklistContainer
+      document.querySelectorAll('#checklistContainer > div').forEach(element => {
+        if (element.classList.contains('checklist-item')) {
+          const text = element.querySelector('.checklist-item-text').textContent;
+          const isChecked = element.querySelector('input[type="checkbox"]').checked;
+          items.push({ type: 'item', text, isChecked });
+        } else if (element.classList.contains('checklist-date-header')) {
+          // For headers, just save the type and text
+          items.push({ type: 'header', text: element.textContent });
+        }
+      });
+      localStorage.setItem('checklistItems', JSON.stringify(items));
+    }
+
+    /**
+     * Loads checklist items from local storage, or initializes with default data.
+     */
+    function loadChecklistItems() {
+      const storedItems = localStorage.getItem('checklistItems');
+      const checklistContainer = document.getElementById('checklistContainer');
+      checklistContainer.innerHTML = ''; // Clear existing content before loading
+
+      if (storedItems) {
+        const items = JSON.parse(storedItems);
+        items.forEach(item => {
+          // Pass the isChecked state for items, or false for headers (though not strictly needed for headers)
+          createChecklistItemElement(item.text, item.isChecked || false, item.type); 
+        });
+      } else {
+        // Load initial data if nothing is in local storage
+        initialChecklistData.forEach(item => {
+          // For initial load, items are not checked by default
+          createChecklistItemElement(item.text, false, item.type); 
+        });
+        saveChecklistItems(); // Save the initial data to local storage after rendering
+      }
+    }
+  </script>
+</body>
+</html>

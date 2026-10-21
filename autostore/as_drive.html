@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Personal Drive — AutoStore</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Exo+2:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --blue:       #1e8fff;
+            --blue-dark:  #0a6fcf;
+            --blue-glow:  rgba(30, 143, 255, 0.35);
+            --bg:         #050b14;
+            --surface:    #0c1829;
+            --surface2:   #0f2040;
+            --border:     rgba(30, 143, 255, 0.2);
+            --text:       #e8f4ff;
+            --text-dim:   rgba(232, 244, 255, 0.45);
+            --red:        #ff4444;
+            --red-dim:    rgba(255, 68, 68, 0.15);
+        }
+
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Exo 2', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 0 90px 0;
+            opacity: 0;
+            animation: pageIn 0.6s ease forwards;
+        }
+
+        @keyframes pageIn {
+            to { opacity: 1; }
+        }
+
+        /* Background grid */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(30, 143, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 143, 255, 0.04) 1px, transparent 1px);
+            background-size: 32px 32px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* === HEADER === */
+        .header {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 28px 20px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-wrap {
+            width: 300px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 6px;
+            opacity: 0;
+            transform: translateY(-12px);
+            animation: dropIn 0.5s ease 0.2s forwards;
+        }
+
+        .logo-wrap img {
+            width: 300px;
+            height: 80px;
+            object-fit: contain;
+        }
+
+        @keyframes dropIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header-divider {
+            width: 90%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--blue), transparent);
+            margin: 14px 0 4px;
+            opacity: 0;
+            animation: fadeIn 0.4s ease 0.5s forwards;
+        }
+
+        .header-sub {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.22em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeIn 0.4s ease 0.6s forwards;
+        }
+
+        /* === PIN CONTAINER === */
+        .pin-container {
+            width: 100%;
+            max-width: 440px;
+            padding: 0 16px;
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            animation: fadeIn 0.4s ease 0.7s forwards;
+        }
+
+        .pin-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 36px 24px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .pin-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 15%; right: 15%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--blue), transparent);
+            opacity: 0.5;
+        }
+
+        .pin-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            background: rgba(30, 143, 255, 0.1);
+            border: 1px solid rgba(30, 143, 255, 0.25);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pin-icon svg {
+            width: 32px;
+            height: 32px;
+            stroke: var(--blue);
+            fill: none;
+            stroke-width: 1.7;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .pin-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: var(--text);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .pin-subtitle {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 13px;
+            color: var(--text-dim);
+            line-height: 1.5;
+            margin-bottom: 28px;
+        }
+
+        .pin-input-wrap {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .pin-digit {
+            width: 56px;
+            height: 64px;
+            background: rgba(30, 143, 255, 0.05);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text);
+            text-align: center;
+            outline: none;
+            transition: background 0.2s, border-color 0.2s;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .pin-digit:focus {
+            background: rgba(30, 143, 255, 0.1);
+            border-color: var(--blue);
+        }
+
+        .pin-digit.error {
+            animation: shake 0.4s ease;
+            border-color: var(--red);
+            background: var(--red-dim);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        .error-msg {
+            color: var(--red);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-top: 12px;
+            min-height: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .error-msg.show {
+            opacity: 1;
+        }
+
+        .verify-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--blue);
+            border: 1px solid var(--blue-dark);
+            border-radius: 10px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            color: #000;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 24px;
+            transition: background 0.15s, transform 0.1s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .verify-btn:active {
+            background: var(--blue-dark);
+            transform: scale(0.98);
+        }
+
+        /* === FILE LIST === */
+        .file-list-container {
+            width: 100%;
+            padding: 0 16px;
+            position: relative;
+            z-index: 1;
+            display: none;
+        }
+
+        .file-list-container.show {
+            display: block;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .file-count {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .file-count .badge {
+            background: var(--blue-glow);
+            border: 1px solid rgba(30, 143, 255, 0.4);
+            border-radius: 20px;
+            padding: 3px 12px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            color: var(--blue);
+            text-transform: uppercase;
+        }
+
+        .col-headers {
+            margin-bottom: 8px;
+        }
+
+        .col-headers-inner {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 0 8px;
+            padding: 0 14px;
+        }
+
+        .col-header {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        .col-header.right {
+            text-align: right;
+        }
+
+        .file-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* === FILE BANNER === */
+        .file-banner {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            width: 100%;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+            transition: border-color 0.2s, background 0.2s, transform 0.12s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .file-banner::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 20%; bottom: 20%;
+            width: 3px;
+            background: var(--blue-dark);
+            border-radius: 0 2px 2px 0;
+            transition: background 0.2s, top 0.2s, bottom 0.2s;
+        }
+
+        .file-banner:active {
+            background: var(--surface2);
+            border-color: var(--blue);
+            transform: scale(0.985);
+        }
+
+        .file-banner:active::before {
+            background: var(--blue);
+            top: 10%;
+            bottom: 10%;
+        }
+
+        .banner-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 7px;
+        }
+
+        .file-name {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: var(--text);
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        .file-type {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            color: var(--text-dim);
+            background: rgba(30, 143, 255, 0.08);
+            border: 1px solid rgba(30, 143, 255, 0.2);
+            border-radius: 4px;
+            padding: 2px 8px;
+            text-transform: uppercase;
+        }
+
+        .banner-bottom {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 0 8px;
+            align-items: center;
+        }
+
+        .file-date {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--text-dim);
+            letter-spacing: 0.06em;
+        }
+
+        .file-date span {
+            color: rgba(232, 244, 255, 0.3);
+            margin-right: 3px;
+            font-size: 10px;
+        }
+
+        .file-size {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            text-align: right;
+            letter-spacing: 0.04em;
+        }
+
+        /* === BACK BUTTON === */
+        .back-wrap {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 12px 16px 16px;
+            display: flex;
+            justify-content: center;
+            z-index: 100;
+            background: linear-gradient(to top, #050b14 60%, transparent);
+            opacity: 0;
+            animation: fadeIn 0.4s ease 1.2s forwards;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 420px;
+            padding: 14px 20px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-dim);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            text-decoration: none;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+        }
+
+        .back-btn svg {
+            stroke: var(--text-dim);
+            transition: stroke 0.15s;
+            flex-shrink: 0;
+        }
+
+        .back-btn:hover {
+            background: rgba(30, 143, 255, 0.07);
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        .back-btn:active {
+            background: rgba(30, 143, 255, 0.14);
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        .back-btn:active svg,
+        .back-btn:hover svg {
+            stroke: var(--blue);
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* === RESPONSIVE === */
+        @media screen and (max-width: 360px) {
+            .pin-box {
+                padding: 28px 20px;
+            }
+
+            .pin-digit {
+                width: 50px;
+                height: 58px;
+                font-size: 28px;
+            }
+
+            .pin-input-wrap {
+                gap: 10px;
+            }
+
+            .file-name { font-size: 14px; }
+            .file-type { font-size: 10px; padding: 2px 6px; }
+            .file-size { font-size: 12px; }
+            .file-date { font-size: 10px; }
+            .file-list-container { padding: 0 13px; }
+
+            .logo-wrap {
+                width: 240px;
+                height: 64px;
+            }
+
+            .logo-wrap img {
+                width: 240px;
+                height: 64px;
+            }
+        }
+
+        @media screen and (min-width: 420px) {
+            .pin-container {
+                padding: 0 20px;
+            }
+
+            .file-list-container {
+                padding: 0 20px;
+            }
+        }
+
+        /* === FILE POPUP === */
+        .file-popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 2000;
+            opacity: 0;
+            animation: fadeIn 0.25s ease forwards;
+        }
+
+        .file-popup-overlay.show {
+            display: flex;
+        }
+
+        .file-popup-box {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px 24px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            transform: scale(0.92);
+            animation: popIn 0.3s ease 0.1s forwards;
+        }
+
+        @keyframes popIn {
+            to { 
+                transform: scale(1); 
+                opacity: 1;
+            }
+        }
+
+        .popup-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: var(--text);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .popup-preview {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 24px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .popup-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .popup-view-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--blue);
+            border: 1px solid var(--blue-dark);
+            border-radius: 10px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            color: #000;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: background 0.15s, transform 0.1s;
+            -webkit-tap-highlight-color: transparent;
+            text-decoration: none;
+            display: block;
+        }
+
+        .popup-view-btn:active {
+            background: var(--blue-dark);
+            transform: scale(0.98);
+        }
+
+        .popup-close-btn {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .popup-close-btn:active {
+            background: rgba(30, 143, 255, 0.14);
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo-wrap">
+            <img src="ashomelogo.png" alt="AutoStore Logo">
+        </div>
+        <div class="header-divider"></div>
+        <div class="header-sub">Personal Drive — Cloud Storage</div>
+    </div>
+
+    <!-- PIN ENTRY -->
+    <div class="pin-container" id="pinContainer">
+        <div class="pin-box">
+            <div class="pin-icon">
+                <svg viewBox="0 0 24 24">
+                    <ellipse cx="12" cy="17" rx="9" ry="3"/>
+                    <path d="M3 17V7c0-1.7 4-3 9-3s9 1.3 9 3v10"/>
+                    <path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/>
+                    <line x1="12" y1="9" x2="12" y2="11"/>
+                </svg>
+            </div>
+
+            <div class="pin-title">Enter Your PIN</div>
+            <div class="pin-subtitle">Please enter your 4-digit PIN to access<br>your personal drive</div>
+
+            <div class="pin-input-wrap">
+                <input type="tel" maxlength="1" class="pin-digit" id="pin1" inputmode="numeric" pattern="[0-9]*">
+                <input type="tel" maxlength="1" class="pin-digit" id="pin2" inputmode="numeric" pattern="[0-9]*">
+                <input type="tel" maxlength="1" class="pin-digit" id="pin3" inputmode="numeric" pattern="[0-9]*">
+                <input type="tel" maxlength="1" class="pin-digit" id="pin4" inputmode="numeric" pattern="[0-9]*">
+            </div>
+
+            <div class="error-msg" id="errorMsg"></div>
+
+            <button class="verify-btn" id="verifyBtn">Verify PIN</button>
+        </div>
+    </div>
+
+    <!-- FILE LIST -->
+    <div class="file-list-container" id="fileListContainer">
+        <div class="file-count">
+            <div class="badge">8 Files Available</div>
+        </div>
+
+        <div class="col-headers">
+            <div class="col-headers-inner">
+                <div class="col-header">File Name &nbsp;·&nbsp; Type</div>
+                <div class="col-header right">Last Access</div>
+                <div class="col-header right">Size</div>
+            </div>
+        </div>
+
+        <div class="file-list">
+
+            <div class="file-banner">
+                <div class="banner-top">
+                    <div class="file-name">pic1</div>
+                    <div class="file-type">JPEG</div>
+                </div>
+                <div class="banner-bottom">
+                    <div class="file-date"><span>•</span>Accessed 2 days ago</div>
+                    <div class="file-size">1,247 KB</div>
+                </div>
+            </div>
+
+            <div class="file-banner">
+                <div class="banner-top">
+                    <div class="file-name">MyCloud Covert Tracker</div>
+                    <div class="file-type">HTML</div>
+                </div>
+                <div class="banner-bottom">
+                    <div class="file-date"><span>•</span>Accessed 5 days ago</div>
+                    <div class="file-size">112 KB</div>
+                </div>
+            </div>
+
+            <div class="file-banner">
+                <div class="banner-top">
+                    <div class="file-name">Box Selfie - Deleted</div>
+                    <div class="file-type">XLSX</div>
+                </div>
+                <div class="banner-bottom">
+                    <div class="file-date"><span>•</span>Deleted 1 day ago</div>
+                    <div class="file-size">2,156 KB</div>
+                </div>
+            </div>
+
+            <div class="file-banner">
+                <div class="banner-top">
+                    <div class="file-name">Mandy XXX</div>
+                    <div class="file-type">PDF</div>
+                </div>
+                <div class="banner-bottom">
+                    <div class="file-date"><span>•</span>Deleted 12 days ago</div>
+                    <div class="file-size">563 KB</div>
+                </div>
+            </div>
+
+            <div class="file-banner">
+                <div class="banner-top">
+                    <div class="file-name">BMW Key Card - Daves 320</div>
+                    <div class="file-type">PNG</div>
+                </div>
+                <div class="banner-bottom">
+                    <div class="file-date"><span>•</span>Deleted 3 days ago</div>
+                    <div class="file-size">4,921 KB</div>
+                </div>
+            </div>
+
+            <div class="file-banner">
+                <div class="banner-top">
+                    <div class="file-name">Gill Snapchat</div>
+                    <div class="file-type">DOCX</div>
+                </div>
+                <div class="banner-bottom">
+                    <div class="file-date"><span>•</span>Deleted 7 days ago</div>
+                    <div class="file-size">1,092 KB</div>
+                </div>
+            </div>
+
+            <div class="file-banner">
+                <div class="banner-top">
+                    <div class="file-name">97686550998-652729</div>
+                    <div class="file-type">PDF</div>
+                </div>
+                <div class="banner-bottom">
+                    <div class="file-date"><span>•</span>Deleted 15 days ago</div>
+                    <div class="file-size">3,487 KB</div>
+                </div>
+            </div>
+
+            <div class="file-banner">
+                <div class="banner-top">
+                    <div class="file-name">Clarks invoice for tyres.pdf</div>
+                    <div class="file-type">XLSX</div>
+                </div>
+                <div class="banner-bottom">
+                    <div class="file-date"><span>•</span>Deleted 9 days ago</div>
+                    <div class="file-size">672 KB</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- FILE POPUP -->
+    <div class="file-popup-overlay" id="filePopup">
+        <div class="file-popup-box">
+            <div class="popup-title" id="popupTitle">My File 1</div>
+            <div class="popup-preview">
+                <img id="popupImage" src="" alt="File Preview">
+            </div>
+            <a href="#" class="popup-view-btn" id="popupViewBtn">View Full Contents</a>
+            <button class="popup-close-btn" id="popupCloseBtn">Close</button>
+        </div>
+    </div>
+
+    <!-- BACK BUTTON -->
+    <div class="back-wrap">
+        <a class="back-btn" href="as_home.html">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"/>
+            </svg>
+            Back to Home
+        </a>
+    </div>
+
+    <script>
+        const pin1 = document.getElementById('pin1');
+        const pin2 = document.getElementById('pin2');
+        const pin3 = document.getElementById('pin3');
+        const pin4 = document.getElementById('pin4');
+        const verifyBtn = document.getElementById('verifyBtn');
+        const errorMsg = document.getElementById('errorMsg');
+        const pinContainer = document.getElementById('pinContainer');
+        const fileListContainer = document.getElementById('fileListContainer');
+
+        const pinInputs = [pin1, pin2, pin3, pin4];
+
+        // Auto-focus next field on input
+        pinInputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+
+                if (e.target.value.length === 1 && index < 3) {
+                    pinInputs[index + 1].focus();
+                }
+
+                pinInputs.forEach(inp => inp.classList.remove('error'));
+                errorMsg.classList.remove('show');
+                errorMsg.textContent = '';
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+                    pinInputs[index - 1].focus();
+                }
+
+                if (e.key === 'Enter') {
+                    verifyBtn.click();
+                }
+            });
+
+            input.addEventListener('focus', (e) => {
+                e.target.select();
+            });
+        });
+
+        // Verify PIN
+        verifyBtn.addEventListener('click', function() {
+            const enteredPin = pin1.value + pin2.value + pin3.value + pin4.value;
+
+            if (enteredPin.length !== 4) {
+                errorMsg.textContent = 'Please enter all 4 digits';
+                errorMsg.classList.add('show');
+                return;
+            }
+
+            if (enteredPin === '1486') {
+                // Correct PIN - show file list
+                pinContainer.style.display = 'none';
+                fileListContainer.classList.add('show');
+            } else {
+                // Wrong PIN
+                errorMsg.textContent = 'Incorrect PIN. Please try again.';
+                errorMsg.classList.add('show');
+                
+                pinInputs.forEach(inp => {
+                    inp.classList.add('error');
+                    inp.value = '';
+                });
+
+                setTimeout(() => {
+                    pinInputs.forEach(inp => inp.classList.remove('error'));
+                    pin1.focus();
+                }, 500);
+            }
+        });
+
+        // ============================================================
+        //  FILE POPUP FUNCTIONALITY
+        // ============================================================
+
+        const filePopup     = document.getElementById('filePopup');
+        const popupTitle    = document.getElementById('popupTitle');
+        const popupImage    = document.getElementById('popupImage');
+        const popupViewBtn  = document.getElementById('popupViewBtn');
+        const popupCloseBtn = document.getElementById('popupCloseBtn');
+
+        // ============================================================
+        //  FILE DATA — HOW TO CONFIGURE YOUR FILES
+        // ============================================================
+        //
+        //  Each entry in fileData corresponds to one row in the file
+        //  list above (in order: 1 = first row, 2 = second row, etc.)
+        //
+        //  Each entry has these fields:
+        //
+        //    name       — Display name shown in the popup title bar.
+        //                 This should match the file-name shown in the
+        //                 HTML banner above.
+        //
+        //    preview    — Path to the image shown in the popup preview
+        //                 tile. This can be:
+        //                   • A JPEG/PNG/GIF/WebP image of the actual file
+        //                     (e.g. a photo, or a screenshot of a document)
+        //                   • A generic icon/thumbnail for non-image files
+        //                 Set to null if you have no preview image — a
+        //                 placeholder icon will be shown instead.
+        //
+        //    link       — Where "View Full Contents" button navigates to.
+        //                 For actual files, this should be the path to the
+        //                 file itself (e.g. 'documents/report.pdf').
+        //                 Use '#' as a placeholder if the file isn't
+        //                 linked yet.
+        //
+        //    directLink — (optional) Set to true to skip the popup
+        //                 entirely and navigate straight to `link` when
+        //                 the row is clicked. Useful for links to other
+        //                 HTML pages (like the MyCloud entry below).
+        //
+        // ============================================================
+        //  FILE LOCATIONS — WHERE TO PUT YOUR FILES
+        // ============================================================
+        //
+        //  as_drive.html is your ROOT file. All file paths below are
+        //  RELATIVE to the folder that contains as_drive.html.
+        //
+        //  Examples:
+        //
+        //    Same folder as as_drive.html:
+        //      preview: 'pic1.jpeg'
+        //      link:    'pic1.jpeg'
+        //
+        //    Inside a sub-folder called "images":
+        //      preview: 'images/pic1.jpeg'
+        //      link:    'images/pic1.jpeg'
+        //
+        //    Inside a sub-folder called "documents":
+        //      preview: 'images/report-thumb.png'   ← thumbnail image
+        //      link:    'documents/report.pdf'       ← actual PDF
+        //
+        //    One folder UP from as_drive.html (parent folder):
+        //      preview: '../pic1.jpeg'
+        //      link:    '../pic1.jpeg'
+        //
+        //  For file 1 (pic1.jpeg), the image is expected at:
+        //      [same folder as as_drive.html]/pic1.jpeg
+        //
+        // ============================================================
+
+        const fileData = {
+
+            // --- FILE 1 ---
+            // An image file. The preview displays the image itself.
+            // Place pic1.jpeg in the SAME folder as as_drive.html.
+            // To use a sub-folder instead, change to e.g. 'images/pic1.jpeg'
+            1: {
+                name:    'pic1',
+                preview: 'pic1.jpeg',   // ← image path relative to as_drive.html
+                link:    'pic1.jpeg'    // ← "View Full Contents" opens the full image
+            },
+
+            // --- FILE 2 ---
+            // directLink: true → clicking the row goes straight to login.html,
+            // no popup is shown. Remove directLink (or set to false) to show
+            // a popup with preview instead.
+            2: {
+                name:       'MyCloud',
+                preview:    null,                         // ← no preview image
+                link:       '../mycloud/login.html',
+                directLink: true
+            },
+
+            // --- FILES 3–8 ---
+            // Replace 'file3.png' etc. with your actual thumbnail/preview images.
+            // Replace '#file3' etc. with the real path to each file.
+            // Example for a PDF:
+            //   preview: 'images/report-thumb.png'
+            //   link:    'documents/my-report.pdf'
+            3: { name: 'My File 3', preview: null, link: '#file3' },
+            4: { name: 'My File 4', preview: null, link: '#file4' },
+            5: { name: 'My File 5', preview: null, link: '#file5' },
+            6: { name: 'My File 6', preview: null, link: '#file6' },
+            7: { name: 'My File 7', preview: null, link: '#file7' },
+            8: { name: 'My File 8', preview: null, link: '#file8' }
+        };
+
+        // ============================================================
+        //  POPUP OPEN — handles preview image display
+        // ============================================================
+
+        document.querySelectorAll('.file-banner').forEach((banner, index) => {
+            banner.addEventListener('click', (e) => {
+                e.preventDefault();
+                const fileNum = index + 1;
+                const file = fileData[fileNum];
+
+                // If directLink is set, skip the popup and navigate directly
+                if (file.directLink) {
+                    window.location.href = file.link;
+                    return;
+                }
+
+                // Set the popup title
+                popupTitle.textContent = file.name;
+
+                // Set the "View Full Contents" button destination
+                popupViewBtn.href = file.link;
+
+                // Handle the preview image:
+                // If a preview path is set, show the image and HIDE the "View Full Contents" button.
+                // If no preview path (null), show a generic file icon placeholder and SHOW the button.
+                if (file.preview) {
+                    popupImage.src = file.preview;
+                    popupImage.style.display = 'block';
+                    popupImage.parentElement.style.background = 'rgba(0,0,0,0.3)';
+                    // Hide the View Full Contents button — image is the preview itself
+                    popupViewBtn.style.display = 'none';
+                } else {
+                    // No preview image — show a generic placeholder icon
+                    popupImage.src = '';
+                    popupImage.style.display = 'none';
+                    popupImage.parentElement.style.background = 'rgba(0,0,0,0.3)';
+                    popupImage.parentElement.innerHTML = `
+                        <svg width="60" height="60" viewBox="0 0 24 24" fill="none"
+                             stroke="rgba(30,143,255,0.5)" stroke-width="1.5"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12
+                                     a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>`;
+                    // Show the View Full Contents button for non-image files
+                    popupViewBtn.style.display = 'block';
+                }
+
+                filePopup.classList.add('show');
+            });
+        });
+
+        // Close popup via Close button
+        popupCloseBtn.addEventListener('click', () => {
+            filePopup.classList.remove('show');
+            // Restore image element in case placeholder SVG replaced it
+            if (!document.getElementById('popupImage')) {
+                const preview = filePopup.querySelector('.popup-preview');
+                preview.innerHTML = '<img id="popupImage" src="" alt="File Preview">';
+            }
+        });
+
+        // Close popup by clicking the dark overlay background
+        filePopup.addEventListener('click', (e) => {
+            if (e.target === filePopup) {
+                filePopup.classList.remove('show');
+                if (!document.getElementById('popupImage')) {
+                    const preview = filePopup.querySelector('.popup-preview');
+                    preview.innerHTML = '<img id="popupImage" src="" alt="File Preview">';
+                }
+            }
+        });
+
+        // Focus first field on page load
+        setTimeout(() => {
+            pin1.focus();
+        }, 1000);
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Stock Lists — AutoStore</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Exo+2:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --blue:       #1e8fff;
+            --blue-dark:  #0a6fcf;
+            --blue-glow:  rgba(30, 143, 255, 0.35);
+            --bg:         #050b14;
+            --surface:    #0c1829;
+            --surface2:   #0f2040;
+            --border:     rgba(30, 143, 255, 0.2);
+            --text:       #e8f4ff;
+            --text-dim:   rgba(232, 244, 255, 0.45);
+            --green:      #00e676;
+            --green-dim:  rgba(0, 230, 118, 0.15);
+        }
+
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Exo 2', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 0 90px 0;
+            opacity: 0;
+            animation: pageIn 0.6s ease forwards;
+        }
+
+        @keyframes pageIn {
+            to { opacity: 1; }
+        }
+
+        /* Background grid */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(30, 143, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 143, 255, 0.04) 1px, transparent 1px);
+            background-size: 32px 32px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* === HEADER === */
+        .header {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 28px 20px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-wrap {
+            width: 300px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 6px;
+            opacity: 0;
+            transform: translateY(-12px);
+            animation: dropIn 0.5s ease 0.2s forwards;
+        }
+
+        .logo-wrap img {
+            width: 300px;
+            height: 80px;
+            object-fit: contain;
+        }
+
+        @keyframes dropIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header-divider {
+            width: 90%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--blue), transparent);
+            margin: 14px 0 4px;
+            opacity: 0;
+            animation: fadeIn 0.4s ease 0.5s forwards;
+        }
+
+        .header-sub {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.22em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            opacity: 0;
+            animation: fadeIn 0.4s ease 0.6s forwards;
+        }
+
+        /* === STOCK COUNT === */
+        .stock-count {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeIn 0.4s ease 0.7s forwards;
+        }
+
+        .stock-count .badge {
+            background: var(--blue-glow);
+            border: 1px solid rgba(30, 143, 255, 0.4);
+            border-radius: 20px;
+            padding: 3px 12px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            color: var(--blue);
+            text-transform: uppercase;
+        }
+
+        /* === COLUMN HEADERS === */
+        .col-headers {
+            width: 100%;
+            padding: 0 16px;
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            animation: fadeIn 0.4s ease 0.75s forwards;
+            margin-bottom: 8px;
+        }
+
+        .col-headers-inner {
+            display: grid;
+            grid-template-columns: 2fr 1.1fr 1.1fr;
+            gap: 0 8px;
+            padding: 0 14px;
+        }
+
+        .col-header {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        .col-header.right {
+            text-align: right;
+        }
+
+        /* === STOCK LIST === */
+        .stock-list {
+            width: 100%;
+            padding: 0 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* === STOCK BANNER === */
+        .stock-banner {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            width: 100%;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: border-color 0.2s, background 0.2s, transform 0.12s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        /* Staggered entrance */
+        .stock-banner:nth-child(n)   { animation: bannerIn 0.3s ease forwards; }
+        .stock-banner:nth-child(1)  { animation-delay: 0.8s; }
+        .stock-banner:nth-child(2)  { animation-delay: 0.85s; }
+        .stock-banner:nth-child(3)  { animation-delay: 0.90s; }
+        .stock-banner:nth-child(4)  { animation-delay: 0.95s; }
+        .stock-banner:nth-child(5)  { animation-delay: 1.00s; }
+        .stock-banner:nth-child(6)  { animation-delay: 1.05s; }
+        .stock-banner:nth-child(7)  { animation-delay: 1.10s; }
+        .stock-banner:nth-child(8)  { animation-delay: 1.15s; }
+        .stock-banner:nth-child(9)  { animation-delay: 1.20s; }
+        .stock-banner:nth-child(10) { animation-delay: 1.25s; }
+        .stock-banner:nth-child(11) { animation-delay: 1.28s; }
+        .stock-banner:nth-child(12) { animation-delay: 1.31s; }
+        .stock-banner:nth-child(13) { animation-delay: 1.34s; }
+        .stock-banner:nth-child(14) { animation-delay: 1.37s; }
+        .stock-banner:nth-child(15) { animation-delay: 1.40s; }
+        .stock-banner:nth-child(16) { animation-delay: 1.43s; }
+        .stock-banner:nth-child(17) { animation-delay: 1.46s; }
+        .stock-banner:nth-child(18) { animation-delay: 1.49s; }
+        .stock-banner:nth-child(19) { animation-delay: 1.52s; }
+        .stock-banner:nth-child(20) { animation-delay: 1.55s; }
+        .stock-banner:nth-child(21) { animation-delay: 1.58s; }
+        .stock-banner:nth-child(22) { animation-delay: 1.61s; }
+        .stock-banner:nth-child(23) { animation-delay: 1.64s; }
+        .stock-banner:nth-child(24) { animation-delay: 1.67s; }
+        .stock-banner:nth-child(25) { animation-delay: 1.70s; }
+        .stock-banner:nth-child(26) { animation-delay: 1.73s; }
+
+        @keyframes bannerIn {
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Left accent bar */
+        .stock-banner::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 20%; bottom: 20%;
+            width: 3px;
+            background: var(--blue-dark);
+            border-radius: 0 2px 2px 0;
+            transition: background 0.2s, top 0.2s, bottom 0.2s;
+        }
+
+        .stock-banner:active,
+        .stock-banner.tapped {
+            background: var(--surface2);
+            border-color: var(--blue);
+            transform: scale(0.985);
+        }
+
+        .stock-banner:active::before,
+        .stock-banner.tapped::before {
+            background: var(--blue);
+            top: 10%;
+            bottom: 10%;
+        }
+
+        /* Top row: make/model + reg */
+        .banner-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 7px;
+        }
+
+        .car-name {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: var(--text);
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        .car-reg {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            color: var(--blue);
+            background: rgba(30, 143, 255, 0.1);
+            border: 1px solid rgba(30, 143, 255, 0.25);
+            border-radius: 4px;
+            padding: 2px 8px;
+            text-transform: uppercase;
+        }
+
+        /* Bottom row: ref + price + margin */
+        .banner-bottom {
+            display: grid;
+            grid-template-columns: 2fr 1.1fr 1.1fr;
+            gap: 0 8px;
+            align-items: center;
+        }
+
+        .car-ref {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--text-dim);
+            letter-spacing: 0.06em;
+        }
+
+        .car-ref span {
+            color: rgba(232, 244, 255, 0.3);
+            margin-right: 3px;
+            font-size: 10px;
+        }
+
+        .car-price {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            text-align: right;
+            letter-spacing: 0.02em;
+        }
+
+        .car-margin {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: right;
+            letter-spacing: 0.04em;
+        }
+
+        .car-margin.high   { color: var(--green); }
+        .car-margin.mid    { color: #ffcc44; }
+        .car-margin.low    { color: #ff7043; }
+
+        /* === BACK BUTTON === */
+        .back-wrap {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 12px 16px 16px;
+            display: flex;
+            justify-content: center;
+            z-index: 100;
+            background: linear-gradient(to top, #050b14 60%, transparent);
+            opacity: 0;
+            animation: fadeIn 0.4s ease 2s forwards;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 420px;
+            padding: 14px 20px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-dim);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            text-decoration: none;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+        }
+
+        .back-btn svg {
+            stroke: var(--text-dim);
+            transition: stroke 0.15s;
+            flex-shrink: 0;
+        }
+
+        .back-btn:hover {
+            background: rgba(30, 143, 255, 0.07);
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        .back-btn:active {
+            background: rgba(30, 143, 255, 0.14);
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        .back-btn:active svg,
+        .back-btn:hover svg {
+            stroke: var(--blue);
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* === RESPONSIVE === */
+        @media screen and (max-width: 360px) {
+            .car-name { font-size: 14px; }
+            .car-reg  { font-size: 11px; padding: 2px 6px; }
+            .car-price { font-size: 13px; }
+            .car-margin { font-size: 12px; }
+            .car-ref  { font-size: 10px; }
+            .stock-list { padding: 0 13px; gap: 7px; }
+            .col-headers { padding: 0 13px; }
+        }
+
+        @media screen and (min-width: 420px) {
+            .car-name  { font-size: 17px; }
+            .car-price { font-size: 15px; }
+            .stock-list { padding: 0 20px; }
+            .col-headers { padding: 0 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo-wrap">
+            <img src="ashomelogo.png" alt="AutoStore Logo">
+        </div>
+        <div class="header-divider"></div>
+        <div class="header-sub">Stock Lists — Live Inventory</div>
+        <div class="stock-count">
+            <div class="badge">26 Vehicles In Stock</div>
+        </div>
+    </div>
+
+    <!-- COLUMN HEADERS -->
+    <div class="col-headers">
+        <div class="col-headers-inner">
+            <div class="col-header">Make / Model &nbsp;·&nbsp; Ref</div>
+            <div class="col-header right">Price</div>
+            <div class="col-header right">Margin</div>
+        </div>
+    </div>
+
+    <!-- STOCK LIST -->
+    <div class="stock-list" id="stockList">
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">BMW 320d M Sport</div>
+                <div class="car-reg">WK23 ABF</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>4821</div>
+                <div class="car-price">£24,995</div>
+                <div class="car-margin high">+£3,200</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Mercedes C220d AMG Line</div>
+                <div class="car-reg">YT72 CKL</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>3356</div>
+                <div class="car-price">£31,500</div>
+                <div class="car-margin high">+£4,100</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Audi A4 35 TDI S Line</div>
+                <div class="car-reg">LK21 HMR</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>7743</div>
+                <div class="car-price">£27,450</div>
+                <div class="car-margin high">+£3,750</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Volkswagen Golf GTI</div>
+                <div class="car-reg">MH22 PTW</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>5519</div>
+                <div class="car-price">£22,995</div>
+                <div class="car-margin mid">+£1,800</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Ford Mustang GT 5.0</div>
+                <div class="car-reg">SJ23 XRN</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>2294</div>
+                <div class="car-price">£44,500</div>
+                <div class="car-margin high">+£5,200</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Porsche Macan S</div>
+                <div class="car-reg">OV21 KBZ</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>9037</div>
+                <div class="car-price">£43,750</div>
+                <div class="car-margin high">+£6,000</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Toyota GR Yaris</div>
+                <div class="car-reg">KE72 DNF</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>6614</div>
+                <div class="car-price">£28,995</div>
+                <div class="car-margin high">+£3,400</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Honda Civic Type R</div>
+                <div class="car-reg">WX23 VLP</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>1187</div>
+                <div class="car-price">£35,200</div>
+                <div class="car-margin high">+£4,500</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Range Rover Evoque</div>
+                <div class="car-reg">FP72 GWT</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>8823</div>
+                <div class="car-price">£38,995</div>
+                <div class="car-margin high">+£4,800</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Skoda Octavia vRS</div>
+                <div class="car-reg">NA21 RCQ</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>3301</div>
+                <div class="car-price">£18,750</div>
+                <div class="car-margin mid">+£1,950</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Hyundai i30 N</div>
+                <div class="car-reg">CP23 HJX</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>7750</div>
+                <div class="car-price">£21,500</div>
+                <div class="car-margin mid">+£2,100</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Nissan 370Z Nismo</div>
+                <div class="car-reg">BK71 MNE</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>4409</div>
+                <div class="car-price">£29,995</div>
+                <div class="car-margin high">+£3,600</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">SEAT Leon FR TSI</div>
+                <div class="car-reg">HV22 ZKP</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>5562</div>
+                <div class="car-price">£14,995</div>
+                <div class="car-margin low">+£900</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Mazda MX-5 RF Sport</div>
+                <div class="car-reg">TL72 AWB</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>2278</div>
+                <div class="car-price">£23,500</div>
+                <div class="car-margin mid">+£2,400</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Alfa Romeo Giulia</div>
+                <div class="car-reg">RJ23 EFL</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>9915</div>
+                <div class="car-price">£26,750</div>
+                <div class="car-margin mid">+£2,850</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Renault Megane RS</div>
+                <div class="car-reg">GN21 TXM</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>6683</div>
+                <div class="car-price">£19,250</div>
+                <div class="car-margin mid">+£1,700</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Kia Stinger GT</div>
+                <div class="car-reg">YA72 BNV</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>1144</div>
+                <div class="car-price">£32,995</div>
+                <div class="car-margin high">+£4,200</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Volvo V60 T6 R-Design</div>
+                <div class="car-reg">EM22 KRD</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>8871</div>
+                <div class="car-price">£33,500</div>
+                <div class="car-margin high">+£3,900</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Mini Cooper S JCW</div>
+                <div class="car-reg">PW23 SCZ</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>3390</div>
+                <div class="car-price">£17,950</div>
+                <div class="car-margin low">+£1,100</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Peugeot 308 GT Pack</div>
+                <div class="car-reg">DC71 HWQ</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>4467</div>
+                <div class="car-price">£12,750</div>
+                <div class="car-margin low">+£850</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Subaru WRX STI</div>
+                <div class="car-reg">XF22 LJA</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>7726</div>
+                <div class="car-price">£27,500</div>
+                <div class="car-margin high">+£3,300</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">BMW M135i xDrive</div>
+                <div class="car-reg">NR23 VCB</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>5531</div>
+                <div class="car-price">£36,995</div>
+                <div class="car-margin high">+£4,650</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Ford Focus ST Estate</div>
+                <div class="car-reg">JT72 EPK</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>2265</div>
+                <div class="car-price">£16,500</div>
+                <div class="car-margin low">+£1,050</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Lexus IS 300h F Sport</div>
+                <div class="car-reg">AG21 MZW</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>9948</div>
+                <div class="car-price">£20,995</div>
+                <div class="car-margin mid">+£2,200</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Cupra Formentor VZ</div>
+                <div class="car-reg">KD23 FRH</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>6659</div>
+                <div class="car-price">£30,500</div>
+                <div class="car-margin high">+£3,800</div>
+            </div>
+        </div>
+
+        <div class="stock-banner">
+            <div class="banner-top">
+                <div class="car-name">Jaguar XE R-Dynamic</div>
+                <div class="car-reg">OT72 NXS</div>
+            </div>
+            <div class="banner-bottom">
+                <div class="car-ref"><span>#</span>1173</div>
+                <div class="car-price">£22,250</div>
+                <div class="car-margin mid">+£2,500</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- BACK BUTTON -->
+    <div class="back-wrap">
+        <a class="back-btn" href="as_home.html">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"/>
+            </svg>
+            Back to Home
+        </a>
+    </div>
+
+    <script>
+        document.querySelectorAll('.stock-banner').forEach(banner => {
+            banner.addEventListener('touchstart', () => {
+                banner.classList.add('tapped');
+            }, { passive: true });
+            banner.addEventListener('touchend', () => {
+                setTimeout(() => banner.classList.remove('tapped'), 250);
+            }, { passive: true });
+        });
+    </script>
+
+</body>
+</html>

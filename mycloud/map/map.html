@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Birmingham Shops - Online</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --accent-red: #ff4d4d;
+            --text-dark: #2d3436;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-gradient);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; 
+        }
+
+        .fixed-header-map {
+            position: relative;
+            z-index: 2000;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        header {
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(15px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .map-section {
+            width: 100%;
+            height: 35vh;
+            background: #f0f0f0; 
+        }
+        #map { height: 100%; width: 100%; }
+
+        .list-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            background: rgba(0,0,0,0.05);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .shop-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            color: var(--text-dark);
+        }
+
+        .shop-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .shop-name { 
+            font-weight: 700; 
+            font-size: 1rem; 
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .days-label { 
+            font-size: 0.7rem; 
+            color: #fff; 
+            background: var(--accent-red); 
+            padding: 3px 10px; 
+            border-radius: 20px; 
+            font-weight: 800;
+        }
+
+        .shop-desc { font-size: 0.85rem; color: #636e72; line-height: 1.4; }
+        
+        .back-btn { 
+            color: white; text-decoration: none; font-size: 0.8rem; font-weight: 600;
+            background: rgba(255,255,255,0.2); padding: 7px 15px; border-radius: 20px; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fixed-header-map">
+        <header>
+            <a href="../mycloudhome.html" class="back-btn"><i class="fas fa-arrow-left"></i> Home </a>
+            <div id="shop-count" style="font-size: 0.8rem; font-weight: 600;">Updating...</div>
+        </header>
+
+        <div class="map-section">
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <main class="list-container">
+        <div id="shop-list"></div>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="togeojson.js"></script>
+    <script>
+        // Set view to Birmingham with zoom level 13
+        const map = L.map('map', { zoomControl: false }).setView([52.486, -1.890], 13);
+
+        // ONLINE TILE LAYER: Points to OpenStreetMap global servers
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        function generateSpecificShopKML(numPins) {
+            let kml = '';
+            const locations = [
+                { name: "The Fort", lat: 52.51, lng: -1.82, radiusDeg: 0.008 },
+                { name: "Bullring", lat: 52.486, lng: -1.890, radiusDeg: 0.005 },
+                { name: "Touchwood", lat: 52.413, lng: -1.776, radiusDeg: 0.005 }
+            ];
+            const now = new Date();
+            for (let i = 1; i <= numPins; i++) {
+                const loc = locations[i % locations.length];
+                const diffDays = Math.floor(Math.random() * 25) + 1;
+                const visitDate = new Date();
+                visitDate.setDate(now.getDate() - diffDays);
+                const lat = loc.lat + (Math.random() * 2 - 1) * loc.radiusDeg;
+                const lng = loc.lng + (Math.random() * 2 - 1) * loc.radiusDeg;
+                const formattedTime = visitDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+                kml += `<Placemark><name>${loc.name} Shop ${i}</name><description>Visited ${diffDays} days ago at ${formattedTime}.</description><Point><coordinates>${lng},${lat},0</coordinates></Point></Placemark>`;
+            }
+            return kml;
+        }
+
+        const kmlDocString = `<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2"><Document>${generateSpecificShopKML(35)}</Document></kml>`;
+        const geojson = togeojson.kml(new DOMParser().parseFromString(kmlDocString, 'text/xml'));
+        const listDiv = document.getElementById('shop-list');
+        const markerGroup = [];
+
+        L.geoJSON(geojson, {
+            pointToLayer: function (feature, latlng) {
+                const desc = feature.properties.description || "";
+                const match = desc.match(/Visited (\d+) days ago/);
+                const daysAgoValue = match ? match[1] : "1"; 
+
+                const marker = L.marker(latlng).bindPopup(`<b>${feature.properties.name}</b><br>${daysAgoValue} days ago`);
+                
+                const card = document.createElement('div');
+                card.className = 'shop-card';
+                card.innerHTML = `<div class="shop-header">
+                        <div class="shop-name"><i class="fas fa-store" style="color:var(--accent-red)"></i> ${feature.properties.name}</div>
+                        <div class="days-label">${daysAgoValue}d ago</div>
+                    </div><div class="shop-desc">${desc}</div>`;
+                
+                card.onclick = () => {
+                    map.flyTo(latlng, 15);
+                    marker.openPopup();
+                    window.scrollTo({top: 0, behavior: 'smooth'});
+                };
+                
+                listDiv.appendChild(card);
+                markerGroup.push(marker);
+                return marker;
+            }
+        }).addTo(map);
+
+        document.getElementById('shop-count').textContent = markerGroup.length + " Locations Found";
+
+        if (markerGroup.length > 0) {
+            const group = new L.featureGroup(markerGroup);
+            map.fitBounds(group.getBounds().pad(0.1));
+        }
+    </script>
+</body>
+</html>

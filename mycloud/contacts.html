@@ -1,0 +1,942 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Contact Directory - MyCloudHome</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0V4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* General styles copied from MyCloudHome Dashboard for consistency */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background-color: #4a0080;
+            min-height: 100vh;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        
+
+        
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 0.75rem 0.6rem 6rem;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
+            overflow: hidden;
+        }
+        }
+        
+        .header {
+            width: 100%;
+            margin-bottom: 0.75rem;
+            text-align: left;
+            opacity: 0;
+            animation: slideDown 0.8s ease-out 0.2s forwards;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 0.6rem;
+            background: none;
+            padding: 0.25rem 0;
+        }
+        
+        .header h1 {
+            font-size: 1.4em;
+            margin-bottom: 0;
+            font-weight: 700;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            flex-grow: 1;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* New button style for "Back to Dashboard" */
+        .back-btn {
+            background: linear-gradient(135deg, #4CAF50, #2E8B57);
+            color: white;
+            border: none;
+            padding: 0.5rem 0.9rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 14px rgba(76, 175, 80, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(76, 175, 80, 0.4);
+            background: linear-gradient(135deg, #4CAF50, #228B22);
+        }
+
+        .back-btn:active {
+            transform: translateY(0);
+        }
+        
+        .main-content {
+            padding: 0;
+            width: 100%;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: nowrap;
+            align-items: center;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 0;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 11px 38px 11px 14px;
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            border-radius: 25px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+        
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.65);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.25);
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.75);
+        }
+        
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24); /* Logout button gradient */
+            color: white;
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(255, 107, 107, 0.4);
+            background: linear-gradient(135deg, #ff5252, #d63031);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            border: 1.5px solid rgba(255, 255, 255, 0.35);
+            box-shadow: none;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+            box-shadow: none;
+        }
+        
+        .contacts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .contact-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 18px 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .contact-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .contact-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #88c0d0 0%, #a3be8c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 17px;
+            margin-right: 13px;
+            flex-shrink: 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .contact-name {
+            font-size: 1.15em;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        
+        .contact-info {
+            margin-bottom: 4px;
+        }
+        
+        .contact-detail {
+            margin-bottom: 6px;
+            display: flex;
+            align-items: flex-start;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.93em;
+            line-height: 1.45;
+        }
+        
+        .contact-detail strong {
+            color: #ffffff;
+            min-width: 66px;
+            flex-shrink: 0;
+            font-weight: 600;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .empty-state h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 14px;
+            flex-wrap: nowrap;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 14px 10px;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+            text-align: center;
+            flex: 1;
+            min-width: 0;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
+        
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        
+        .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 3px;
+            font-size: 0.82em;
+        }
+
+        /* Footer styles copied from MyCloudHome Dashboard */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.75rem 0 0.5rem;
+            text-align: center;
+            z-index: 1000;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 0.55rem 1.6rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 14px rgba(255, 107, 107, 0.3);
+            margin-bottom: 0.3rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(255, 107, 107, 0.4);
+            background: linear-gradient(135deg, #ff5252, #d63031);
+        }
+
+        .logout-btn:active {
+            transform: translateY(0);
+        }
+
+        .copyright {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+            font-weight: 300;
+        }
+        
+        @media (max-width: 768px) {
+            .container { padding: 0.75rem 0.6rem 6rem; }
+        }
+
+        @media (max-width: 480px) {
+            .header { flex-direction: row; align-items: center; }
+            .header h1 { font-size: 1.3rem; }
+        }
+
+        /* Lock to portrait on mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .container { padding-bottom: 5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <!-- Back to Dashboard button -->
+            <button class="back-btn" onclick="location.href='mycloudhome.html';">
+                <i class="fas fa-arrow-left"></i> Home 
+            </button>
+            <h1>📱 Contact Directory</h1>
+        </div>
+        
+        <div class="main-content">
+            <div class="stats" id="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalContacts">0</div>
+                    <div class="stat-label">Total Contacts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="filteredContacts">0</div>
+                    <div class="stat-label">Filtered Results</div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search contacts by name, email, phone, or location...">
+                    <span class="search-icon">🔍</span>
+                </div>
+                <button class="btn btn-secondary" onclick="showAllContacts()">
+                    <i class="fas fa-users"></i> Show All Contacts
+                </button>
+            </div>
+            
+            <div id="contactsContainer">
+                <div class="empty-state">
+                    <h3>No contacts found</h3>
+                    <p>Click "Show All Contacts" to view the directory!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <button class="logout-btn" onclick="location.href='login.html';">
+            <svg width="16" height="16" viewBox="0 0 512 512" style="fill: currentColor;">
+                <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"/>
+            </svg>
+            Log Out
+        </button>
+        <p class="copyright">© 2025 myCloud remote network solutions LLC</p>
+    </div>
+
+    <script>
+        let contacts = [];
+        let filteredContacts = [];
+        let allContactsVisible = false;
+
+        // Initialize with West Midlands contacts
+        function initSampleData() {
+            contacts = [
+                {
+                    firstName: "Emily",
+                    lastName: "Thompson",
+                    email: "emily.thompson@birminghamtech.co.uk",
+                    phone: "+44 121 456 7890",
+                    company: "Birmingham Tech Solutions",
+                    address: "15 Colmore Row, Birmingham B3 2BH",
+                    notes: "Software development manager, specialises in fintech"
+                },
+                {
+                    firstName: "James",
+                    lastName: "Williams",
+                    email: "james.williams@coventryuni.ac.uk",
+                    phone: "+44 24 7652 3000",
+                    company: "Coventry University",
+                    address: "Priory Street, Coventry CV1 5FB",
+                    notes: "Senior lecturer in automotive engineering"
+                },
+                {
+                    firstName: "Sarah",
+                    lastName: "Jones",
+                    email: "sarah.jones@wolverhamptonlaw.com",
+                    phone: "+44 1902 123456",
+                    company: "Wolverhampton Legal Partners",
+                    address: "Queen Street, Wolverhampton WV1 1ES",
+                    notes: "Commercial solicitor, property law specialist"
+                },
+                {
+                    firstName: "Vanessa - Ness",
+                    lastName: "Dobson",
+                    email: "vanessa_d87@gmail.com",
+                    phone: "+447 38553 1831",
+                    company: "Sandwell General Hospital - Sandwell Borough",
+                    address: " ",
+                    notes: "Matthew Mitchell BMW - S8 MRM - Touchwood Center..."
+                },
+                {
+                    firstName: "Rachel",
+                    lastName: "Davis",
+                    email: "rachel.davis@walsallmarketing.co.uk",
+                    phone: "+44 1922 654321",
+                    company: "Walsall Digital Marketing",
+                    address: "Bridge Street, Walsall WS1 1JQ",
+                    notes: "Creative director, social media specialist"
+                },
+                {
+                    firstName: "David",
+                    lastName: "Wilson",
+                    email: "david.wilson@dudleycollege.ac.uk",
+                    phone: "+44 1384 363000",
+                    company: "Dudley College",
+                    address: "The Broadway, Dudley DY1 4AS",
+                    notes: "Head of construction department, apprenticeship coordinator"
+                },
+                {
+                    firstName: "Lisa",
+                    lastName: "Taylor",
+                    email: "lisa.taylor@suttonpark.gov.uk",
+                    phone: "+44 121 464 8888",
+                    company: "Sutton Coldfield Town Council",
+                    address: "Council House, Sutton Coldfield B73 6AB",
+                    notes: "Environmental planning officer, heritage conservation"
+                },
+                {
+                    firstName: "Andrew",
+                    lastName: "Miller",
+                    email: "andrew.miller@solihullbusiness.com",
+                    phone: "+44 121 704 6000",
+                    company: "Solihull Business Centre",
+                    address: "Endeavour House, Solihull B91 2BD",
+                    notes: "Business development consultant, startup mentor"
+                },
+                {
+                    firstName: "Jennifer",
+                    lastName: "Garcia",
+                    email: "jennifer.garcia@tamworthschool.org.uk",
+                    phone: "+44 1827 213300",
+                    company: "Tamworth Grammar School",
+                    address: "Lichfield Street, Tamworth B79 7QZ",
+                    notes: "Head of mathematics, GCSE coordinator"
+                },
+                {
+                    firstName: "Robert",
+                    lastName: "Anderson",
+                    email: "robert.anderson@rugbybuilders.co.uk",
+                    phone: "+44 1788 544466",
+                    company: "Rugby Construction Ltd",
+                    address: "Corporation Street, Rugby CV21 2DR",
+                    notes: "Site manager, commercial building projects"
+                },
+                {
+                    firstName: "Amanda",
+                    lastName: "White",
+                    email: "amanda.white@kenilworthart.com",
+                    phone: "+44 1926 864000",
+                    company: "Kenilworth Arts Centre",
+                    address: "Abbey End, Kenilworth CV8 1QJ",
+                    notes: "Gallery curator, contemporary art specialist"
+                },
+                {
+                    firstName: "Christopher",
+                    lastName: "Jackson",
+                    email: "chris.jackson@leamingtonspa.co.uk",
+                    phone: "+44 1926 456789",
+                    company: "Leamington Spa Tourism Board",
+                    address: "The Parade, Leamington Spa CV32 4BL",
+                    notes: "Tourism development manager, event coordinator"
+                },
+                {
+                    firstName: "Michelle",
+                    lastName: "Harris",
+                    email: "michelle.harris@nuneaton.nhs.uk",
+                    phone: "+44 24 7635 1234",
+                    company: "George Eliot Hospital",
+                    address: "College Street, Nuneaton CV10 7DJ",
+                    notes: "Senior nurse practitioner, emergency department"
+                },
+                {
+                    firstName: "Daniel",
+                    lastName: "Martin",
+                    email: "daniel.martin@stratfordtheatre.org.uk",
+                    phone: "+44 1789 403493",
+                    company: "Royal Shakespeare Company",
+                    address: "Waterside, Stratford-upon-Avon CV37 6BB",
+                    notes: "Technical director, stage management"
+                },
+                {
+                    firstName: "Karen",
+                    lastName: "Thompson",
+                    email: "karen.thompson@redditch.gov.uk",
+                    phone: "+44 1527 64252",
+                    company: "Redditch Borough Council",
+                    address: "Town Hall, Redditch B98 8AH",
+                    notes: "Planning officer, residential development"
+                },
+                {
+                    firstName: "Steven",
+                    lastName: "Clark",
+                    email: "steven.clark@aston.ac.uk",
+                    phone: "+44 121 204 3000",
+                    company: "Aston University",
+                    address: "Aston Triangle, Birmingham B4 7ET",
+                    notes: "Research fellow, materials engineering"
+                },
+                {
+                    firstName: "Laura",
+                    lastName: "Lewis",
+                    email: "laura.lewis@banbury.oxon.sch.uk",
+                    phone: "+44 1295 263435",
+                    company: "Banbury School",
+                    address: "Ruskin Road, Banbury OX16 9HY",
+                    notes: "Head of English department, drama coordinator"
+                },
+                {
+                    firstName: "Mark",
+                    lastName: "Robinson",
+                    email: "mark.robinson@warwickuni.ac.uk",
+                    phone: "+44 24 7652 3523",
+                    company: "University of Warwick",
+                    address: "Gibbet Hill, Coventry CV4 7AL",
+                    notes: "Professor of computer science, AI research"
+                },
+                {
+                    firstName: "Helen",
+                    lastName: "Walker",
+                    email: "helen.walker@alcesterhealth.co.uk",
+                    phone: "+44 1789 762207",
+                    company: "Alcester Health Centre",
+                    address: "Bleachfield Street, Alcester B49 5DP",
+                    notes: "Practice manager, community healthcare"
+                },
+                {
+                    firstName: "Paul",
+                    lastName: "Young",
+                    email: "paul.young@bromsgrove.gov.uk",
+                    phone: "+44 1527 881288",
+                    company: "Bromsgrove District Council",
+                    address: "The Council House, Bromsgrove B60 2DW",
+                    notes: "Environmental health officer, food safety inspector"
+                },
+                {
+                    firstName: "Catherine",
+                    lastName: "Hall",
+                    email: "catherine.hall@birminghammuseum.org.uk",
+                    phone: "+44 121 348 8000",
+                    company: "Birmingham Museum & Art Gallery",
+                    address: "Chamberlain Square, Birmingham B3 3DH",
+                    notes: "Senior curator, Victorian collections"
+                },
+                {
+                    firstName: "Richard",
+                    lastName: "Allen",
+                    email: "richard.allen@stourbridge.co.uk",
+                    phone: "+44 1384 812345",
+                    company: "Stourbridge Glass Museum",
+                    address: "Stuart Road, Stourbridge DY8 4FB",
+                    notes: "Museum director, glass art historian"
+                },
+                {
+                    firstName: "Susan",
+                    lastName: "King",
+                    email: "susan.king@halesowen.sch.uk",
+                    phone: "+44 121 602 7900",
+                    company: "Halesowen College",
+                    address: "Whittingham Road, Halesowen B63 3NA",
+                    notes: "Vice principal, further education specialist"
+                },
+                {
+                    firstName: "Jonathan",
+                    lastName: "Scott",
+                    email: "jonathan.scott@lichfieldcathedral.org",
+                    phone: "+44 1543 306100",
+                    company: "Lichfield Cathedral",
+                    address: "The Close, Lichfield WS13 7LD",
+                    notes: "Cathedral administrator, heritage management"
+                },
+                {
+                    firstName: "Angela",
+                    lastName: "Green",
+                    email: "angela.green@burtonbrewery.com",
+                    phone: "+44 1283 511000",
+                    company: "National Brewery Centre",
+                    address: "Horninglow Street, Burton upon Trent DE14 1NG",
+                    notes: "Head brewer, traditional ale specialist"
+                },
+                {
+                    firstName: "Kevin",
+                    lastName: "Adams",
+                    email: "kevin.adams@cannockchase.gov.uk",
+                    phone: "+44 1543 462621",
+                    company: "Cannock Chase District Council",
+                    address: "Beecroft Road, Cannock WS11 1BG",
+                    notes: "Parks and recreation manager, outdoor activities"
+                },
+                {
+                    firstName: "Nicola",
+                    lastName: "Baker",
+                    email: "nicola.baker@warwick.gov.uk",
+                    phone: "+44 1926 456700",
+                    company: "Warwick District Council",
+                    address: "Riverside House, Warwick CV34 4EX",
+                    notes: "Housing officer, social housing allocation"
+                },
+                {
+                    firstName: "Thomas",
+                    lastName: "Turner",
+                    email: "thomas.turner@jaguar.com",
+                    phone: "+44 24 7640 2121",
+                    company: "Jaguar Land Rover",
+                    address: "Abbey Road, Whitley, Coventry CV3 4LF",
+                    notes: "Design engineer, luxury vehicle development"
+                },
+                {
+                    firstName: "Emma",
+                    lastName: "Phillips",
+                    email: "emma.phillips@heartlands.nhs.uk",
+                    phone: "+44 121 424 2000",
+                    company: "Heartlands Hospital",
+                    address: "Bordesley Green East, Birmingham B9 5SS",
+                    notes: "Senior physiotherapist, sports injury specialist"
+                },
+                {
+                    firstName: "Gary",
+                    lastName: "Campbell",
+                    email: "gary.campbell@bcfc.com",
+                    phone: "+44 121 772 0101",
+                    company: "Birmingham City FC",
+                    address: "St Andrews Stadium, Birmingham B9 4RL",
+                    notes: "Youth academy coach, player development"
+                },
+                {
+                    firstName: "Stephanie",
+                    lastName: "Parker",
+                    email: "stephanie.parker@stoneleigh.ac.uk",
+                    phone: "+44 24 7669 6969",
+                    company: "Harper Adams University",
+                    address: "Newport, Shropshire TF10 8NB",
+                    notes: "Agricultural research scientist, sustainable farming"
+                },
+                {
+                    firstName: "Anthony",
+                    lastName: "Evans",
+                    email: "anthony.evans@bedworth.co.uk",
+                    phone: "+44 24 7631 4031",
+                    company: "Bedworth United FC",
+                    address: "The Oval, Bedworth CV12 0DG",
+                    notes: "Club secretary, grassroots football coordinator"
+                },
+                {
+                    firstName: "Diane",
+                    lastName: "Roberts",
+                    email: "diane.roberts@shipston.warks.sch.uk",
+                    phone: "+44 1608 661954",
+                    company: "Shipston High School",
+                    address: "Darlingscote Road, Shipston-on-Stour CV36 4HJ",
+                    notes: "Deputy headteacher, special educational needs coordinator"
+                },
+                {
+                    firstName: "Matthew",
+                    lastName: "Mitchell",
+                    email: "matthew.mitchell",
+                    phone: "+44 121 704 8001",
+                    company: "Sandwell Metropolitan Borough Council",
+                    address: "Council House, Sandwell",
+                    notes: "Traffic management engineer, transport planning"
+                },
+                {
+                    firstName: "Caroline",
+                    lastName: "Wood",
+                    email: "caroline.wood@coleshill.co.uk",
+                    phone: "+44 1675 464646",
+                    company: "Coleshill Town Council",
+                    address: "Town Hall, High Street, Coleshill B46 3BP",
+                    notes: "Town clerk, community event organiser"
+                },
+                {
+                    firstName: "Simon",
+                    lastName: "Carter",
+                    email: "simon.carter@henleyinarden.org.uk",
+                    phone: "+44 1564 795815",
+                    company: "Henley-in-Arden Heritage Trust",
+                    address: "High Street, Henley-in-Arden B95 5AT",
+                    notes: "Heritage officer, medieval architecture specialist"
+                },
+                {
+                    firstName: "Julie",
+                    lastName: "Cooper",
+                    email: "julie.cooper@southam.college.ac.uk",
+                    phone: "+44 1926 812560",
+                    company: "Southam College",
+                    address: "Welsh Road West, Southam CV47 0JW",
+                    notes: "Head of science department, chemistry teacher"
+                },
+                {
+                    firstName: "Neil",
+                    lastName: "Murphy",
+                    email: "neil.murphy@atherstone.co.uk",
+                    phone: "+44 1827 712034",
+                    company: "Atherstone Town FC",
+                    address: "Sheepy Road, Atherstone CV9 1HF",
+                    notes: "Groundskeeper, pitch maintenance specialist"
+                },
+                {
+                    firstName: "Victoria",
+                    lastName: "Price",
+                    email: "victoria.price@studley.warks.sch.uk",
+                    phone: "+44 1527 852105",
+                    company: "Studley High School",
+                    address: "Crooks Lane, Studley B80 7QU",
+                    notes: "Art teacher, community art project coordinator"
+                },
+                {
+                    firstName: "Graham",
+                    lastName: "Ward",
+                    email: "graham.ward@polesworth.co.uk",
+                    phone: "+44 1827 892378",
+                    company: "Polesworth Abbey",
+                    address: "Abbey Green, Polesworth B78 1EG",
+                    notes: "Site manager, historical preservation"
+                },
+                {
+                    firstName: "Samantha",
+                    lastName: "Hughes",
+                    email: "samantha.hughes@kingsbury.water.co.uk",
+                    phone: "+44 1827 872266",
+                    company: "Kingsbury Water Park",
+                    address: "Bodymoor Heath Lane, Kingsbury B78 2LR",
+                    notes: "Park warden, wildlife conservation officer"
+                },
+                {
+                    firstName: "Ian",
+                    lastName: "Bennett",
+                    email: "ian.bennett@meriden.parish.gov.uk",
+                    phone: "+44 1676 522474",
+                    company: "Meriden Parish Council",
+                    address: "Village Hall, Meriden CV7 7LN",
+                    notes: "Parish councillor, local history society chair"
+                },
+                {
+                    firstName: "Rebecca",
+                    lastName: "Foster",
+                    email: "rebecca.foster@knowle.solihull.sch.uk",
+                    phone: "+44 1564 776765",
+                    company: "Knowle C of E Primary School",
+                    address: "School Road, Knowle B93 0JE",
+                    notes: "Headteacher, early years education specialist"
+                }
+            ];
+            filteredContacts = [];
+            displayContacts();
+            updateStats();
+        }
+
+        function displayContacts() {
+            const container = document.getElementById('contactsContainer');
+            
+            if (filteredContacts.length === 0 && !allContactsVisible) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>Contact Directory Ready</h3>
+                        <p>Click "Show All Contacts" to view the entire list or type anything in the search bar to filter</p>
+                    </div>
+                `;
+                return;
+            }
+
+            if (filteredContacts.length === 0 && allContactsVisible) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No matching contacts</h3>
+                        <p>Try adjusting your search terms or clear the search to see all contacts</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const contactsHTML = filteredContacts.map((contact, index) => `
+                <div class="contact-card">
+                    <div class="contact-header">
+                        <div class="contact-avatar">
+                            ${contact.firstName.charAt(0).toUpperCase()}${contact.lastName.charAt(0).toUpperCase()}
+                        </div>
+                        <h3 class="contact-name">${contact.firstName} ${contact.lastName}</h3>
+                    </div>
+                    <div class="contact-info">
+                        ${contact.email ? `<div class="contact-detail"><strong>Email:</strong> ${contact.email}</div>` : ''}
+                        ${contact.phone ? `<div class="contact-detail"><strong>Phone:</strong> ${contact.phone}</div>` : ''}
+                        ${contact.company ? `<div class="contact-detail"><strong>Company:</strong> ${contact.company}</div>` : ''}
+                        ${contact.address ? `<div class="contact-detail"><strong>Address:</strong> ${contact.address}</div>` : ''}
+                        ${contact.notes ? `<div class="contact-detail"><strong>Notes:</strong> ${contact.notes}</div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = `<div class="contacts-grid">${contactsHTML}</div>`;
+        }
+
+        function filterContacts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            if (!searchTerm && !allContactsVisible) {
+                filteredContacts = [];
+            } else if (!searchTerm) {
+                filteredContacts = contacts.map((contact, index) => ({
+                    ...contact,
+                    originalIndex: index
+                }));
+            } else {
+                filteredContacts = contacts
+                    .map((contact, index) => ({ ...contact, originalIndex: index }))
+                    .filter(contact => 
+                        contact.firstName.toLowerCase().includes(searchTerm) ||
+                        contact.lastName.toLowerCase().includes(searchTerm) ||
+                        (contact.email && contact.email.toLowerCase().includes(searchTerm)) ||
+                        (contact.phone && contact.phone.toLowerCase().includes(searchTerm)) ||
+                        (contact.company && contact.company.toLowerCase().includes(searchTerm)) ||
+                        (contact.address && contact.address.toLowerCase().includes(searchTerm)) ||
+                        (contact.notes && contact.notes.toLowerCase().includes(searchTerm))
+                    );
+                allContactsVisible = true;
+            }
+            
+            displayContacts();
+            updateStats();
+        }
+
+        function showAllContacts() {
+            allContactsVisible = true;
+            document.getElementById('searchInput').value = '';
+            filteredContacts = contacts.map((contact, index) => ({
+                ...contact,
+                originalIndex: index
+            }));
+            displayContacts();
+            updateStats();
+        }
+
+        function updateStats() {
+            document.getElementById('totalContacts').textContent = contacts.length;
+            document.getElementById('filteredContacts').textContent = filteredContacts.length;
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', filterContacts);
+
+        // Initialize the app
+        initSampleData();
+    </script>
+</body>
+</html>
