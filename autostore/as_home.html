@@ -395,13 +395,9 @@
         .notepad-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: #1a1a2e;
             display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
+            flex-direction: column;
             z-index: 3000;
             opacity: 0;
             animation: fadeIn 0.3s ease forwards;
@@ -411,119 +407,336 @@
             display: flex;
         }
 
-        .notepad-container {
-            width: 100%;
-            height: 100%;
-            background: var(--bg);
-            display: flex;
-            flex-direction: column;
-            transform: scale(0.95);
-            animation: popIn 0.3s ease 0.1s forwards;
-        }
-
         @keyframes popIn {
             to { 
                 transform: scale(1); 
             }
         }
 
+        /* Notepad Header - App Style */
         .notepad-header {
-            padding: 20px;
-            background: var(--bg);
+            padding: 16px 16px 12px;
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            border-bottom: 2px solid #e94560;
+        }
+
+        .notepad-header-left {
+            display: flex;
             align-items: center;
             gap: 12px;
-            border-bottom: 1px solid var(--border);
         }
 
-        .notepad-logo {
-            width: 300px;
-            height: 80px;
+        .notepad-header-icon {
+            width: 40px;
+            height: 40px;
+            background: #e94560;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .notepad-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+        .notepad-header-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 2;
         }
 
         .notepad-title {
             font-family: 'Rajdhani', sans-serif;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 700;
-            letter-spacing: 0.08em;
-            color: var(--text);
-            text-transform: uppercase;
+            color: #ffffff;
+            letter-spacing: 0.05em;
         }
 
+        .notepad-subtitle {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+            margin-top: 2px;
+        }
+
+        .notepad-close-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .notepad-close-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .notepad-close-btn:active {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Notepad Content Area */
         .notepad-content-wrapper {
             flex: 1;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
-            padding: 20px;
-            background: var(--bg);
+            padding: 16px;
+            background: #0f0f23;
         }
 
-        .notepad-content {
+        /* Note Cards */
+        .note-card {
             background: #ffffff;
             border-radius: 12px;
-            padding: 24px 20px;
-            min-height: 500px;
-            color: #000000;
-            font-family: 'Exo 2', sans-serif;
-            font-size: 15px;
-            line-height: 1.8;
-            white-space: pre-wrap;
+            margin-bottom: 14px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
-        .notepad-close-wrap {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 12px 16px 16px;
+        .note-card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 10px 14px;
             display: flex;
-            justify-content: center;
-            z-index: 3100;
-            background: linear-gradient(to top, var(--bg) 60%, transparent);
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .notepad-close-btn {
-            width: 100%;
-            max-width: 420px;
-            padding: 16px;
-            background: #00e676;
-            border: none;
-            border-radius: 10px;
+        .note-card-title {
             font-family: 'Rajdhani', sans-serif;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 700;
-            letter-spacing: 0.12em;
-            color: #000000;
+            color: #ffffff;
             text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.15s;
-            -webkit-tap-highlight-color: transparent;
-            min-height: 54px;
-            box-shadow: 0 4px 12px rgba(0, 230, 118, 0.3);
+            letter-spacing: 0.05em;
         }
 
-        .notepad-close-btn:active {
-            transform: scale(0.98);
-            background: #00d66a;
-            box-shadow: 0 2px 8px rgba(0, 230, 118, 0.4);
+        .note-card-date {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 10px;
+            color: rgba(255,255,255,0.7);
         }
 
+        .note-card-body {
+            padding: 14px;
+        }
+
+        .note-card-text {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .note-card-text:last-child {
+            margin-bottom: 0;
+        }
+
+        .note-card-text strong {
+            color: #e94560;
+            font-weight: 600;
+        }
+
+        .note-card-text .label {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+
+        .note-card-text .value {
+            display: block;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+        }
+
+        /* Note Images */
+        .note-card-image {
+            width: 100%;
+            margin-top: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .note-card-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+            max-height: 200px;
+        }
+
+        .note-card-image-full {
+            margin: -14px -14px 0 -14px;
+            border-radius: 0;
+        }
+
+        .note-card-image-full img {
+            max-height: 250px;
+        }
+
+        /* Note Tags */
+        .note-card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .note-tag {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: #e8f4ff;
+            color: #1e8fff;
+            font-weight: 600;
+        }
+
+        .note-tag.urgent {
+            background: #ffe8e8;
+            color: #e94560;
+        }
+
+        .note-tag.done {
+            background: #e8ffe8;
+            color: #28a745;
+        }
+
+        /* Divider */
+        .note-divider {
+            height: 1px;
+            background: #e0e0e0;
+            margin: 10px 0;
+        }
+
+        /* Reminder style */
+        .note-reminder {
+            background: #fff9c4;
+            border-left: 3px solid #ffc107;
+            padding: 10px 12px;
+            border-radius: 0 6px 6px 0;
+            margin-top: 10px;
+        }
+
+        .note-reminder-text {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 12px;
+            color: #856404;
+            font-style: italic;
+        }
+
+        /* Password style */
+        .note-password {
+            background: #f5f5f5;
+            border: 1px dashed #ccc;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-top: 8px;
+        }
+
+        .note-password-label {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 10px;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .note-password-value {
+            font-family: monospace;
+            font-size: 14px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        /* Checklist */
+        .note-checklist {
+            list-style: none;
+            padding: 0;
+            margin: 8px 0 0 0;
+        }
+
+        .note-checklist li {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 13px;
+            color: #333;
+            padding: 6px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .note-checklist li:last-child {
+            border-bottom: none;
+        }
+
+        .note-checklist li::before {
+            content: '';
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ccc;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .note-checklist li.checked::before {
+            background: #28a745;
+            border-color: #28a745;
+        }
+
+        .note-checklist li.checked {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        /* Responsive */
         @media screen and (max-width: 360px) {
-            .notepad-logo {
-                width: 240px;
-                height: 64px;
+            .notepad-header {
+                padding: 12px 12px 10px;
             }
 
-            .notepad-content {
-                padding: 20px 16px;
-                font-size: 14px;
+            .notepad-title {
+                font-size: 18px;
+            }
+
+            .notepad-content-wrapper {
+                padding: 12px;
+            }
+
+            .note-card-body {
+                padding: 12px;
+            }
+
+            .note-card-text {
+                font-size: 13px;
+            }
+        }
+
+        @media screen and (min-width: 420px) {
+            .notepad-content-wrapper {
+                padding: 20px;
+                max-width: 500px;
+                margin: 0 auto;
+                width: 100%;
             }
         }
     </style>
@@ -626,44 +839,167 @@
 
     <!-- NOTEPAD POPUP -->
     <div class="notepad-overlay" id="notepadOverlay">
-        <div class="notepad-container">
-            <div class="notepad-header">
-                <div class="notepad-logo">
-                    <img src="ashomelogo.png" alt="AutoStore Logo">
+        <div class="notepad-header">
+            <div class="notepad-header-left">
+                <div class="notepad-header-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                    </svg>
                 </div>
-                <div class="notepad-title">My Notepad - Do not store customer information in this system</div>
-            </div>
-            
-            <div class="notepad-content-wrapper">
-                <div class="notepad-content" id="notepadContent">
-BMW - VIN WBA3B7C05L133884 - new clutch and seatbelt check..
-
-Denise Rathbone, needs insurance documents before finance is returned...
-
-
-
-Dave P.+447382000387 -by Friday
-
-
-New pin 1486 - New tracker app- "Mycloud"
-
-Jenny - Hyundai - p/n 50938839903CC-090 
-
-
-
-Deliveroo marcusg@autostore.co.uk Password MadMax1486
-Just Eat - marcog.... Password MadMax1486.
-Morrisons Marcus... pword MadMax1486
-
-
-
-
+                <div>
+                    <div class="notepad-title">My Notes</div>
+                    <div class="notepad-subtitle">Do not store customer information</div>
                 </div>
             </div>
+            <button class="notepad-close-btn" id="notepadCloseBtn">
+                <svg viewBox="0 0 24 24">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+        </div>
+        
+        <div class="notepad-content-wrapper">
 
-            <div class="notepad-close-wrap">
-                <button class="notepad-close-btn" id="notepadCloseBtn">Close</button>
+            <!-- Note 1: Office Photo -->
+            <div class="note-card">
+                <div class="note-card-image note-card-image-full">
+                    <img src="notepad-photos/Photo3.jpg" alt="Office" loading="lazy">
+                </div>
+                <div class="note-card-body">
+                    <div class="note-card-text">
+                        Stock room - need to reorganize shelves this week. New stock arriving Tuesday.
+                    </div>
+                    <div class="note-card-tags">
+                        <span class="note-tag">Stock Room</span>
+                    </div>
+                </div>
             </div>
+
+            <!-- Note 2: Login Details -->
+            <div class="note-card">
+                <div class="note-card-header" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                    <div class="note-card-title">Login Details</div>
+                    <div class="note-card-date">Last week</div>
+                </div>
+                <div class="note-card-body">
+                    <div class="note-card-text">
+                        New PIN: <strong>1486</strong><br>
+                        New tracker app - "Mycloud"
+                    </div>
+                    <div class="note-password">
+                        <div class="note-password-label">Deliveroo</div>
+                        <div class="note-password-value">marcusg@autostore.co.uk</div>
+                    </div>
+                    <div class="note-password">
+                        <div class="note-password-label">Password</div>
+                        <div class="note-password-value">MadMax1486</div>
+                    </div>
+                    <div class="note-divider"></div>
+                    <div class="note-card-text" style="font-size: 12px; color: #888;">
+                        Just Eat: marcog.... | Morrisons: Marcus...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Note 3: Hand Photo -->
+            <div class="note-card">
+                <div class="note-card-image note-card-image-full">
+                    <img src="notepad-photos/Photo5.jpg" alt="Photo" loading="lazy">
+                </div>
+                <div class="note-card-body">
+                    <div class="note-card-text">
+                        Customer came in with these tattoos - asked about fleet discount. Follow up with email.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Note 4: Jenny Hyundai -->
+            <div class="note-card">
+                <div class="note-card-header" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                    <div class="note-card-title" style="color: #333;">Jenny - Hyundai</div>
+                    <div class="note-card-date" style="color: #666;">Tuesday</div>
+                </div>
+                <div class="note-card-body">
+                    <div class="note-card-text">
+                        <span class="label">Part Number</span>
+                        <span class="value">50938839903CC-090</span>
+                        Order placed - expected delivery 3-5 days.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Note 5: Checklist -->
+            <div class="note-card">
+                <div class="note-card-header" style="background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);">
+                    <div class="note-card-title" style="color: #333;">Friday Checklist</div>
+                    <div class="note-card-date" style="color: #666;">This week</div>
+                </div>
+                <div class="note-card-body">
+                    <ul class="note-checklist">
+                        <li class="checked">Lock up showroom</li>
+                        <li class="checked">Check voicemails</li>
+                        <li>Process refund for Dave P.</li>
+                        <li>Email Denise insurance docs</li>
+                        <li>Update stock list</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Note 6: Street Photo -->
+            <div class="note-card">
+                <div class="note-card-image note-card-image-full">
+                    <img src="notepad-photos/Photo7.jpg" alt="Location" loading="lazy">
+                </div>
+                <div class="note-card-body">
+                    <div class="note-card-text">
+                        Met contact near this junction. Drop-off scheduled for next week. Need to confirm time.
+                    </div>
+                    <div class="note-card-tags">
+                        <span class="note-tag">Meeting</span>
+                        <span class="note-tag urgent">Confirm</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Note 7: Beach Photo -->
+            <div class="note-card">
+                <div class="note-card-image note-card-image-full">
+                    <img src="notepad-photos/Photo4.jpg" alt="Beach" loading="lazy">
+                </div>
+                <div class="note-card-body">
+                    <div class="note-card-text">
+                        Weekend photos - need to delete before anyone sees. Don't want personal stuff on work phone.
+                    </div>
+                    <div class="note-card-tags">
+                        <span class="note-tag urgent">Delete</span>
+                        <span class="note-tag">Personal</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Note 8: Indoor Photo -->
+            <div class="note-card">
+                <div class="note-card-image note-card-image-full">
+                    <img src="notepad-photos/Photo9.jpg" alt="Indoor" loading="lazy">
+                </div>
+                <div class="note-card-body">
+                    <div class="note-card-text">
+                        New office setup - need to finish cable management. Printer still not connected.
+                    </div>
+                    <div class="note-card-tags">
+                        <span class="note-tag">Office</span>
+                        <span class="note-tag done">In Progress</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spacer for bottom padding -->
+            <div style="height: 20px;"></div>
+
         </div>
     </div>
 

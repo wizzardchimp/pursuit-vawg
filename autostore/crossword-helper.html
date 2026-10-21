@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crossword Helper — Pursuit Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --text-dim: #64748b;
+            --blue: #2563eb;
+            --blue-dark: #1d4ed8;
+            --blue-soft: #eff6ff;
+            --green: #10b981;
+            --green-dark: #059669;
+            --green-soft: #ecfdf5;
+            --shadow: 0 8px 30px rgba(37, 99, 235, 0.08);
+            --shadow-lg: 0 20px 50px rgba(15, 23, 42, 0.18);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 1rem 1rem 3rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        /* === TOP BAR / NAV === */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+        }
+
+        .nav-btn svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--blue);
+            color: var(--blue);
+            transform: translateY(-1px);
+        }
+
+        /* === HEADER === */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-top: 0.5rem;
+        }
+
+        .logo-badge {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.3);
+        }
+
+        .logo-badge svg {
+            width: 38px;
+            height: 38px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--text);
+        }
+
+        .title span {
+            color: var(--blue);
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: var(--text-dim);
+            margin-top: 0.35rem;
+            font-weight: 500;
+        }
+
+        /* === SECTIONS === */
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .section-badge {
+            background: var(--blue-soft);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 6px 14px;
+            border-radius: 999px;
+        }
+
+        .section-head h2 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .clue-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+            gap: 12px;
+        }
+
+        .clue-button {
+            position: relative;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px 0;
+            color: var(--blue);
+            font-size: 1.5rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: all 0.2s ease;
+        }
+
+        .clue-button:hover {
+            transform: translateY(-3px);
+            border-color: var(--blue);
+            box-shadow: 0 12px 32px rgba(37, 99, 235, 0.18);
+        }
+
+        .clue-button:active {
+            transform: translateY(-1px);
+        }
+
+        .clue-button.revealed {
+            background: var(--green-soft);
+            border-color: var(--green);
+            color: var(--green-dark);
+        }
+
+        .clue-button.revealed::after {
+            content: '✓';
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--green);
+        }
+
+        /* === VIEWS === */
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+            animation: viewIn 0.3s ease;
+        }
+
+        @keyframes viewIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* === CLUE DETAIL === */
+        .detail-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            box-shadow: var(--shadow-lg);
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .detail-kicker {
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .clue-text {
+            font-size: 1.575rem;
+            line-height: 1.7;
+            color: #000000;
+            font-family: 'Courier New', monospace;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .clue-text.decrypting {
+            color: var(--blue);
+        }
+
+        .letter-chip {
+            display: inline-block;
+            background: var(--blue-soft);
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 5px 14px;
+            border-radius: 999px;
+            margin-bottom: 1.5rem;
+        }
+
+        .answer-display {
+            background: #f8fafc;
+            border: 2px dashed var(--border);
+            border-radius: 14px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            min-height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 8px;
+            transition: border-color 0.3s ease;
+        }
+
+        .answer-display.revealed {
+            border-color: var(--green);
+            background: var(--green-soft);
+        }
+
+        .answer-text {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: 0.25em;
+            color: var(--blue);
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        .answer-text.decrypting {
+            color: var(--blue);
+        }
+
+        .answer-text.done {
+            color: var(--green-dark);
+        }
+
+        /* Timer bar */
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--blue), var(--blue-dark));
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        /* Action buttons */
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 1.25rem;
+        }
+
+        .btn {
+            border: none;
+            padding: 0.9rem 1.5rem;
+            border-radius: 12px;
+            font-size: 0.9375rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 26px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-green {
+            background: linear-gradient(135deg, var(--green), var(--green-dark));
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-green:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-ghost {
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-row .btn {
+            flex: 1;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 1.5rem 0 0;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- HOME / GRID VIEW -->
+        <div class="view active" id="homeView">
+            <div class="topbar">
+                <a href="as_drive.html" class="nav-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17l-5-5 5-5"/><path d="M18 17l-5-5 5-5"/></svg>
+                    Back to Autostore Personal Drive
+                </a>
+            </div>
+
+            <div class="header">
+                <div class="logo-badge">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="18" height="18" rx="3"/>
+                        <line x1="3" y1="9" x2="21" y2="9"/>
+                        <line x1="3" y1="15" x2="21" y2="15"/>
+                        <line x1="9" y1="3" x2="9" y2="21"/>
+                        <line x1="15" y1="3" x2="15" y2="21"/>
+                    </svg>
+                </div>
+                <div class="title">Crossword <span>Helper</span></div>
+                <div class="subtitle">Solve the clues. Crack the case.</div>
+            </div>
+
+            <div class="section">
+                <div class="section-head">
+                    <span class="section-badge">Across</span>
+                    <h2>Horizontal Clues</h2>
+                </div>
+                <div class="clue-grid" id="acrossGrid"></div>
+            </div>
+
+            <div class="section">
+                <div class="section-head">
+                    <span class="section-badge">Down</span>
+                    <h2>Vertical Clues</h2>
+                </div>
+                <div class="clue-grid" id="downGrid"></div>
+            </div>
+
+            <div class="footer">All clues and answers are case-sensitive</div>
+        </div>
+
+        <!-- CLUE DETAIL VIEW -->
+        <div class="view" id="detailView">
+            <div class="topbar">
+                <button class="nav-btn" id="backHomeBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                    Back to clue list
+                </button>
+            </div>
+
+            <div class="detail-card">
+                <div class="detail-kicker" id="detailKicker">ACROSS</div>
+                <div class="detail-title" id="detailTitle">Clue 1</div>
+                <div class="clue-text" id="clueText"></div>
+                <span class="letter-chip" id="letterChip">9 letters</span>
+
+                <div class="answer-display" id="answerDisplay">
+                    <div class="answer-text" id="answerText">••••••••</div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-green" id="revealBtn">Reveal Answer</button>
+                    <div class="btn-row">
+                        <button class="btn btn-primary" id="nextBtn">Next Clue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Crossword clues and answers
+        const clues = {
+            across: {
+                1: { text: "Strong combinations protect online accounts from a hacker.", letters: 8, answer: "PASSWORD" },
+                3: { text: "The act of publishing someone's private personal information online with malicious intent.", letters: 7, answer: "DOXXING" },
+                5: { text: "Stealing a victim's online identity as an imposter to damage their reputation or contact others.", letters: 11, answer: "IMPERSONATE" },
+                8: { text: "A new UK offence for the non-consensual sending of explicit digital images.", letters: 13, answer: "CYBERFLASHING" },
+                10: { text: "Secret monitoring of a victim's online and offline activities using tech.", letters: 12, answer: "SURVEILLANCE" },
+                11: { text: "The R word that often precedes the sharing of intimate images by a former partner.", letters: 7, answer: "REVENGE" },
+                12: { text: "Unwanted behaviour or cruel treatment, described in the forms of psychological or emotional.", letters: 5, answer: "ABUSE" },
+                14: { text: "Gaining unauthorised access to a victim's accounts or devices.", letters: 7, answer: "HACKING" },
+                15: { text: "Software or a device (like a GPS or tag) is often secretly installed to monitor a victim's location.", letters: 7, answer: "TRACKER" }
+            },
+            down: {
+                2: { text: "Blackmail using threats to share intimate images unless demands are met.", letters: 10, answer: "SEXTORTION" },
+                4: { text: "Following and monitoring a victim across digital platforms, often a tactic of coercive control.", letters: 13, answer: "CYBERSTALKING" },
+                6: { text: "Repeated, unwanted contact or conduct online that causes alarm or distress.", letters: 10, answer: "HARASSMENT" },
+                7: { text: "Devices like smart speakers and cameras are often weaponised for tech abuse (Acronym - internet of things).", letters: 3, answer: "IOT" },
+                9: { text: "A technologically-manipulated video or image, often explicit, using another's body, criminalised under the UK's Online Safety Act.", letters: 8, answer: "DEEPFAKE" },
+                13: { text: "The sentence for serious cyber crime offences.", letters: 6, answer: "PRISON" }
+            }
+        };
+
+        let revealedAnswers = new Set();
+        let currentClue = { direction: null, number: null };
+        let currentRevealInterval = null;
+        let currentProgressBar = null;
+
+        // Sequential clue order: all across → all down → home
+        const clueOrder = [
+            ...Object.keys(clues.across).map(n => ({ num: n, dir: 'across' })),
+            ...Object.keys(clues.down).map(n => ({ num: n, dir: 'down' }))
+        ];
+
+        const homeView = document.getElementById('homeView');
+        const detailView = document.getElementById('detailView');
+        const acrossGrid = document.getElementById('acrossGrid');
+        const downGrid = document.getElementById('downGrid');
+        const detailKicker = document.getElementById('detailKicker');
+        const detailTitle = document.getElementById('detailTitle');
+        const clueText = document.getElementById('clueText');
+        const letterChip = document.getElementById('letterChip');
+        const answerText = document.getElementById('answerText');
+        const answerDisplay = document.getElementById('answerDisplay');
+        const revealBtn = document.getElementById('revealBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const backHomeBtn = document.getElementById('backHomeBtn');
+
+        function createClueButton(num, direction) {
+            const btn = document.createElement('button');
+            btn.className = 'clue-button';
+            btn.textContent = num;
+            btn.onclick = () => showClue(num, direction, btn);
+            if (revealedAnswers.has(`${direction}-${num}`)) {
+                btn.classList.add('revealed');
+            }
+            return btn;
+        }
+
+        function buildGrids() {
+            acrossGrid.innerHTML = '';
+            downGrid.innerHTML = '';
+            Object.keys(clues.across).forEach(num => acrossGrid.appendChild(createClueButton(num, 'across')));
+            Object.keys(clues.down).forEach(num => downGrid.appendChild(createClueButton(num, 'down')));
+        }
+
+        function showView(view) {
+            homeView.classList.toggle('active', view === 'home');
+            detailView.classList.toggle('active', view === 'detail');
+        }
+
+        function stopReveal() {
+            if (currentRevealInterval) {
+                clearInterval(currentRevealInterval);
+                currentRevealInterval = null;
+            }
+            if (currentProgressBar) {
+                currentProgressBar.remove();
+            }
+            currentProgressBar = null;
+        }
+
+        function showClue(num, direction, buttonElement) {
+            stopReveal();
+
+            const clue = clues[direction][num];
+            const isRevealed = revealedAnswers.has(`${direction}-${num}`);
+
+            currentClue = { direction, number: num, buttonElement };
+            detailKicker.textContent = direction.toUpperCase();
+            detailTitle.textContent = `Clue ${num}`;
+            clueText.textContent = clue.text;
+            clueText.classList.remove('decrypting');
+            letterChip.textContent = `${clue.letters} letters`;
+
+            answerText.textContent = '•'.repeat(clue.answer.length);
+            answerText.classList.remove('decrypting', 'done');
+            answerDisplay.classList.remove('revealed');
+
+            revealBtn.style.display = 'block';
+            revealBtn.disabled = false;
+            revealBtn.textContent = isRevealed ? 'Revealed' : 'Reveal Answer';
+
+            revealBtn.onclick = () => {
+                if (revealedAnswers.has(`${direction}-${num}`)) return;
+                revealAnswer(clue, buttonElement, direction, num);
+            };
+
+            showView('detail');
+        }
+
+        function revealAnswer(clue, buttonElement, direction, num) {
+            revealBtn.style.display = 'none';
+
+            const answer = clue.answer;
+            const totalLetters = answer.length;
+            const intervalTime = 10000 / totalLetters;
+
+            // Progress bar in the answer display
+            const progressContainer = document.createElement('div');
+            progressContainer.className = 'progress-container';
+            const progressBar = document.createElement('div');
+            progressBar.className = 'progress-bar';
+            progressContainer.appendChild(progressBar);
+            answerDisplay.appendChild(progressContainer);
+            currentProgressBar = progressContainer;
+
+            let currentIndex = 0;
+            answerText.textContent = '';
+            answerText.classList.add('decrypting');
+
+            currentRevealInterval = setInterval(() => {
+                if (!progressContainer.isConnected) {
+                    stopReveal();
+                    return;
+                }
+
+                if (currentIndex < totalLetters) {
+                    const revealedPart = answer.substring(0, currentIndex + 1);
+                    const remainingDots = '•'.repeat(totalLetters - currentIndex - 1);
+                    answerText.textContent = revealedPart + remainingDots;
+                    currentIndex++;
+                    progressBar.style.width = (currentIndex / totalLetters) * 100 + '%';
+                } else {
+                    clearInterval(currentRevealInterval);
+                    currentRevealInterval = null;
+                    answerText.textContent = answer;
+                    answerText.classList.remove('decrypting');
+                    answerText.classList.add('done');
+                    answerDisplay.classList.add('revealed');
+                    progressContainer.remove();
+                    currentProgressBar = null;
+                    if (buttonElement) buttonElement.classList.add('revealed');
+                    revealedAnswers.add(`${direction}-${num}`);
+                    revealBtn.textContent = 'Revealed';
+                    revealBtn.disabled = true;
+                    revealBtn.style.display = 'block';
+                }
+            }, intervalTime);
+        }
+
+        function nextClue() {
+            if (!currentClue.direction) {
+                showView('home');
+                return;
+            }
+
+            const idx = clueOrder.findIndex(c => c.dir === currentClue.direction && c.num === currentClue.number);
+            const nextIdx = idx + 1;
+
+            // Reached last clue → go home
+            if (nextIdx >= clueOrder.length) {
+                backToHome();
+                return;
+            }
+
+            const next = clueOrder[nextIdx];
+            const grid = next.dir === 'across' ? acrossGrid : downGrid;
+            const buttons = grid.querySelectorAll('.clue-button');
+            let targetBtn = null;
+            buttons.forEach(b => {
+                if (b.textContent === next.num) targetBtn = b;
+            });
+
+            if (targetBtn) {
+                showClue(next.num, next.dir, targetBtn);
+            }
+        }
+
+        function backToHome() {
+            stopReveal();
+            buildGrids();
+            showView('home');
+        }
+
+        nextBtn.addEventListener('click', nextClue);
+        backHomeBtn.addEventListener('click', backToHome);
+
+        buildGrids();
+    </script>
+</body>
+</html>

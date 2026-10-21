@@ -25,6 +25,7 @@
             --text-dim:   rgba(232, 244, 255, 0.45);
             --red:        #ff4444;
             --red-dim:    rgba(255, 68, 68, 0.15);
+            --gold:       #ffd700;
         }
 
         html, body {
@@ -266,8 +267,8 @@
             transform: scale(0.98);
         }
 
-        /* === FILE LIST === */
-        .file-list-container {
+        /* === TILE GRID === */
+        .tile-grid-container {
             width: 100%;
             padding: 0 16px;
             position: relative;
@@ -275,7 +276,7 @@
             display: none;
         }
 
-        .file-list-container.show {
+        .tile-grid-container.show {
             display: block;
             animation: fadeIn 0.4s ease forwards;
         }
@@ -301,43 +302,18 @@
             text-transform: uppercase;
         }
 
-        .col-headers {
-            margin-bottom: 8px;
-        }
-
-        .col-headers-inner {
+        .tile-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 0 8px;
-            padding: 0 14px;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
         }
 
-        .col-header {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 9px;
-            font-weight: 600;
-            letter-spacing: 0.18em;
-            color: var(--text-dim);
-            text-transform: uppercase;
-        }
-
-        .col-header.right {
-            text-align: right;
-        }
-
-        .file-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        /* === FILE BANNER === */
-        .file-banner {
+        /* === TILE === */
+        .tile {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 12px 14px;
-            width: 100%;
+            border-radius: 14px;
+            padding: 14px 16px;
             cursor: pointer;
             position: relative;
             overflow: hidden;
@@ -345,89 +321,161 @@
             transition: border-color 0.2s, background 0.2s, transform 0.12s;
             text-decoration: none;
             color: inherit;
-            display: block;
+            min-height: 84px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 14px;
         }
 
-        .file-banner::before {
+        .tile::before {
             content: '';
             position: absolute;
-            left: 0; top: 20%; bottom: 20%;
-            width: 3px;
-            background: var(--blue-dark);
-            border-radius: 0 2px 2px 0;
-            transition: background 0.2s, top 0.2s, bottom 0.2s;
+            top: 0; left: 15%; right: 15%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--blue), transparent);
+            opacity: 0.5;
         }
 
-        .file-banner:active {
+        .tile:active {
             background: var(--surface2);
             border-color: var(--blue);
-            transform: scale(0.985);
+            transform: scale(0.96);
         }
 
-        .file-banner:active::before {
-            background: var(--blue);
-            top: 10%;
-            bottom: 10%;
-        }
-
-        .banner-top {
+        .tile-icon {
+            width: 52px;
+            height: 52px;
+            background: rgba(30, 143, 255, 0.1);
+            border: 1px solid rgba(30, 143, 255, 0.25);
+            border-radius: 12px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 7px;
+            justify-content: center;
+            transition: background 0.2s, border-color 0.2s;
         }
 
-        .file-name {
+        .tile:active .tile-icon {
+            background: rgba(30, 143, 255, 0.22);
+            border-color: var(--blue);
+        }
+
+        .tile-icon svg,
+        .tile-icon i {
+            width: 24px;
+            height: 24px;
+            stroke: var(--blue);
+            fill: none;
+            stroke-width: 1.7;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.2s;
+        }
+
+        .tile:active .tile-icon svg,
+        .tile:active .tile-icon i {
+            stroke: #7fd0ff;
+        }
+
+        .tile-icon.gold {
+            background: rgba(255, 215, 0, 0.15);
+            border-color: rgba(255, 215, 0, 0.4);
+        }
+
+        .tile-icon.gold svg,
+        .tile-icon.gold i {
+            stroke: var(--gold);
+        }
+
+        .tile-icon.red {
+            background: var(--red-dim);
+            border-color: rgba(255, 68, 68, 0.4);
+        }
+
+        .tile-icon.red svg,
+        .tile-icon.red i {
+            stroke: var(--red);
+        }
+
+        .tile-icon.green {
+            background: #00d26a;
+            border-color: rgba(0, 210, 106, 0.7);
+        }
+
+        .tile-icon.green svg,
+        .tile-icon.green i {
+            stroke: none;
+            fill: #0a2418;
+        }
+
+        .tile:active .tile-icon.green svg,
+        .tile:active .tile-icon.green i {
+            stroke: none;
+            fill: #0a2418;
+        }
+
+        .tile-icon.yellow {
+            background: #ffd500;
+            border-color: rgba(255, 213, 0, 0.75);
+        }
+
+        .tile-icon.yellow svg,
+        .tile-icon.yellow i {
+            stroke: #3a2f00;
+            fill: none;
+        }
+
+        .tile:active .tile-icon.yellow svg,
+        .tile:active .tile-icon.yellow i {
+            stroke: #3a2f00;
+            fill: none;
+        }
+
+        .tile-label {
             font-family: 'Rajdhani', sans-serif;
             font-size: 16px;
             font-weight: 700;
             letter-spacing: 0.05em;
             color: var(--text);
             text-transform: uppercase;
-            line-height: 1;
+            text-align: left;
+            line-height: 1.2;
         }
 
-        .file-type {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 11px;
+        .tile-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .tile-deleted {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 9px;
             font-weight: 600;
-            letter-spacing: 0.12em;
-            color: var(--text-dim);
-            background: rgba(30, 143, 255, 0.08);
-            border: 1px solid rgba(30, 143, 255, 0.2);
-            border-radius: 4px;
-            padding: 2px 8px;
+            letter-spacing: 0.08em;
+            color: var(--red);
             text-transform: uppercase;
         }
 
-        .banner-bottom {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 0 8px;
-            align-items: center;
-        }
+        /* Staggered entrance */
+        .tile:nth-child(1) { animation: tileIn 0.4s ease 0.1s both; }
+        .tile:nth-child(2) { animation: tileIn 0.4s ease 0.15s both; }
+        .tile:nth-child(3) { animation: tileIn 0.4s ease 0.2s both; }
+        .tile:nth-child(4) { animation: tileIn 0.4s ease 0.25s both; }
+        .tile:nth-child(5) { animation: tileIn 0.4s ease 0.3s both; }
+        .tile:nth-child(6) { animation: tileIn 0.4s ease 0.35s both; }
+        .tile:nth-child(7) { animation: tileIn 0.4s ease 0.4s both; }
+        .tile:nth-child(8) { animation: tileIn 0.4s ease 0.45s both; }
+        .tile:nth-child(9) { animation: tileIn 0.4s ease 0.5s both; }
+        .tile:nth-child(10) { animation: tileIn 0.4s ease 0.55s both; }
+        .tile:nth-child(11) { animation: tileIn 0.4s ease 0.6s both; }
+        .tile:nth-child(12) { animation: tileIn 0.4s ease 0.65s both; }
 
-        .file-date {
-            font-family: 'Exo 2', sans-serif;
-            font-size: 11px;
-            font-weight: 400;
-            color: var(--text-dim);
-            letter-spacing: 0.06em;
-        }
-
-        .file-date span {
-            color: rgba(232, 244, 255, 0.3);
-            margin-right: 3px;
-            font-size: 10px;
-        }
-
-        .file-size {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text);
-            text-align: right;
-            letter-spacing: 0.04em;
+        @keyframes tileIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         /* === BACK BUTTON === */
@@ -511,11 +559,24 @@
                 gap: 10px;
             }
 
-            .file-name { font-size: 14px; }
-            .file-type { font-size: 10px; padding: 2px 6px; }
-            .file-size { font-size: 12px; }
-            .file-date { font-size: 10px; }
-            .file-list-container { padding: 0 13px; }
+            .tile-grid {
+                gap: 11px;
+            }
+
+            .tile {
+                min-height: 74px;
+                padding: 12px;
+                gap: 11px;
+            }
+
+            .tile-icon {
+                width: 44px;
+                height: 44px;
+            }
+
+            .tile-label {
+                font-size: 14px;
+            }
 
             .logo-wrap {
                 width: 240px;
@@ -529,11 +590,7 @@
         }
 
         @media screen and (min-width: 420px) {
-            .pin-container {
-                padding: 0 20px;
-            }
-
-            .file-list-container {
+            .tile-grid {
                 padding: 0 20px;
             }
         }
@@ -572,8 +629,8 @@
         }
 
         @keyframes popIn {
-            to { 
-                transform: scale(1); 
+            to {
+                transform: scale(1);
                 opacity: 1;
             }
         }
@@ -655,6 +712,15 @@
             color: var(--blue);
         }
 
+        .deleted-notice {
+            color: var(--red);
+            font-family: 'Exo 2', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-top: 12px;
+        }
     </style>
 </head>
 <body>
@@ -696,122 +762,170 @@
         </div>
     </div>
 
-    <!-- FILE LIST -->
-    <div class="file-list-container" id="fileListContainer">
+    <!-- TILE GRID -->
+    <div class="tile-grid-container" id="tileGridContainer">
         <div class="file-count">
-            <div class="badge">8 Files Available</div>
+            <div class="badge">11 Files Available</div>
         </div>
 
-        <div class="col-headers">
-            <div class="col-headers-inner">
-                <div class="col-header">File Name &nbsp;·&nbsp; Type</div>
-                <div class="col-header right">Last Access</div>
-                <div class="col-header right">Size</div>
-            </div>
-        </div>
+        <div class="tile-grid">
 
-        <div class="file-list">
+            <!-- Tile 1: MyCloud (Direct Link) -->
+            <a class="tile" href="../mycloud/login.html">
+                <div class="tile-icon green">
+                    <i class="fas fa-cloud" style="font-size: 26px; stroke: none; fill: #0a2418;"></i>
+                </div>
+                <div class="tile-text">
+                    <div class="tile-label">MyCloud</div>
+                </div>
+            </a>
 
-            <div class="file-banner">
-                <div class="banner-top">
-                    <div class="file-name">pic1</div>
-                    <div class="file-type">JPEG</div>
+            <!-- Tile 2: pic1 -->
+            <div class="tile" data-tile="2">
+                <div class="tile-icon">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21 15 16 10 5 21"/>
+                    </svg>
                 </div>
-                <div class="banner-bottom">
-                    <div class="file-date"><span>•</span>Accessed 2 days ago</div>
-                    <div class="file-size">1,247 KB</div>
-                </div>
-            </div>
-
-            <div class="file-banner">
-                <div class="banner-top">
-                    <div class="file-name">MyCloud Covert Tracker</div>
-                    <div class="file-type">HTML</div>
-                </div>
-                <div class="banner-bottom">
-                    <div class="file-date"><span>•</span>Accessed 5 days ago</div>
-                    <div class="file-size">112 KB</div>
+                <div class="tile-text">
+                    <div class="tile-label">pic1</div>
                 </div>
             </div>
 
-            <div class="file-banner">
-                <div class="banner-top">
-                    <div class="file-name">Box Selfie - Deleted</div>
-                    <div class="file-type">XLSX</div>
-                </div>
-                <div class="banner-bottom">
-                    <div class="file-date"><span>•</span>Deleted 1 day ago</div>
-                    <div class="file-size">2,156 KB</div>
+            <!-- Tile 3: Car Damage - Front -->
+            <div class="tile" data-tile="3">
+                <div class="tile-icon" style="background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22%3E%3Crect fill=%22%23333%22 width=%22200%22 height=%22200%22/%3E%3Cpath fill=%22%23666%22 d=%22M30 120 Q60 80 100 110 Q140 90 170 130 L170 170 L30 170 Z%22/%3E%3Ccircle fill=%22%23999%22 cx=%2280%22 cy=%22140%22 r=%228%22/%3E%3Ccircle fill=%22%23999%22 cx=%22120%22 cy=%22145%22 r=%228%22/%3E%3Cpath stroke=%22%23ff4444%22 stroke-width=%223%22 fill=%22none%22 d=%22M50 100 Q70 95 90 105%22/%3E%3C/svg%3E'); background-size: cover; background-position: center;"></div>
+                <div class="tile-text">
+                    <div class="tile-label">Car Damage - Front</div>
                 </div>
             </div>
 
-            <div class="file-banner">
-                <div class="banner-top">
-                    <div class="file-name">Mandy XXX</div>
-                    <div class="file-type">PDF</div>
+            <!-- Tile 4: Customer Complaint 01 (Deleted) -->
+            <div class="tile" data-tile="4">
+                <div class="tile-icon red">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
                 </div>
-                <div class="banner-bottom">
-                    <div class="file-date"><span>•</span>Deleted 12 days ago</div>
-                    <div class="file-size">563 KB</div>
-                </div>
-            </div>
-
-            <div class="file-banner">
-                <div class="banner-top">
-                    <div class="file-name">BMW Key Card - Daves 320</div>
-                    <div class="file-type">PNG</div>
-                </div>
-                <div class="banner-bottom">
-                    <div class="file-date"><span>•</span>Deleted 3 days ago</div>
-                    <div class="file-size">4,921 KB</div>
+                <div class="tile-text">
+                    <div class="tile-label">Customer Complaint 01</div>
+                    <div class="tile-deleted">Deleted 3 days ago</div>
                 </div>
             </div>
 
-            <div class="file-banner">
-                <div class="banner-top">
-                    <div class="file-name">Gill Snapchat</div>
-                    <div class="file-type">DOCX</div>
+            <!-- Tile 5: BMW Key Card -->
+            <div class="tile" data-tile="5">
+                <div class="tile-icon" style="background: linear-gradient(135deg, #1a1a2e, #16213e);">
+                    <svg viewBox="0 0 24 24" style="stroke:#ffd700; fill:none;">
+                        <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+                    </svg>
                 </div>
-                <div class="banner-bottom">
-                    <div class="file-date"><span>•</span>Deleted 7 days ago</div>
-                    <div class="file-size">1,092 KB</div>
-                </div>
-            </div>
-
-            <div class="file-banner">
-                <div class="banner-top">
-                    <div class="file-name">97686550998-652729</div>
-                    <div class="file-type">PDF</div>
-                </div>
-                <div class="banner-bottom">
-                    <div class="file-date"><span>•</span>Deleted 15 days ago</div>
-                    <div class="file-size">3,487 KB</div>
+                <div class="tile-text">
+                    <div class="tile-label">BMW Key Card</div>
                 </div>
             </div>
 
-            <div class="file-banner">
-                <div class="banner-top">
-                    <div class="file-name">Clarks invoice for tyres.pdf</div>
-                    <div class="file-type">XLSX</div>
+            <!-- Tile 6: Crossword Helper (Direct Link) -->
+            <a class="tile" href="crossword-helper.html">
+                <div class="tile-icon yellow">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <line x1="3" y1="9" x2="21" y2="9"/>
+                        <line x1="3" y1="15" x2="21" y2="15"/>
+                        <line x1="9" y1="3" x2="9" y2="21"/>
+                        <line x1="15" y1="3" x2="15" y2="21"/>
+                    </svg>
                 </div>
-                <div class="banner-bottom">
-                    <div class="file-date"><span>•</span>Deleted 9 days ago</div>
-                    <div class="file-size">672 KB</div>
+                <div class="tile-text">
+                    <div class="tile-label">Crossword Helper</div>
+                </div>
+            </a>
+
+            <!-- Tile 7: 97686550998-652729 (Deleted) -->
+            <div class="tile" data-tile="7">
+                <div class="tile-icon red">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                    </svg>
+                </div>
+                <div class="tile-text">
+                    <div class="tile-label">97686550998-652729</div>
+                    <div class="tile-deleted">Deleted 5 days ago</div>
+                </div>
+            </div>
+
+            <!-- Tile 8: Clarks Invoice -->
+            <div class="tile" data-tile="8">
+                <div class="tile-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                    </svg>
+                </div>
+                <div class="tile-text">
+                    <div class="tile-label">Clarks Invoice</div>
+                    <div class="tile-deleted">Deleted 1 day ago</div>
+                </div>
+            </div>
+
+            <!-- Tile 9: Tyre Wear Photo -->
+            <div class="tile" data-tile="9">
+                <div class="tile-icon" style="background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22%3E%3Crect fill=%22%23222%22 width=%22200%22 height=%22200%22/%3E%3Ccircle fill=%22none%22 stroke=%22%23555%22 stroke-width=%2220%22 cx=%22100%22 cy=%22100%22 r=%2270%22/%3E%3Ccircle fill=%22none%22 stroke=%22%23888%22 stroke-width=%2230%22 cx=%22100%22 cy=%22100%22 r=%2245%22/%3E%3Cpath fill=%22%23333%22 d=%22M100 30 L110 70 L90 70 Z%22/%3E%3Cpath fill=%22%23333%22 d=%22M100 170 L110 130 L90 130 Z%22/%3E%3Cpath fill=%22%23333%22 d=%22M30 100 L70 110 L70 90 Z%22/%3E%3Cpath fill=%22%23333%22 d=%22M170 100 L130 110 L130 90 Z%22/%3E%3C/svg%3E'); background-size: cover; background-position: center;"></div>
+                <div class="tile-text">
+                    <div class="tile-label">Tyre Wear Photo</div>
+                </div>
+            </div>
+
+            <!-- Tile 10: Insurance Claim (Deleted) -->
+            <div class="tile" data-tile="10">
+                <div class="tile-icon red">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                </div>
+                <div class="tile-text">
+                    <div class="tile-label">Insurance Claim</div>
+                    <div class="tile-deleted">Deleted 3 days ago</div>
+                </div>
+            </div>
+
+            <!-- Tile 11: Workshop Notes (Deleted) -->
+            <div class="tile" data-tile="11">
+                <div class="tile-icon red">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                    </svg>
+                </div>
+                <div class="tile-text">
+                    <div class="tile-label">Workshop Notes</div>
+                    <div class="tile-deleted">Deleted 4 days ago</div>
                 </div>
             </div>
 
         </div>
     </div>
 
-
     <!-- FILE POPUP -->
     <div class="file-popup-overlay" id="filePopup">
         <div class="file-popup-box">
-            <div class="popup-title" id="popupTitle">My File 1</div>
+            <div class="popup-title" id="popupTitle">My File</div>
             <div class="popup-preview">
                 <img id="popupImage" src="" alt="File Preview">
             </div>
             <a href="#" class="popup-view-btn" id="popupViewBtn">View Full Contents</a>
+            <div class="deleted-notice" id="deletedNotice" style="display:none;">File no longer available</div>
             <button class="popup-close-btn" id="popupCloseBtn">Close</button>
         </div>
     </div>
@@ -826,6 +940,7 @@
         </a>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
     <script>
         const pin1 = document.getElementById('pin1');
         const pin2 = document.getElementById('pin2');
@@ -834,7 +949,7 @@
         const verifyBtn = document.getElementById('verifyBtn');
         const errorMsg = document.getElementById('errorMsg');
         const pinContainer = document.getElementById('pinContainer');
-        const fileListContainer = document.getElementById('fileListContainer');
+        const tileGridContainer = document.getElementById('tileGridContainer');
 
         const pinInputs = [pin1, pin2, pin3, pin4];
 
@@ -867,6 +982,12 @@
             });
         });
 
+        // Check session storage for PIN unlock
+        if (sessionStorage.getItem('driveUnlocked') === 'true') {
+            pinContainer.style.display = 'none';
+            tileGridContainer.classList.add('show');
+        }
+
         // Verify PIN
         verifyBtn.addEventListener('click', function() {
             const enteredPin = pin1.value + pin2.value + pin3.value + pin4.value;
@@ -878,14 +999,13 @@
             }
 
             if (enteredPin === '1486') {
-                // Correct PIN - show file list
+                sessionStorage.setItem('driveUnlocked', 'true');
                 pinContainer.style.display = 'none';
-                fileListContainer.classList.add('show');
+                tileGridContainer.classList.add('show');
             } else {
-                // Wrong PIN
                 errorMsg.textContent = 'Incorrect PIN. Please try again.';
                 errorMsg.classList.add('show');
-                
+
                 pinInputs.forEach(inp => {
                     inp.classList.add('error');
                     inp.value = '';
@@ -899,188 +1019,105 @@
         });
 
         // ============================================================
-        //  FILE POPUP FUNCTIONALITY
+        //  TILE DATA
         // ============================================================
-
-        const filePopup     = document.getElementById('filePopup');
-        const popupTitle    = document.getElementById('popupTitle');
-        const popupImage    = document.getElementById('popupImage');
-        const popupViewBtn  = document.getElementById('popupViewBtn');
-        const popupCloseBtn = document.getElementById('popupCloseBtn');
-
-        // ============================================================
-        //  FILE DATA — HOW TO CONFIGURE YOUR FILES
-        // ============================================================
-        //
-        //  Each entry in fileData corresponds to one row in the file
-        //  list above (in order: 1 = first row, 2 = second row, etc.)
-        //
-        //  Each entry has these fields:
-        //
-        //    name       — Display name shown in the popup title bar.
-        //                 This should match the file-name shown in the
-        //                 HTML banner above.
-        //
-        //    preview    — Path to the image shown in the popup preview
-        //                 tile. This can be:
-        //                   • A JPEG/PNG/GIF/WebP image of the actual file
-        //                     (e.g. a photo, or a screenshot of a document)
-        //                   • A generic icon/thumbnail for non-image files
-        //                 Set to null if you have no preview image — a
-        //                 placeholder icon will be shown instead.
-        //
-        //    link       — Where "View Full Contents" button navigates to.
-        //                 For actual files, this should be the path to the
-        //                 file itself (e.g. 'documents/report.pdf').
-        //                 Use '#' as a placeholder if the file isn't
-        //                 linked yet.
-        //
-        //    directLink — (optional) Set to true to skip the popup
-        //                 entirely and navigate straight to `link` when
-        //                 the row is clicked. Useful for links to other
-        //                 HTML pages (like the MyCloud entry below).
-        //
-        // ============================================================
-        //  FILE LOCATIONS — WHERE TO PUT YOUR FILES
-        // ============================================================
-        //
-        //  as_drive.html is your ROOT file. All file paths below are
-        //  RELATIVE to the folder that contains as_drive.html.
-        //
-        //  Examples:
-        //
-        //    Same folder as as_drive.html:
-        //      preview: 'pic1.jpeg'
-        //      link:    'pic1.jpeg'
-        //
-        //    Inside a sub-folder called "images":
-        //      preview: 'images/pic1.jpeg'
-        //      link:    'images/pic1.jpeg'
-        //
-        //    Inside a sub-folder called "documents":
-        //      preview: 'images/report-thumb.png'   ← thumbnail image
-        //      link:    'documents/report.pdf'       ← actual PDF
-        //
-        //    One folder UP from as_drive.html (parent folder):
-        //      preview: '../pic1.jpeg'
-        //      link:    '../pic1.jpeg'
-        //
-        //  For file 1 (pic1.jpeg), the image is expected at:
-        //      [same folder as as_drive.html]/pic1.jpeg
-        //
-        // ============================================================
-
-        const fileData = {
-
-            // --- FILE 1 ---
-            // An image file. The preview displays the image itself.
-            // Place pic1.jpeg in the SAME folder as as_drive.html.
-            // To use a sub-folder instead, change to e.g. 'images/pic1.jpeg'
-            1: {
-                name:    'pic1',
-                preview: 'pic1.jpeg',   // ← image path relative to as_drive.html
-                link:    'pic1.jpeg'    // ← "View Full Contents" opens the full image
-            },
-
-            // --- FILE 2 ---
-            // directLink: true → clicking the row goes straight to login.html,
-            // no popup is shown. Remove directLink (or set to false) to show
-            // a popup with preview instead.
-            2: {
-                name:       'MyCloud',
-                preview:    null,                         // ← no preview image
-                link:       '../mycloud/login.html',
-                directLink: true
-            },
-
-            // --- FILES 3–8 ---
-            // Replace 'file3.png' etc. with your actual thumbnail/preview images.
-            // Replace '#file3' etc. with the real path to each file.
-            // Example for a PDF:
-            //   preview: 'images/report-thumb.png'
-            //   link:    'documents/my-report.pdf'
-            3: { name: 'My File 3', preview: null, link: '#file3' },
-            4: { name: 'My File 4', preview: null, link: '#file4' },
-            5: { name: 'My File 5', preview: null, link: '#file5' },
-            6: { name: 'My File 6', preview: null, link: '#file6' },
-            7: { name: 'My File 7', preview: null, link: '#file7' },
-            8: { name: 'My File 8', preview: null, link: '#file8' }
+        const tileData = {
+            1: { name: 'MyCloud', preview: null, link: '../mycloud/login.html', directLink: true },
+            2: { name: 'pic1', preview: 'pic1.jpeg', link: 'pic1.jpeg' },
+            3: { name: 'Car Damage - Front', preview: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22%3E%3Crect fill=%22%23333%22 width=%22200%22 height=%22200%22/%3E%3Cpath fill=%22%23666%22 d=%22M30 120 Q60 80 100 110 Q140 90 170 130 L170 170 L30 170 Z%22/%3E%3Ccircle fill=%22%23999%22 cx=%2280%22 cy=%22140%22 r=%228%22/%3E%3Ccircle fill=%22%23999%22 cx=%22120%22 cy=%22145%22 r=%228%22/%3E%3Cpath stroke=%22%23ff4444%22 stroke-width=%223%22 fill=%22none%22 d=%22M50 100 Q70 95 90 105%22/%3E%3C/svg%3E', link: '#' },
+            4: { name: 'Customer Complaint 01', preview: null, link: '#', deleted: true },
+            5: { name: 'BMW Key Card', preview: null, link: '#', keycard: true },
+            6: { name: 'Crossword Helper', preview: null, link: 'crossword-helper.html', directLink: true },
+            7: { name: '97686550998-652729', preview: null, link: '#', deleted: true },
+            8: { name: 'Clarks Invoice', preview: null, link: '#', deleted: true, deletedDays: 1 },
+            9: { name: 'Tyre Wear Photo', preview: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22%3E%3Crect fill=%22%23222%22 width=%22200%22 height=%22200%22/%3E%3Ccircle fill=%22none%22 stroke=%22%23555%22 stroke-width=%2220%22 cx=%22100%22 cy=%22100%22 r=%2270%22/%3E%3Ccircle fill=%22none%22 stroke=%22%23888%22 stroke-width=%2230%22 cx=%22100%22 cy=%22100%22 r=%2245%22/%3E%3Cpath fill=%22%23333%22 d=%22M100 30 L110 70 L90 70 Z%22/%3E%3Cpath fill=%22%23333%22 d=%22M100 170 L110 130 L90 130 Z%22/%3E%3Cpath fill=%22%23333%22 d=%22M30 100 L70 110 L70 90 Z%22/%3E%3Cpath fill=%22%23333%22 d=%22M170 100 L130 110 L130 90 Z%22/%3E%3C/svg%3E', link: '#' },
+            10: { name: 'Insurance Claim', preview: null, link: '#', deleted: true },
+            11: { name: 'Workshop Notes', preview: null, link: '#', deleted: true }
         };
 
         // ============================================================
-        //  POPUP OPEN — handles preview image display
+        //  POPUP
         // ============================================================
+        const filePopup = document.getElementById('filePopup');
+        const popupTitle = document.getElementById('popupTitle');
+        const popupImage = document.getElementById('popupImage');
+        const popupViewBtn = document.getElementById('popupViewBtn');
+        const popupCloseBtn = document.getElementById('popupCloseBtn');
+        const deletedNotice = document.getElementById('deletedNotice');
 
-        document.querySelectorAll('.file-banner').forEach((banner, index) => {
-            banner.addEventListener('click', (e) => {
+        document.querySelectorAll('.tile').forEach((tile, index) => {
+            if (tile.tagName === 'A') return; // Skip direct links
+
+            tile.addEventListener('click', (e) => {
                 e.preventDefault();
-                const fileNum = index + 1;
-                const file = fileData[fileNum];
+                const tileNum = index + 1;
+                const data = tileData[tileNum];
 
-                // If directLink is set, skip the popup and navigate directly
-                if (file.directLink) {
-                    window.location.href = file.link;
-                    return;
-                }
-
-                // Set the popup title
-                popupTitle.textContent = file.name;
-
-                // Set the "View Full Contents" button destination
-                popupViewBtn.href = file.link;
-
-                // Handle the preview image:
-                // If a preview path is set, show the image and HIDE the "View Full Contents" button.
-                // If no preview path (null), show a generic file icon placeholder and SHOW the button.
-                if (file.preview) {
-                    popupImage.src = file.preview;
-                    popupImage.style.display = 'block';
-                    popupImage.parentElement.style.background = 'rgba(0,0,0,0.3)';
-                    // Hide the View Full Contents button — image is the preview itself
+                popupTitle.textContent = data.name;
+                popupViewBtn.href = data.link;
+                if (data.deleted) {
+                    deletedNotice.style.display = 'block';
+                    const days = data.deletedDays || 3;
+                    deletedNotice.textContent = `Deleted ${days} day${days > 1 ? 's' : ''} ago`;
                     popupViewBtn.style.display = 'none';
                 } else {
-                    // No preview image — show a generic placeholder icon
-                    popupImage.src = '';
-                    popupImage.style.display = 'none';
-                    popupImage.parentElement.style.background = 'rgba(0,0,0,0.3)';
-                    popupImage.parentElement.innerHTML = `
+                    deletedNotice.style.display = 'none';
+                    popupViewBtn.style.display = 'block';
+                }
+
+                // Restore preview container
+                const previewContainer = popupImage.parentElement;
+                if (!document.getElementById('popupImage')) {
+                    previewContainer.innerHTML = '<img id="popupImage" src="" alt="File Preview">';
+                }
+                const img = document.getElementById('popupImage');
+
+                if (data.keycard) {
+                    // BMW Key Card - show random numbers
+                    img.style.display = 'none';
+                    previewContainer.style.background = 'linear-gradient(135deg, #1a1a2e, #16213e)';
+                    previewContainer.innerHTML = `
+                        <div style="font-family:monospace; font-size:28px; font-weight:700; letter-spacing:4px; color:#ffd700;">
+                            ${Math.floor(100000000000 + Math.random()*900000000000)}
+                        </div>`;
+                } else if (data.preview && data.preview.startsWith('data:image/svg')) {
+                    // SVG preview
+                    img.style.display = 'none';
+                    previewContainer.style.background = 'rgba(0,0,0,0.3)';
+                    previewContainer.innerHTML = `<img src="${data.preview}" style="width:100%;height:100%;object-fit:contain;" alt="Preview">`;
+                } else if (data.preview) {
+                    // Regular image preview
+                    img.src = data.preview;
+                    img.style.display = 'block';
+                    previewContainer.style.background = 'rgba(0,0,0,0.3)';
+                } else {
+                    // No preview - show generic icon
+                    img.style.display = 'none';
+                    previewContainer.style.background = 'rgba(0,0,0,0.3)';
+                    previewContainer.innerHTML = `
                         <svg width="60" height="60" viewBox="0 0 24 24" fill="none"
                              stroke="rgba(30,143,255,0.5)" stroke-width="1.5"
                              stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12
-                                     a2 2 0 0 0 2-2V8z"/>
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                             <polyline points="14 2 14 8 20 8"/>
                         </svg>`;
-                    // Show the View Full Contents button for non-image files
-                    popupViewBtn.style.display = 'block';
                 }
 
                 filePopup.classList.add('show');
             });
         });
 
-        // Close popup via Close button
         popupCloseBtn.addEventListener('click', () => {
             filePopup.classList.remove('show');
-            // Restore image element in case placeholder SVG replaced it
-            if (!document.getElementById('popupImage')) {
-                const preview = filePopup.querySelector('.popup-preview');
-                preview.innerHTML = '<img id="popupImage" src="" alt="File Preview">';
-            }
         });
 
-        // Close popup by clicking the dark overlay background
         filePopup.addEventListener('click', (e) => {
             if (e.target === filePopup) {
                 filePopup.classList.remove('show');
-                if (!document.getElementById('popupImage')) {
-                    const preview = filePopup.querySelector('.popup-preview');
-                    preview.innerHTML = '<img id="popupImage" src="" alt="File Preview">';
-                }
             }
         });
 
-        // Focus first field on page load
+        // Focus first field
         setTimeout(() => {
             pin1.focus();
         }, 1000);

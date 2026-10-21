@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Financial Activity - MyCloudHome</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+            background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+            min-height:100vh; color:#ffffff; overflow-x:hidden; position:relative;
+        }
+        body::before {
+            content:''; position:fixed; inset:0;
+            background:radial-gradient(circle at 20% 80%,rgba(120,119,198,0.3) 0%,transparent 50%),
+                      radial-gradient(circle at 80% 20%,rgba(255,119,198,0.3) 0%,transparent 50%);
+            animation:float 150s ease-in-out infinite; pointer-events:none; z-index:-1;
+        }
+        @keyframes float { 0%,100%{transform:translate(0,0) rotate(0deg);} 33%{transform:translate(30px,-30px) rotate(120deg);} 66%{transform:translate(-20px,20px) rotate(240deg);} }
+        .container { max-width:480px; margin:0 auto; padding:20px; min-height:100vh; }
+        .header { text-align:center; margin-bottom:20px; }
+        .header h1 { font-size:1.8rem; font-weight:700; text-shadow:0 4px 8px rgba(0,0,0,0.2); }
+        .back-btn { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:#fff; padding:8px 14px; border-radius:10px; cursor:pointer; margin-bottom:16px; display:inline-flex; align-items:center; gap:6px; }
+        .section { background:rgba(255,255,255,0.12); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.25); border-radius:18px; padding:16px; margin-bottom:16px; }
+        .section h2 { font-size:1.1rem; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+        .txn { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.1); }
+        .txn:last-child { border-bottom:none; }
+        .txn .meta { font-size:0.85rem; opacity:0.8; }
+        .txn .amount { font-weight:700; }
+        .txn .amount.out { color:#ff6b6b; }
+        .txn .amount.in { color:#4caf50; }
+        .flag { font-size:0.7rem; background:rgba(255,107,107,0.3); padding:2px 6px; border-radius:6px; margin-left:6px; }
+        .wallet { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.1); }
+        .wallet:last-child { border-bottom:none; }
+        .msg { background:rgba(255,255,255,0.08); border-radius:10px; padding:10px; margin-bottom:8px; font-size:0.9rem; }
+        .msg .from { font-weight:700; font-size:0.8rem; opacity:0.8; margin-bottom:4px; }
+        .footer { text-align:center; margin-top:20px; opacity:0.7; font-size:0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="back-btn" onclick="location.href='mycloudhome.html';"><i class="fas fa-arrow-left"></i> Home</button>
+        <div class="header"><h1>Financial Activity</h1></div>
+
+        <div class="section">
+            <h2><i class="fas fa-exchange-alt"></i> Recent Transactions</h2>
+            <div class="txn"><div><div>Online transfer to "M. Mitchell"</div><div class="meta">14 Oct 2026 · 22:14 <span class="flag">SUSPICIOUS</span></div></div><div class="amount out">-£1,250.00</div></div>
+            <div class="txn"><div><div>Crypto purchase (BTC)</div><div class="meta">13 Oct 2026 · 19:42 <span class="flag">SUSPICIOUS</span></div></div><div class="amount out">-£890.00</div></div>
+            <div class="txn"><div><div>Salary deposit</div><div class="meta">12 Oct 2026 · 09:00</div></div><div class="amount in">+£2,340.00</div></div>
+            <div class="txn"><div><div>Card payment - Touchwood</div><div class="meta">11 Oct 2026 · 15:22</div></div><div class="amount out">-£64.50</div></div>
+            <div class="txn"><div><div>Standing order - rent</div><div class="meta">01 Oct 2026 · 00:01</div></div><div class="amount out">-£750.00</div></div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fab fa-bitcoin"></i> Crypto Wallet</h2>
+            <div class="wallet"><span>BTC</span><span>0.0142 BTC (£812.40)</span></div>
+            <div class="wallet"><span>ETH</span><span>0.32 ETH (£540.10)</span></div>
+            <div class="wallet"><span>Last sync</span><span>14 Oct 2026 · 22:30</span></div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-link"></i> Linked Accounts</h2>
+            <div class="wallet"><span>AutoStore Payroll</span><span>marcus@autostore.co.uk</span></div>
+            <div class="wallet"><span>Deliveroo</span><span>marcusg@autostore.co.uk</span></div>
+            <div class="wallet"><span>Just Eat</span><span>marcog....</span></div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-comments"></i> Messages</h2>
+            <div class="msg"><div class="from">M. Mitchell · 14 Oct 2026</div>Send me your location when you get there. Don't forget.</div>
+            <div class="msg"><div class="from">Unknown · 13 Oct 2026</div>Payment received. As agreed.</div>
+        </div>
+
+        <div class="footer">© 2025 myCloud remote network solutions LLC</div>
+    </div>
+</body>
+</html>

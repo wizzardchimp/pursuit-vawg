@@ -369,6 +369,19 @@
 
         passphraseField.focus();
 
+        // Auto-login as soon as "police" is fully typed (no Enter needed)
+        passphraseField.addEventListener('input', function() {
+            const input = passphraseField.value.trim().toLowerCase();
+            if (input === 'police') {
+                welcomePopup.style.display = 'none';
+                terminal.classList.add('unlocked');
+                setTimeout(() => {
+                    loaderWrap.classList.add('visible');
+                    startLoader();
+                }, 200);
+            }
+        });
+
         passphraseField.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 const input = passphraseField.value.trim().toLowerCase();
