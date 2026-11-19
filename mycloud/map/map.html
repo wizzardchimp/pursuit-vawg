@@ -3,134 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#3a1f78">
     <link rel="preload" href="/fonts/exo-2-300.woff2?v=20261119a" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="/fonts/fonts.css?v=20261119a">
     <link rel="stylesheet" href="/css/base.css?v=20261119a">
     <link rel="stylesheet" href="/mycloud/css/all.min.css?v=20261119a">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=20261119a">
-    <title>Birmingham Shops - Online</title>
+    <title>Map Tracker - MyCloudHome</title>
     <link rel="stylesheet" href="./leaflet/leaflet.css" />
     <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --accent-red: #ff4d4d;
-            --text-dark: #2d3436;
-        }
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+        :root{--pink:#ff5fa8;--blue:#4f9bff;--gold:#ffb830;}
+        body{font-family:'Exo 2',-apple-system,'Segoe UI',Roboto,sans-serif;color:#fff;min-height:100vh;-webkit-font-smoothing:antialiased;
+            background:linear-gradient(160deg,#5b6fe0 0%,#7a4fc0 55%,#5a3a9a 100%);background-attachment:fixed;}
+        .wrap{max-width:640px;margin:0 auto;padding:0 14px 24px;}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        .top{position:sticky;top:0;z-index:2000;margin:0 -14px;padding:max(12px,env(safe-area-inset-top)) 14px 12px;
+            background:linear-gradient(180deg,rgba(60,40,140,.96),rgba(70,45,150,.9));-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 8px 24px rgba(20,5,50,.35);}
+        .header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
+        .header h1{font-size:22px;white-space:nowrap;font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;line-height:1.1;}
+        .live{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:800;color:#b8ffd9;background:rgba(52,211,153,.18);padding:6px 11px;border-radius:20px;white-space:nowrap;}
+        .live i{width:8px;height:8px;border-radius:50%;background:#34d399;box-shadow:0 0 0 0 rgba(52,211,153,.7);animation:pulse 1.8s infinite;}
+        @keyframes pulse{70%{box-shadow:0 0 0 9px rgba(52,211,153,0);}100%{box-shadow:0 0 0 0 rgba(52,211,153,0);}}
+        .map-card{border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.3);box-shadow:0 12px 28px rgba(15,5,40,.4);position:relative;}
+        #map{height:34vh;min-height:210px;width:100%;background:#e8e4f0;}
+        .legend{position:absolute;left:10px;bottom:10px;z-index:1000;display:flex;gap:6px;pointer-events:none;}
+        .legend span{font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:12px;background:rgba(25,10,60,.78);display:flex;align-items:center;gap:6px;}
+        .legend b{width:9px;height:9px;border-radius:50%;display:block;}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--primary-gradient);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden; 
-        }
+        .chips{display:flex;gap:8px;overflow-x:auto;padding:12px 0 4px;scrollbar-width:none;}
+        .chips::-webkit-scrollbar{display:none;}
+        .chip{flex-shrink:0;display:flex;align-items:center;gap:7px;padding:9px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.14);color:#fff;font:700 14px 'Exo 2',sans-serif;cursor:pointer;}
+        .chip em{font-style:normal;font-size:12px;background:rgba(255,255,255,.22);padding:1px 8px;border-radius:10px;}
+        .chip.on{background:#fff;color:#3a1f78;border-color:#fff;}
+        .chip.on em{background:rgba(58,31,120,.14);}
 
-        .fixed-header-map {
-            position: relative;
-            z-index: 2000;
-            flex-shrink: 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-
-        header {
-            padding: 12px 15px;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(15px);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            color: white;
-        }
-
-        .map-section {
-            width: 100%;
-            height: 35vh;
-            background: #f0f0f0; 
-        }
-        #map { height: 100%; width: 100%; }
-
-        .list-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 15px;
-            background: rgba(0,0,0,0.05);
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .shop-card {
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            color: var(--text-dark);
-        }
-
-        .shop-header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            margin-bottom: 6px;
-        }
-
-        .shop-name { 
-            font-weight: 700; 
-            font-size: 1rem; 
-            color: var(--text-dark);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .days-label { 
-            font-size: 0.7rem; 
-            color: #fff; 
-            background: var(--accent-red); 
-            padding: 3px 10px; 
-            border-radius: 20px; 
-            font-weight: 800;
-        }
-
-        .shop-desc { font-size: 0.85rem; color: #636e72; line-height: 1.4; }
-        
-        .back-btn { 
-            color: white; text-decoration: none; font-size: 0.8rem; font-weight: 600;
-            background: rgba(255,255,255,0.2); padding: 7px 15px; border-radius: 20px; 
-        }
+        .sec{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.75;margin:14px 4px 8px;}
+        .list{display:flex;flex-direction:column;gap:9px;}
+        .shop{display:flex;align-items:center;gap:13px;padding:12px 14px;border-radius:18px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);cursor:pointer;transition:transform .12s;}
+        .shop:active{transform:scale(.98);background:rgba(255,255,255,.2);}
+        .shop .ic{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 4px 10px rgba(0,0,0,.2);}
+        .shop .tx{flex:1;min-width:0;}
+        .shop .tx b{display:block;font-size:16px;font-weight:700;line-height:1.25;}
+        .shop .tx span{display:block;font-size:13.5px;opacity:.78;margin-top:2px;}
+        .shop .ago{font-size:12px;font-weight:800;padding:5px 11px;border-radius:14px;background:rgba(0,0,0,.25);white-space:nowrap;}
+        .pin{width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.4);}
+        .pin i{transform:rotate(45deg);font-size:12px;color:#fff;}
+        .leaflet-popup-content{font-family:'Exo 2',sans-serif;font-size:14px;margin:12px 14px;}
+        @media (min-width:760px){#map{height:44vh;}}
     </style>
 </head>
 <body>
-
-    <div class="fixed-header-map">
-        <header>
-            <a href="../mycloudhome.html" class="back-btn"><i class="fas fa-arrow-left"></i> Home </a>
-            <div id="shop-count" style="font-size: 0.8rem; font-weight: 600;">Updating...</div>
-        </header>
-
-        <div class="map-section">
-            <div id="map"></div>
+    <div class="wrap">
+        <div class="top">
+            <div class="header">
+                <h1>Map Tracker</h1>
+                <span class="live"><i></i><span id="shop-count">Updating...</span></span>
+            </div>
+            <div class="map-card">
+                <div id="map"></div>
+                <div class="legend"><span><b style="background:var(--pink)"></b>The Fort</span><span><b style="background:var(--blue)"></b>Bullring</span><span><b style="background:var(--gold)"></b>Touchwood</span></div>
+            </div>
         </div>
-    </div>
 
-    <main class="list-container">
-        <div id="shop-list"></div>
-    </main>
+        <div class="chips" id="chips"></div>
+        <div class="sec" id="listTitle">Recent visits</div>
+        <div class="list" id="shop-list"></div>
+    </div>
 
     <script src="./leaflet/leaflet.js"></script>
     <script src="togeojson.js"></script>
     <script>
         // Set view to Birmingham with zoom level 13
         const map = L.map('map', { zoomControl: false }).setView([52.486, -1.890], 13);
+        L.control.zoom({ position: 'topright' }).addTo(map);
 
-        // ONLINE TILE LAYER: Points to OpenStreetMap global servers
         L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
             maxZoom: 19,
-            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+            attribution: 'Tiles &copy; Esri'
         }).addTo(map);
+
+        const STYLE = {
+            'The Fort':  { colour: '#ff5fa8', grad: 'linear-gradient(145deg,#ff7ab8,#d6246e)' },
+            'Bullring':  { colour: '#4f9bff', grad: 'linear-gradient(145deg,#5aa2ff,#2160e0)' },
+            'Touchwood': { colour: '#ffb830', grad: 'linear-gradient(145deg,#ffc94d,#f08a00)' }
+        };
 
         function generateSpecificShopKML(numPins) {
             let kml = '';
@@ -155,42 +112,61 @@
 
         const kmlDocString = `<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2"><Document>${generateSpecificShopKML(35)}</Document></kml>`;
         const geojson = togeojson.kml(new DOMParser().parseFromString(kmlDocString, 'text/xml'));
+
+        const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
+        const visits = [];
+        const seen = {};
+        geojson.features.forEach(f => {
+            if (seen[f.properties.name]) return;   // the converter returns each pin three times
+            seen[f.properties.name] = true;
+            const name = f.properties.name || '';
+            const desc = f.properties.description || '';
+            const m = desc.match(/Visited (\d+) days ago(?: at (\d{2}:\d{2}))?/);
+            const place = Object.keys(STYLE).find(k => name.indexOf(k) === 0) || 'The Fort';
+            const [lng, lat] = f.geometry.coordinates;
+            const days = m ? parseInt(m[1], 10) : 1;
+            const marker = L.marker([lat, lng], {
+                icon: L.divIcon({ className: '', iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -28],
+                    html: `<div class="pin" style="background:${STYLE[place].colour}"><i class="fas fa-store"></i></div>` })
+            }).bindPopup(`<b>${name}</b><br>${days} ${days === 1 ? 'day' : 'days'} ago${m && m[2] ? ' at ' + m[2] : ''}`);
+            visits.push({ name, place, days, time: m && m[2] || '', lat, lng, marker });
+        });
+        visits.sort((a, b) => a.days - b.days);
+
         const listDiv = document.getElementById('shop-list');
-        const markerGroup = [];
+        const chipsDiv = document.getElementById('chips');
+        let active = 'All';
 
-        L.geoJSON(geojson, {
-            pointToLayer: function (feature, latlng) {
-                const desc = feature.properties.description || "";
-                const match = desc.match(/Visited (\d+) days ago/);
-                const daysAgoValue = match ? match[1] : "1"; 
-
-                const marker = L.marker(latlng).bindPopup(`<b>${feature.properties.name}</b><br>${daysAgoValue} days ago`);
-                
-                const card = document.createElement('div');
-                card.className = 'shop-card';
-                card.innerHTML = `<div class="shop-header">
-                        <div class="shop-name"><i class="fas fa-store" style="color:var(--accent-red)"></i> ${feature.properties.name}</div>
-                        <div class="days-label">${daysAgoValue}d ago</div>
-                    </div><div class="shop-desc">${desc}</div>`;
-                
-                card.onclick = () => {
-                    map.flyTo(latlng, 15);
-                    marker.openPopup();
-                    window.scrollTo({top: 0, behavior: 'smooth'});
-                };
-                
+        function render() {
+            listDiv.textContent = '';
+            const shown = visits.filter(v => active === 'All' || v.place === active);
+            const layer = [];
+            visits.forEach(v => { if (shown.includes(v)) { v.marker.addTo(map); layer.push(v.marker); } else map.removeLayer(v.marker); });
+            document.getElementById('listTitle').textContent = (active === 'All' ? 'Recent visits' : active) + ' · ' + shown.length;
+            shown.forEach(v => {
+                const card = el('div', 'shop');
+                const ic = el('div', 'ic'); ic.style.background = STYLE[v.place].grad; ic.appendChild(el('i', 'fas fa-store'));
+                const tx = el('div', 'tx'); tx.appendChild(el('b', '', v.name));
+                tx.appendChild(el('span', '', 'Visited ' + v.days + (v.days === 1 ? ' day' : ' days') + ' ago' + (v.time ? ' at ' + v.time : '')));
+                card.appendChild(ic); card.appendChild(tx); card.appendChild(el('div', 'ago', v.days + 'd ago'));
+                card.addEventListener('click', () => { map.flyTo([v.lat, v.lng], 15); v.marker.openPopup(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
                 listDiv.appendChild(card);
-                markerGroup.push(marker);
-                return marker;
-            }
-        }).addTo(map);
-
-        document.getElementById('shop-count').textContent = markerGroup.length + " Locations Found";
-
-        if (markerGroup.length > 0) {
-            const group = new L.featureGroup(markerGroup);
-            map.fitBounds(group.getBounds().pad(0.1));
+            });
+            if (layer.length) map.fitBounds(L.featureGroup(layer).getBounds().pad(0.1));
         }
+
+        ['All', 'The Fort', 'Bullring', 'Touchwood'].forEach(p => {
+            const n = p === 'All' ? visits.length : visits.filter(v => v.place === p).length;
+            const b = el('button', 'chip' + (p === active ? ' on' : ''), p); b.type = 'button'; b.appendChild(el('em', '', n));
+            b.addEventListener('click', () => { active = p; [...chipsDiv.children].forEach(c => c.classList.toggle('on', c === b)); render(); });
+            chipsDiv.appendChild(b);
+        });
+
+        document.getElementById('shop-count').textContent = visits.length + ' found';
+        render();
+        // size the map once the sticky header has laid out, then frame the pins
+        setTimeout(() => { map.invalidateSize(); render(); }, 250);
+        window.addEventListener('resize', () => map.invalidateSize());
     </script>
     <script src="/js/hints.js?v=20261119a" defer></script>
     <script src="/js/backbar.js?v=20261119a" defer></script>

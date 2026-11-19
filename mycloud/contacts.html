@@ -1,449 +1,84 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#3a1f78">
     <link rel="preload" href="/fonts/exo-2-300.woff2?v=20261119a" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="/fonts/fonts.css?v=20261119a">
     <link rel="stylesheet" href="/css/base.css?v=20261119a">
     <link rel="stylesheet" href="/mycloud/css/all.min.css?v=20261119a">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=20261119a">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>Contact Directory - MyCloudHome</title>
-    <!-- Font Awesome for icons -->
+    <title>Contacts - MyCloudHome</title>
     <style>
-        /* General styles copied from MyCloudHome Dashboard for consistency */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+        body{font-family:'Exo 2',-apple-system,'Segoe UI',Roboto,sans-serif;color:#fff;min-height:100vh;overflow-x:hidden;
+            background:linear-gradient(160deg,#5b6fe0 0%,#7a4fc0 55%,#5a3a9a 100%);background-attachment:fixed;-webkit-font-smoothing:antialiased;}
+        body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+            background:radial-gradient(circle at 15% 85%,rgba(120,119,198,.4),transparent 50%),radial-gradient(circle at 85% 10%,rgba(255,119,198,.32),transparent 50%);}
+        .container{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:max(14px,env(safe-area-inset-top)) 14px 24px;}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background-color: #4a0080;
-            min-height: 100vh;
-            color: #ffffff;
-            overflow-x: hidden;
-            position: relative;
-        }
+        .header{display:flex;align-items:center;gap:12px;padding:6px 2px 14px;}
+        .header h1{font-size:23px;white-space:nowrap;font-weight:800;letter-spacing:-.02em;line-height:1.1;display:flex;align-items:center;}
+        .count-pill{margin-left:auto;font-size:13px;font-weight:700;padding:6px 12px;border-radius:20px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);white-space:nowrap;}
 
-        
+        .toolbar{position:sticky;top:0;z-index:20;margin:0 -14px 12px;padding:8px 14px 10px;
+            background:linear-gradient(180deg,rgba(80,60,170,.92),rgba(80,60,170,.78));-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.12);}
+        .search{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);border-radius:16px;padding:0 14px;}
+        .search i{opacity:.8;font-size:15px;}
+        .search input{flex:1;min-width:0;background:none;border:none;outline:none;color:#fff;font:600 16px 'Exo 2',sans-serif;padding:14px 0;}
+        .search input::placeholder{color:rgba(255,255,255,.7);font-weight:500;}
+        .search .clear{display:none;width:26px;height:26px;border-radius:50%;border:none;background:rgba(255,255,255,.28);color:#fff;font-size:14px;line-height:1;cursor:pointer;}
+        .search.has .clear{display:block;}
+        .row-btns{display:flex;gap:10px;margin-top:10px;}
+        .btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.14);color:#fff;font:700 15px 'Exo 2',sans-serif;cursor:pointer;}
+        .btn.primary{background:linear-gradient(145deg,#c58bff,#6a47ea);border-color:transparent;box-shadow:0 8px 18px rgba(30,10,70,.3);}
+        .btn:active{transform:scale(.97);}
 
-        
-            33% { transform: translate(30px, -30px) rotate(120deg); }
-            66% { transform: translate(-20px, 20px) rotate(240deg); }
-        }
-
-        .container {
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 0.75rem 0.6rem 6rem;
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            min-height: 100vh;
-            position: relative;
-            z-index: 1;
-            background: transparent;
-            border-radius: 0;
-            box-shadow: none;
-            overflow: hidden;
-        }
-        }
-        
-        .header {
-            width: 100%;
-            margin-bottom: 0.75rem;
-            text-align: left;
-            opacity: 0;
-            animation: slideDown 0.8s ease-out 0.2s forwards;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            gap: 0.6rem;
-            background: none;
-            padding: 0.25rem 0;
-        }
-        
-        .header h1 {
-            font-size: 1.4em;
-            margin-bottom: 0;
-            font-weight: 700;
-            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            flex-grow: 1;
-            color: #ffffff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* New button style for "Back to Dashboard" */
-        .back-btn {
-            background: linear-gradient(135deg, #4CAF50, #2E8B57);
-            color: white;
-            border: none;
-            padding: 0.5rem 0.9rem;
-            font-size: 0.8rem;
-            font-weight: 600;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 14px rgba(76, 175, 80, 0.3);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            flex-shrink: 0;
-            white-space: nowrap;
-        }
-
-        .back-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 30px rgba(76, 175, 80, 0.4);
-            background: linear-gradient(135deg, #4CAF50, #228B22);
-        }
-
-        .back-btn:active {
-            transform: translateY(0);
-        }
-        
-        .main-content {
-            padding: 0;
-            width: 100%;
-        }
-        
-        .controls {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-            flex-wrap: nowrap;
-            align-items: center;
-        }
-        
-        .search-box {
-            flex: 1;
-            min-width: 0;
-            position: relative;
-        }
-        
-        .search-box input {
-            width: 100%;
-            padding: 11px 38px 11px 14px;
-            border: 1.5px solid rgba(255, 255, 255, 0.4);
-            border-radius: 25px;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.2);
-            color: #ffffff;
-        }
-        
-        .search-box input::placeholder {
-            color: rgba(255, 255, 255, 0.65);
-        }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: rgba(255, 255, 255, 0.7);
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15);
-            background: rgba(255, 255, 255, 0.25);
-        }
-        
-        .search-icon {
-            position: absolute;
-            right: 13px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: rgba(255, 255, 255, 0.75);
-        }
-        
-        .btn {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24); /* Logout button gradient */
-            color: white;
-            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 30px rgba(255, 107, 107, 0.4);
-            background: linear-gradient(135deg, #ff5252, #d63031);
-        }
-        
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.2);
-            color: #ffffff;
-            border: 1.5px solid rgba(255, 255, 255, 0.35);
-            box-shadow: none;
-        }
-        
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-1px);
-            box-shadow: none;
-        }
-        
-        .contacts-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-            margin-top: 12px;
-        }
-        
-        .contact-card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 16px;
-            padding: 18px 16px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            color: #ffffff;
-        }
-        
-        .contact-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        .contact-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-        
-        .contact-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #88c0d0 0%, #a3be8c 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 17px;
-            margin-right: 13px;
-            flex-shrink: 0;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-        }
-        
-        .contact-name {
-            font-size: 1.15em;
-            font-weight: 700;
-            color: #ffffff;
-            margin: 0;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-        
-        .contact-info {
-            margin-bottom: 4px;
-        }
-        
-        .contact-detail {
-            margin-bottom: 6px;
-            display: flex;
-            align-items: flex-start;
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 0.93em;
-            line-height: 1.45;
-        }
-        
-        .contact-detail strong {
-            color: #ffffff;
-            min-width: 66px;
-            flex-shrink: 0;
-            font-weight: 600;
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .empty-state h3 {
-            font-size: 1.5em;
-            margin-bottom: 15px;
-            color: #ffffff;
-        }
-        
-        .stats {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 14px;
-            flex-wrap: nowrap;
-        }
-        
-        .stat-card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 14px 10px;
-            border-radius: 14px;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
-            text-align: center;
-            flex: 1;
-            min-width: 0;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            color: #ffffff;
-        }
-        
-        .stat-number {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: #ffffff;
-            text-shadow: 0 2px 6px rgba(0,0,0,0.2);
-        }
-        
-        .stat-label {
-            color: rgba(255, 255, 255, 0.8);
-            margin-top: 3px;
-            font-size: 0.82em;
-        }
-
-        /* Footer styles copied from MyCloudHome Dashboard */
-        .footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.25);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 0.75rem 0 0.5rem;
-            text-align: center;
-            z-index: 1000;
-        }
-
-        .logout-btn {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            color: white;
-            border: none;
-            padding: 0.55rem 1.6rem;
-            font-size: 0.9rem;
-            font-weight: 600;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 14px rgba(255, 107, 107, 0.3);
-            margin-bottom: 0.3rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .logout-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 30px rgba(255, 107, 107, 0.4);
-            background: linear-gradient(135deg, #ff5252, #d63031);
-        }
-
-        .logout-btn:active {
-            transform: translateY(0);
-        }
-
-        .copyright {
-            font-size: 0.85rem;
-            opacity: 0.8;
-            margin-top: 0.5rem;
-            font-weight: 300;
-        }
-        
-        @media (max-width: 768px) {
-            .container { padding: 0.75rem 0.6rem 6rem; }
-        }
-
-        @media (max-width: 480px) {
-            .header { flex-direction: row; align-items: center; }
-            .header h1 { font-size: 1.3rem; }
-        }
-
-        /* Lock to portrait on mobile */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .container { padding-bottom: 5rem; }
-        }
+        .letter{position:sticky;top:112px;z-index:5;font-size:13px;font-weight:800;letter-spacing:.1em;padding:10px 6px 6px;color:#ffd1f0;text-transform:uppercase;}
+        .group{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);border-radius:18px;overflow:hidden;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);margin-bottom:6px;}
+        .c{border-top:1px solid rgba(255,255,255,.12);}
+        .c:first-child{border-top:none;}
+        .c-top{display:flex;align-items:center;gap:13px;padding:12px 14px;cursor:pointer;}
+        .c-top:active{background:rgba(255,255,255,.1);}
+        .av{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff;flex-shrink:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 4px 10px rgba(0,0,0,.2);}
+        .nm{flex:1;min-width:0;}
+        .nm b{display:block;font-size:17px;font-weight:700;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+        .nm span{display:block;font-size:13.5px;opacity:.75;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+        .chev{opacity:.6;font-size:14px;transition:transform .2s;}
+        .c.open .chev{transform:rotate(90deg);}
+        .c-det{display:none;padding:2px 14px 14px 73px;}
+        .c.open .c-det{display:block;}
+        .line{display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:1.35;padding:5px 0;overflow-wrap:anywhere;}
+        .line i{width:18px;text-align:center;opacity:.8;margin-top:2px;flex-shrink:0;}
+        .line a{color:#fff;text-decoration:none;border-bottom:1px dotted rgba(255,255,255,.5);}
+        .note{margin-top:8px;padding:10px 12px;border-radius:12px;background:rgba(0,0,0,.2);font-size:14.5px;line-height:1.4;}
+        .note small{display:block;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;opacity:.65;margin-bottom:2px;font-weight:700;}
+        .empty{text-align:center;padding:46px 20px;border-radius:20px;background:rgba(255,255,255,.1);border:1px dashed rgba(255,255,255,.3);}
+        .empty i{font-size:34px;opacity:.8;margin-bottom:12px;display:block;}
+        .empty h3{font-size:20px;margin-bottom:6px;}
+        .empty p{font-size:15px;opacity:.8;line-height:1.4;}
+        @media (min-width:760px){.container{max-width:680px;padding-top:32px;} .letter{top:118px;}}
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <!-- Back to Dashboard button -->
-            <button class="back-btn" onclick="location.href='mycloudhome.html';">
-                <i class="fas fa-arrow-left"></i> Home 
-            </button>
-            <h1>📱 Contact Directory</h1>
+            <h1>Contact Directory</h1>
+            <span class="count-pill" id="countPill">0 contacts</span>
         </div>
-        
-        <div class="main-content">
-            <div class="stats" id="stats">
-                <div class="stat-card">
-                    <div class="stat-number" id="totalContacts">0</div>
-                    <div class="stat-label">Total Contacts</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="filteredContacts">0</div>
-                    <div class="stat-label">Filtered Results</div>
-                </div>
-            </div>
-            
-            <div class="controls">
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Search contacts by name, email, phone, or location...">
-                    <span class="search-icon">🔍</span>
-                </div>
-                <button class="btn btn-secondary" onclick="showAllContacts()">
-                    <i class="fas fa-users"></i> Show All Contacts
-                </button>
-            </div>
-            
-            <div id="contactsContainer">
-                <div class="empty-state">
-                    <h3>No contacts found</h3>
-                    <p>Click "Show All Contacts" to view the directory!</p>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Footer -->
-    <div class="footer">
-        <button class="logout-btn" onclick="location.href='login.html';">
-            <svg width="16" height="16" viewBox="0 0 512 512" style="fill: currentColor;">
-                <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"/>
-            </svg>
-            Log Out
-        </button>
-        <p class="copyright">© 2025 myCloud remote network solutions LLC</p>
+        <div class="toolbar">
+            <label class="search"><i class="fas fa-search"></i>
+                <input type="search" id="searchInput" placeholder="Search name, number, place or notes" autocomplete="off" enterkeyhint="search">
+                <button class="clear" id="clearBtn" type="button" aria-label="Clear search">&times;</button>
+            </label>
+            <div class="row-btns">
+                <button class="btn primary" onclick="showAllContacts()"><i class="fas fa-users"></i> Show all contacts</button>
+            </div>
+        </div>
+
+        <div id="contactsContainer"></div>
     </div>
 
     <script>
@@ -451,7 +86,7 @@
         let filteredContacts = [];
         let allContactsVisible = false;
 
-        // Initialize with West Midlands contacts
+        // West Midlands contacts (data unchanged)
         function initSampleData() {
             contacts = [
                 {
@@ -847,99 +482,92 @@
             updateStats();
         }
 
+
+        const COLOURS = [
+            'linear-gradient(145deg,#ff7ab8,#d6246e)','linear-gradient(145deg,#5aa2ff,#2160e0)','linear-gradient(145deg,#34d399,#0f9d6b)',
+            'linear-gradient(145deg,#ffc94d,#f08a00)','linear-gradient(145deg,#ff7a6b,#d93025)','linear-gradient(145deg,#2ee0d0,#0c8f95)',
+            'linear-gradient(145deg,#a58bff,#6a47ea)'
+        ];
+        const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
+        const clean = v => (v || '').trim();
+        const colourFor = c => COLOURS[(c.firstName.charCodeAt(0) + c.lastName.charCodeAt(0)) % COLOURS.length];
+
+        function detailLine(icon, text, href) {
+            const l = el('div', 'line'); l.appendChild(el('i', 'fas ' + icon));
+            if (href) { const a = el('a', '', text); a.href = href; l.appendChild(a); } else l.appendChild(el('span', '', text));
+            return l;
+        }
+
+        function buildContact(c) {
+            const row = el('div', 'c');
+            const top = el('div', 'c-top');
+            const av = el('div', 'av', c.firstName.charAt(0).toUpperCase() + c.lastName.charAt(0).toUpperCase()); av.style.background = colourFor(c);
+            const nm = el('div', 'nm'); nm.appendChild(el('b', '', c.firstName + ' ' + c.lastName));
+            nm.appendChild(el('span', '', clean(c.company) || clean(c.phone)));
+            top.appendChild(av); top.appendChild(nm); top.appendChild(el('i', 'fas fa-chevron-right chev'));
+            const det = el('div', 'c-det');
+            if (clean(c.phone)) det.appendChild(detailLine('fa-phone', c.phone, 'tel:' + c.phone.replace(/[^+\d]/g, '')));
+            if (clean(c.email)) det.appendChild(detailLine('fa-envelope', c.email, 'mailto:' + c.email));
+            if (clean(c.company)) det.appendChild(detailLine('fa-building', c.company));
+            if (clean(c.address)) det.appendChild(detailLine('fa-location-dot', clean(c.address)));
+            if (clean(c.notes)) { const n = el('div', 'note'); n.appendChild(el('small', '', 'Notes')); n.appendChild(document.createTextNode(c.notes)); det.appendChild(n); }
+            top.addEventListener('click', () => row.classList.toggle('open'));
+            row.appendChild(top); row.appendChild(det);
+            return row;
+        }
+
         function displayContacts() {
-            const container = document.getElementById('contactsContainer');
-            
-            if (filteredContacts.length === 0 && !allContactsVisible) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <h3>Contact Directory Ready</h3>
-                        <p>Click "Show All Contacts" to view the entire list or type anything in the search bar to filter</p>
-                    </div>
-                `;
-                return;
+            const box = document.getElementById('contactsContainer');
+            box.textContent = '';
+            if (filteredContacts.length === 0) {
+                const e = el('div', 'empty'); e.appendChild(el('i', allContactsVisible ? 'fas fa-user-slash' : 'fas fa-address-book'));
+                e.appendChild(el('h3', '', allContactsVisible ? 'No matching contacts' : 'Contact Directory ready'));
+                e.appendChild(el('p', '', allContactsVisible ? 'Try a different search, or clear it to see everyone.' : 'Tap "Show all contacts" to see the whole list, or type in the search bar to filter.'));
+                box.appendChild(e); return;
             }
-
-            if (filteredContacts.length === 0 && allContactsVisible) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <h3>No matching contacts</h3>
-                        <p>Try adjusting your search terms or clear the search to see all contacts</p>
-                    </div>
-                `;
-                return;
-            }
-
-            const contactsHTML = filteredContacts.map((contact, index) => `
-                <div class="contact-card">
-                    <div class="contact-header">
-                        <div class="contact-avatar">
-                            ${contact.firstName.charAt(0).toUpperCase()}${contact.lastName.charAt(0).toUpperCase()}
-                        </div>
-                        <h3 class="contact-name">${contact.firstName} ${contact.lastName}</h3>
-                    </div>
-                    <div class="contact-info">
-                        ${contact.email ? `<div class="contact-detail"><strong>Email:</strong> ${contact.email}</div>` : ''}
-                        ${contact.phone ? `<div class="contact-detail"><strong>Phone:</strong> ${contact.phone}</div>` : ''}
-                        ${contact.company ? `<div class="contact-detail"><strong>Company:</strong> ${contact.company}</div>` : ''}
-                        ${contact.address ? `<div class="contact-detail"><strong>Address:</strong> ${contact.address}</div>` : ''}
-                        ${contact.notes ? `<div class="contact-detail"><strong>Notes:</strong> ${contact.notes}</div>` : ''}
-                    </div>
-                </div>
-            `).join('');
-
-            container.innerHTML = `<div class="contacts-grid">${contactsHTML}</div>`;
+            const sorted = filteredContacts.slice().sort((a, b) => (a.firstName + ' ' + a.lastName).localeCompare(b.firstName + ' ' + b.lastName));
+            let last = '', group = null;
+            sorted.forEach(c => {
+                const L = c.firstName.charAt(0).toUpperCase();
+                if (L !== last) { last = L; box.appendChild(el('div', 'letter', L)); group = el('div', 'group'); box.appendChild(group); }
+                group.appendChild(buildContact(c));
+            });
         }
 
         function filterContacts() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-            
-            if (!searchTerm && !allContactsVisible) {
+            const input = document.getElementById('searchInput');
+            const term = input.value.toLowerCase().trim();
+            document.querySelector('.search').classList.toggle('has', !!input.value);
+            if (!term && !allContactsVisible) {
                 filteredContacts = [];
-            } else if (!searchTerm) {
-                filteredContacts = contacts.map((contact, index) => ({
-                    ...contact,
-                    originalIndex: index
-                }));
+            } else if (!term) {
+                filteredContacts = contacts.map((c, i) => ({ ...c, originalIndex: i }));
             } else {
-                filteredContacts = contacts
-                    .map((contact, index) => ({ ...contact, originalIndex: index }))
-                    .filter(contact => 
-                        contact.firstName.toLowerCase().includes(searchTerm) ||
-                        contact.lastName.toLowerCase().includes(searchTerm) ||
-                        (contact.email && contact.email.toLowerCase().includes(searchTerm)) ||
-                        (contact.phone && contact.phone.toLowerCase().includes(searchTerm)) ||
-                        (contact.company && contact.company.toLowerCase().includes(searchTerm)) ||
-                        (contact.address && contact.address.toLowerCase().includes(searchTerm)) ||
-                        (contact.notes && contact.notes.toLowerCase().includes(searchTerm))
-                    );
+                filteredContacts = contacts.map((c, i) => ({ ...c, originalIndex: i })).filter(c =>
+                    [c.firstName, c.lastName, c.email, c.phone, c.company, c.address, c.notes].some(v => v && v.toLowerCase().includes(term)));
                 allContactsVisible = true;
             }
-            
-            displayContacts();
-            updateStats();
+            displayContacts(); updateStats();
         }
 
         function showAllContacts() {
             allContactsVisible = true;
             document.getElementById('searchInput').value = '';
-            filteredContacts = contacts.map((contact, index) => ({
-                ...contact,
-                originalIndex: index
-            }));
-            displayContacts();
-            updateStats();
+            document.querySelector('.search').classList.remove('has');
+            filteredContacts = contacts.map((c, i) => ({ ...c, originalIndex: i }));
+            displayContacts(); updateStats();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function updateStats() {
-            document.getElementById('totalContacts').textContent = contacts.length;
-            document.getElementById('filteredContacts').textContent = filteredContacts.length;
+            const pill = document.getElementById('countPill');
+            pill.textContent = filteredContacts.length && filteredContacts.length !== contacts.length
+                ? filteredContacts.length + ' of ' + contacts.length : contacts.length + ' contacts';
         }
 
-        // Event listeners
         document.getElementById('searchInput').addEventListener('input', filterContacts);
+        document.getElementById('clearBtn').addEventListener('click', () => { const i = document.getElementById('searchInput'); i.value = ''; filterContacts(); i.focus(); });
 
-        // Initialize the app
         initSampleData();
     </script>
     <script src="/js/hints.js?v=20261119a" defer></script>
