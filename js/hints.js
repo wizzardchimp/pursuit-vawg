@@ -13,8 +13,8 @@
   var STAGES = {
     login: { title: 'AutoStore login', hints: [
       "The username is already filled in. You need Marcus's password.",
-      "The password is three words joined by full stops, and it is about his lunch.",
-      "He was ordering a Nandos: the heat of the sauce, then a drink. Try nandos.spicy.tango"
+      "The password is three words joined by full stops. Look at the leaderboard image: it has a clue on it.",
+      "The clue says nandos spicy tango. Join the three words with full stops: nandos.spicy.tango"
     ]},
     home: { title: 'AutoStore home', hints: [
       "Marcus keeps things in more than one place. Which apps haven't you opened yet?",
@@ -35,17 +35,17 @@
     drive: { title: 'Personal Drive', hints: [
       "Look at the tiles. One looks like an app Marcus uses to keep an eye on someone.",
       "There is also a Crossword Helper. Not every file is a clue.",
-      "MyCloud is the tracker app named in his notes. Open it."
+      "MyCloud is the tracker app named in his notes. The crossword gives you what you need to get in."
     ]},
     crossword: { title: 'Crossword helper', hints: [
       "The helper reveals the answers to the paper crossword, one clue at a time.",
       "The answers are all forms of online and tech-enabled abuse.",
-      "When you have finished, go back to the Personal Drive and open MyCloud."
+      "Finished? Take it back to the Personal Drive."
     ]},
     mclogin: { title: 'MyCloud login', hints: [
       "You need a username and a password for the tracker app.",
-      "People reuse passwords. Look again at the passwords in his Notes.",
-      "Username: thelonerover. Password: the word from his Deliveroo password, ending in 1 (not case sensitive)."
+      "The way in comes from the crossword. The password is on a piece of paper in your pack.",
+      "Username: thelonerover. Password: madmax1 (not case sensitive)."
     ]},
     mchome: { title: 'MyCloud dashboard', hints: [
       "Each tile shows a different way Marcus watches and controls someone. Open them all.",
@@ -66,8 +66,9 @@
       "Controlling, jealous and monitoring messages are signs of coercive control."
     ]},
     mcfinance: { title: 'Financial activity', hints: [
-      "Look at the payments and when they happened.",
-      "Anyone with access to the account can see these notifications."
+      "Look at the payments and when they happened. These are phone notifications.",
+      "Every payment leaves a trail: a notification appears on the phone that made it.",
+      "Synced devices such as an iPad show the same payments, so someone with access to one can see what was spent and where."
     ]},
     mccontacts: { title: 'Contacts', hints: [
       "Use Show All Contacts, then look at the notes on each person.",
