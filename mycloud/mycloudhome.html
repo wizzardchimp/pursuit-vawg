@@ -332,7 +332,7 @@
         .chip{font-size:13px;font-weight:600;padding:7px 12px;border-radius:20px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);}
         .chip b{color:#ffd1f0;}
         .sec{width:100%;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.75;margin:22px 4px 10px;}
-        .feed{width:100%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:20px;overflow:hidden;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
+        .feed{width:100%;margin-bottom:20px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:20px;overflow:hidden;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
         .fi{display:flex;align-items:center;gap:12px;padding:12px 14px;animation:fin .45s ease;}
         .fi + .fi{border-top:1px solid rgba(255,255,255,.14);}
         @keyframes fin{from{opacity:0;transform:translateY(-10px);background:rgba(255,255,255,.2);}to{opacity:1;transform:none;background:transparent;}}
@@ -352,20 +352,27 @@
         .card:nth-child(7) .icon{background:linear-gradient(145deg,#aab2c0,#6b7486);}
         .card p small{display:block;font-size:12.5px;font-weight:500;opacity:.75;margin-top:2px;}
         @media (prefers-reduced-motion:reduce){ .live i,.fi,.hero{animation:none;opacity:1;} }
+        /* header logo */
+        .brandbar{width:100%;display:flex;align-items:center;gap:13px;margin-bottom:18px;padding:2px 2px;opacity:0;animation:fadeInUp .5s ease-out .05s forwards;}
+        .brand-ic{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:25px;color:#fff;background:linear-gradient(145deg,#c58bff,#6a47ea);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 8px 18px rgba(30,10,70,.35);flex-shrink:0;}
+        .brand-tx b{display:block;font-size:27px;font-weight:800;letter-spacing:-.02em;line-height:1.05;}
+        .brand-tx em{font-style:normal;color:#ffd1f0;}
+        .brand-tx small{display:block;font-size:12.5px;opacity:.75;margin-top:2px;font-weight:600;letter-spacing:.02em;}
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Banner -->
-        <div class="banner">
-            <img src="./images/mycloudbanner.png" alt="MyCloudHome Banner" loading="lazy">
-        </div>
+        <div class="brandbar"><span class="brand-ic"><i class="fas fa-cloud"></i></span><span class="brand-tx"><b>my<em>Cloud</em></b><small>Remote network solutions</small></span></div>
 
         <div class="hero">
             <div class="hero-top"><span class="hero-label">Device tracked</span><span class="live"><i></i>LIVE</span></div>
             <h2>iPhone 15 Pro - ness phone</h2>
             <div class="chips"><span class="chip"><b>29</b> photos</span><span class="chip"><b>43</b> contacts</span><span class="chip"><b>3</b> CCTV feeds</span></div>
         </div>
+
+        <div class="sec" style="margin-top:2px;">Live activity</div>
+        <div class="feed" id="feed" aria-live="polite"></div>
 
         <!-- Grid -->
         <div class="grid">
@@ -433,8 +440,6 @@
             </a>
         </div>
 
-        <div class="sec">Live activity</div>
-        <div class="feed" id="feed" aria-live="polite"></div>
     </div>
 
     <p class="copyright" style="text-align:center;padding:18px 0 30px;position:relative;z-index:1;">© 2025 myCloud remote network solutions LLC</p>
