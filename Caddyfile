@@ -1,0 +1,21 @@
+# Web server for The Pursuit - VAWG on Railway (replaces Netlify's _headers / _redirects)
+:{$PORT:8080} {
+	root * /srv
+	encode zstd gzip
+
+	route {
+		# Never serve facilitator material or build leftovers, even if a copy ends up in the image
+		@private path /Facilitator-Guide* /Master* /.git* /.netlify* /Dockerfile /Caddyfile /_headers /_redirects
+		respond @private 404
+
+		# Pages, styles and scripts always revalidate so phones pick up changes straight away
+		@fresh path / *.html /css/* /js/* /fonts/fonts.css
+		header @fresh Cache-Control "no-cache"
+		# Versioned fonts can be cached for a long time
+		@fonts path /fonts/*.woff2 /mycloud/webfonts/*
+		header @fonts Cache-Control "public, max-age=31536000, immutable"
+
+		header X-Content-Type-Options "nosniff"
+		file_server
+	}
+}

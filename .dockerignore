@@ -1,0 +1,13 @@
+.git
+.netlify
+.DS_Store
+**/.DS_Store
+node_modules
+*.pdf
+*.zip
+*.md
+_headers
+_redirects
+LICENSE
+autostore/as_mail-old.html
+Samsung
