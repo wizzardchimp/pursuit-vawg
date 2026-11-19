@@ -426,7 +426,7 @@ const PIN_CODE = '1486';
 const COMPANY_DOMAIN = 'autostore.co.uk';
 
 /* ── EMAIL BANK ─────────────────────────────────────────────
-   13 emails (6 genuine, 7 phishing). Each attempt draws 3 + 3 at random,
+   13 emails (7 genuine, 6 phishing). Each attempt draws 3 + 3 at random,
    so teams in the same room see different emails in a different order.
    To add one: copy an entry. `explain` is what the player is shown. */
 const BANK = [
@@ -584,20 +584,21 @@ const BANK = [
     foot:'AutoStore HR · Internal use only',
     explain:["It comes from your own company domain, autostore.co.uk, so there is no External warning.", "The link goes to the company intranet, and it asks for no login or personal details.", "There is no threat or countdown. It is just a normal reminder."] },
 
-  { id:'trackmate', genuine:false,
-    short:["Look-alike billing site: trackmate-pro-renew.com.", "Countdown, and wants your card details."],
-    from:{name:'TrackMate Pro Billing', addr:'billing@trackmate-pro-renew.com', color:'#d6246e', initial:'T'},
-    to:'marcus@autostore.co.uk', date:'Today, 7:12 AM', subject:'Your phone tracker has been switched OFF',
-    preview:'Your TrackMate Pro subscription has expired. Renew now to keep live location and messages.',
+  { id:'trackmate', genuine:true,
+    short:["Real trackmatepro.com address and link.", "Your own account, no pressure or threats."],
+    from:{name:'TrackMate Pro', addr:'billing@trackmatepro.com', color:'#d6246e', initial:'T'},
+    to:'marcus@autostore.co.uk', date:'Today, 7:12 AM', subject:'Your TrackMate Pro receipt',
+    preview:'Thanks for your payment. Your subscription is active and live location is switched on.',
     banner:{text:'TrackMate Pro', bg:'#a21856', color:'#fff'},
     body:[
-      {warn:'Live tracking stops in 2 hours unless you renew.', red:true},
-      {p:'Dear Customer,'},
-      {p:'Your TrackMate Pro subscription has expired. To keep your live location and message feed, confirm your card details using the button below.'},
-      {btn:{label:'Renew and keep tracking →', url:'https://trackmate-pro-renew.com/billing/update?id=88213', bg:'#d6246e', color:'#fff'}}
+      {p:'Hi Marcus,'},
+      {p:'Thanks for your payment. Your TrackMate Pro subscription is active and live location is switched on for your registered device.'},
+      {box:[['Plan','TrackMate Pro Monthly'],['Device','1 phone'],['Paid','£9.99'],['Card','Visa ••••3847']], bg:'#fff0f7', border:'#f5c2dc'},
+      {btn:{label:'View my account', url:'https://www.trackmatepro.com/account', bg:'#d6246e', color:'#fff'}},
+      {small:'This is an automated receipt. No action is needed.'}
     ],
     foot:'TrackMate Pro Ltd',
-    explain:["The sender is trackmate-pro-renew.com, a billing look-alike, and you cannot check who is behind it.", "\"Dear Customer\", a 2-hour countdown and a request for card details through a link are classic scam signs.", "Secretly tracking another person's phone is stalking, and it is a crime."] },
+    explain:["The sender and the link are both on trackmatepro.com, and it matches the account you signed up with.", "It uses your name and shows the last four digits of your card. It asks for nothing and has no countdown.", "It is genuine, and it shows Marcus is paying to track another person's phone. Secretly tracking someone is stalking, and it is a crime."] },
 
   { id:'cloudalert', genuine:false,
     short:["Fake address: mycloud-secure-verify.net.", "Threat to suspend, wants you to log in."],
