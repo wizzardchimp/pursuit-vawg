@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="native-ui">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preload" href="/fonts/exo-2-300.woff2?v=20261119a" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/fonts/fonts.css?v=20261119a">
+    <link rel="stylesheet" href="/css/base.css?v=20261119a">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=20261119a">
     <title>myMail — AutoStore</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Exo+2:wght@300;400;600&display=swap');
         *{margin:0;padding:0;box-sizing:border-box;}
         :root{
             --blue:#1e8fff;--blue-dark:#0a6fcf;--blue-glow:rgba(30,143,255,0.35);
@@ -15,7 +18,7 @@
             --green:#44ff44;--green-dim:rgba(68,255,68,0.15);--yellow:#ffdd44;
         }
         html,body{width:100%;overflow-x:hidden;}
-        body{background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 0 90px 0;opacity:0;animation:pageIn .6s ease forwards;}
+        body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 0 90px 0;opacity:0;animation:pageIn .6s ease forwards;}
         @keyframes pageIn{to{opacity:1;}}
         body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(30,143,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(30,143,255,.04) 1px,transparent 1px);background-size:32px 32px;pointer-events:none;z-index:0;}
 
@@ -25,7 +28,7 @@
         .logo-wrap img{width:300px;height:80px;object-fit:contain;}
         @keyframes dropIn{to{opacity:1;transform:translateY(0);}}
         .hdr-div{width:90%;height:1px;background:linear-gradient(90deg,transparent,var(--blue),transparent);margin:14px 0 4px;opacity:0;animation:fadeIn .4s ease .5s forwards;}
-        .hdr-sub{font-family:'Rajdhani',sans-serif;font-size:11px;letter-spacing:.22em;color:var(--text-dim);text-transform:uppercase;margin-bottom:24px;opacity:0;animation:fadeIn .4s ease .6s forwards;}
+        .hdr-sub{font-family:var(--font);font-size:11px;letter-spacing:.22em;color:var(--text-dim);text-transform:uppercase;margin-bottom:24px;opacity:0;animation:fadeIn .4s ease .6s forwards;}
 
         /* ── OVERLAYS ── */
         .ov{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto;}
@@ -52,7 +55,7 @@
         svg{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 
         /* ── TEXT ── */
-        .ttl{font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;}
+        .ttl{font-family:var(--font);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;}
         .welcome-ttl{font-size:24px;color:var(--text);}
         .penalty-ttl{font-size:22px;color:var(--red);}
         .timeout-ttl{font-size:26px;color:#ff6400;letter-spacing:.06em;}
@@ -63,149 +66,217 @@
 
         /* ── BUTTONS ── */
         .start-btn,.restart-btn,.cont-btn,.abtn{cursor:pointer;-webkit-tap-highlight-color:transparent;}
-        .start-btn{width:100%;padding:16px;background:var(--blue);border:1px solid var(--blue-dark);border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;letter-spacing:.12em;color:#000;text-transform:uppercase;transition:background .15s,transform .1s;}
+        .start-btn{width:100%;padding:16px;background:var(--blue);border:1px solid var(--blue-dark);border-radius:10px;font-family:var(--font);font-size:16px;font-weight:700;letter-spacing:.12em;color:#000;text-transform:uppercase;transition:background .15s,transform .1s;}
         .start-btn:active{background:var(--blue-dark);transform:scale(.98);}
-        .restart-btn{width:100%;padding:18px;background:linear-gradient(135deg,#ff6400,#ff3300);border:none;border-radius:12px;font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;letter-spacing:.12em;color:#fff;text-transform:uppercase;transition:opacity .15s,transform .1s;box-shadow:0 4px 20px rgba(255,100,0,.4);}
+        .restart-btn{width:100%;padding:18px;background:linear-gradient(135deg,#ff6400,#ff3300);border:none;border-radius:12px;font-family:var(--font);font-size:20px;font-weight:700;letter-spacing:.12em;color:#fff;text-transform:uppercase;transition:opacity .15s,transform .1s;box-shadow:0 4px 20px rgba(255,100,0,.4);}
         .restart-btn:active{opacity:.85;transform:scale(.97);}
-        .cont-btn{width:100%;padding:16px;background:transparent;border:1px solid var(--border);border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:21px;font-weight:600;letter-spacing:.12em;color:var(--text);text-transform:uppercase;transition:all .15s;text-decoration:none;display:block;margin-top:20px;}
+        .cont-btn{width:100%;padding:16px;background:transparent;border:1px solid var(--border);border-radius:10px;font-family:var(--font);font-size:21px;font-weight:600;letter-spacing:.12em;color:var(--text);text-transform:uppercase;transition:all .15s;text-decoration:none;display:block;margin-top:20px;}
         .cont-btn:active{background:rgba(30,143,255,.14);border-color:var(--blue);color:var(--blue);}
 
         /* ── PENALTY FEEDBACK ── */
         .fb{background:rgba(255,68,68,.07);border-left:3px solid var(--red);border-radius:6px;padding:14px 16px;margin-bottom:16px;text-align:left;}
-        .fb-ttl{font-family:'Rajdhani',sans-serif;font-size:16px;letter-spacing:.08em;color:var(--red);text-transform:uppercase;margin-bottom:10px;font-weight:700;}
+        .fb-ttl{font-family:var(--font);font-size:16px;letter-spacing:.08em;color:var(--red);text-transform:uppercase;margin-bottom:10px;font-weight:700;}
         .fb-single{font-size:15px;color:var(--text);line-height:1.6;}
-        .p-timer{font-family:'Rajdhani',sans-serif;font-size:52px;font-weight:700;color:var(--yellow);margin-bottom:4px;letter-spacing:.08em;line-height:1;}
+        .p-timer{font-family:var(--font);font-size:52px;font-weight:700;color:var(--yellow);margin-bottom:4px;letter-spacing:.08em;line-height:1;}
         .p-timer-lbl{font-size:11px;letter-spacing:.12em;color:var(--text-dim);text-transform:uppercase;margin-bottom:14px;}
         .tbar{width:100%;height:6px;background:rgba(255,221,68,.15);border-radius:3px;overflow:hidden;}
         .tbar-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--yellow));border-radius:3px;width:100%;animation:tbarA 10s linear forwards;}
         @keyframes tbarA{to{width:0%;}}
 
         /* ── TIMEOUT EXTRAS ── */
-        .timeout-score{font-family:'Rajdhani',sans-serif;font-size:15px;color:var(--text-dim);margin-bottom:24px;letter-spacing:.04em;}
+        .timeout-score{font-family:var(--font);font-size:15px;color:var(--text-dim);margin-bottom:24px;letter-spacing:.04em;}
         .timeout-score span{color:var(--text);font-weight:700;font-size:18px;}
 
         /* ── PIN ── */
         .pin-box{background:rgba(30,143,255,.1);border:2px solid var(--blue);border-radius:10px;padding:20px;margin-bottom:24px;position:relative;overflow:hidden;}
         .pin-box::before{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(30,143,255,.15),transparent);animation:shimmer 2.5s ease infinite;}
         @keyframes shimmer{to{left:200%;}}
-        .pin-lbl{font-family:'Rajdhani',sans-serif;font-size:16px;letter-spacing:.12em;color:var(--text-dim);text-transform:uppercase;margin-bottom:8px;}
-        .pin-val{font-family:'Rajdhani',sans-serif;font-size:56px;font-weight:700;letter-spacing:.18em;color:var(--blue);text-shadow:0 0 20px var(--blue-glow);margin-bottom:12px;}
+        .pin-lbl{font-family:var(--font);font-size:16px;letter-spacing:.12em;color:var(--text-dim);text-transform:uppercase;margin-bottom:8px;}
+        .pin-val{font-family:var(--font);font-size:56px;font-weight:700;letter-spacing:.18em;color:var(--blue);text-shadow:0 0 20px var(--blue-glow);margin-bottom:12px;}
         .pin-note{font-size:15px;color:var(--text-dim);line-height:1.6;font-style:italic;}
 
         /* ── VIEWER ── */
-        .viewer{width:100%;position:relative;z-index:1;opacity:0;animation:fadeIn .4s ease .7s forwards;flex:1;display:flex;flex-direction:column;align-items:center;padding-top:14px;}
+        .viewer{width:100%;position:relative;z-index:1;flex:1;display:flex;flex-direction:column;align-items:center;padding-top:6px;}
         .viewer-box{width:100%;display:flex;flex-direction:column;align-items:center;padding:0 12px;}
-        .counter{font-family:'Rajdhani',sans-serif;font-size:17px;letter-spacing:.08em;color:var(--text-dim);text-transform:uppercase;margin-bottom:8px;text-align:center;}
+        .counter{font-family:var(--font);font-size:17px;letter-spacing:.08em;color:var(--text-dim);text-transform:uppercase;margin-bottom:8px;text-align:center;}
 
-        /* ── FLOATING TIMER (sticky, always visible) ── */
-        .float-timer{
-            position:sticky;
-            top:10px;
-            z-index:200;
-            width:calc(100% - 24px);
-            max-width:400px;
-            margin:0 0 12px 0;
-            background:rgba(5,11,20,0.82);
-            backdrop-filter:blur(12px);
-            -webkit-backdrop-filter:blur(12px);
-            border:1px solid rgba(30,143,255,0.22);
-            border-radius:12px;
-            padding:8px 14px;
-            display:flex;
-            align-items:center;
-            gap:12px;
-            box-shadow:0 4px 24px rgba(0,0,0,0.5);
-            transition:border-color .3s;
-        }
+        /* ── FLOATING TIMER (sticky, message view only) ── */
+        .float-timer{position:sticky;top:10px;z-index:200;width:calc(100% - 24px);max-width:400px;margin:0 0 12px 0;background:rgba(5,11,20,0.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(30,143,255,0.22);border-radius:12px;padding:8px 14px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 24px rgba(0,0,0,0.5);transition:border-color .3s;}
         .float-timer.warn{border-color:rgba(255,221,68,0.5);}
         .float-timer.danger{border-color:rgba(255,68,68,0.6);box-shadow:0 4px 24px rgba(255,68,68,0.18);}
-        .ft-label{font-family:'Rajdhani',sans-serif;font-size:12px;letter-spacing:.1em;color:var(--text-dim);text-transform:uppercase;white-space:nowrap;}
+        .ft-label{font-family:var(--font);font-size:12px;letter-spacing:.1em;color:var(--text-dim);text-transform:uppercase;white-space:nowrap;}
         .ft-bg{flex:1;height:9px;background:rgba(30,143,255,.12);border-radius:5px;overflow:hidden;}
         .ft-fill{height:100%;border-radius:5px;width:100%;}
-        .ft-fill.run{animation:ftAnim 15s linear forwards;}
+        .ft-fill.run{animation:ftAnim var(--secs,30s) linear forwards;}
         @keyframes ftAnim{to{width:0%;}}
-        .ft-secs{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:var(--blue);min-width:28px;text-align:right;line-height:1;transition:color .3s;}
+        .ft-secs{font-family:var(--font);font-size:22px;font-weight:700;color:var(--blue);min-width:28px;text-align:right;line-height:1;transition:color .3s;}
         .ft-secs.warn{color:var(--yellow);}
         .ft-secs.danger{color:var(--red);}
 
-        /* ── EMAIL CARDS ── */
-        .ec{width:100%;max-width:400px;background:#fff;border-radius:16px;overflow:hidden;margin-bottom:16px;box-shadow:0 12px 40px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.05);display:none;font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;}
-        .ec.active{display:block;}
-        .e-time{font-size:13px;font-weight:700;color:#000;}
-        .e-icons{font-size:11px;color:#000;font-weight:600;display:flex;gap:4px;align-items:center;}
-        .e-nav{background:rgba(242,242,247,.95);border-bottom:.5px solid #c8c8ce;padding:9px 14px;display:flex;align-items:center;justify-content:space-between;}
-        .e-nav-back{font-size:15px;color:#007aff;display:flex;align-items:center;gap:3px;}
-        .e-nav-back svg{width:9px;height:15px;}
-        .e-nav-title{font-size:16px;font-weight:600;color:#000;}
-        .e-nav-action{font-size:18px;color:#007aff;line-height:1;}
-        .e-hdr{background:#fff;padding:12px 14px 10px;border-bottom:.5px solid #e5e5ea;}
+        /* ── MAIL APP (iOS-style) ── */
+        .mailapp{width:100%;max-width:400px;background:#fff;border-radius:18px;overflow:hidden;margin-bottom:16px;box-shadow:0 12px 40px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.05);font-family:-apple-system,'SF Pro Text','Helvetica Neue',Arial,sans-serif;color:#000;}
+                        .m-nav{background:#f2f2f7;border-bottom:.5px solid #c8c8ce;padding:6px 14px 8px;display:flex;align-items:center;justify-content:space-between;min-height:40px;}
+        .m-nav-back{font-size:17.5px;color:#007aff;display:flex;align-items:center;gap:4px;}
+        .m-nav-back.off{opacity:.45;}
+        .m-nav-title{font-size:17.5px;font-weight:600;}
+        .m-nav-act{font-size:16.5px;color:#007aff;min-width:44px;text-align:right;}
+        .m-inbox-title{font-size:30px;font-weight:800;padding:8px 16px 4px;background:#fff;letter-spacing:-.01em;}
+        .m-search{margin:2px 14px 8px;background:#eeeef0;border-radius:10px;padding:8px 10px;font-size:15.5px;color:#8e8e93;display:flex;gap:6px;align-items:center;}
+        .m-list{list-style:none;}
+        .m-item{display:flex;gap:10px;padding:11px 14px 11px 8px;border-top:.5px solid #e5e5ea;cursor:pointer;-webkit-tap-highlight-color:transparent;background:#fff;position:relative;}
+        .m-item:active{background:#e9eefb;}
+        .m-dot{width:10px;flex-shrink:0;display:flex;justify-content:center;padding-top:15px;}
+        .m-dot i{display:block;width:9px;height:9px;border-radius:50%;background:#007aff;}
+        .m-item.done .m-dot i{background:transparent;}
+        .m-av{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18.5px;font-weight:700;color:#fff;}
+        .m-main{flex:1;min-width:0;}
+        .m-top{display:flex;justify-content:space-between;gap:8px;}
+        .m-from{font-size:16.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .m-when{font-size:14px;color:#8e8e93;white-space:nowrap;flex-shrink:0;}
+        .m-subj{font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
+        .m-prev{font-size:15px;color:#8e8e93;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:1px;}
+        .m-item.done{background:#fafafa;}
+        .m-item.done .m-from,.m-item.done .m-subj{color:#8e8e93;font-weight:500;}
+        .m-badge{position:absolute;right:12px;bottom:10px;font-size:12px;font-weight:700;padding:2px 8px;border-radius:10px;}
+        .m-badge.ok{background:#e6f7ec;color:#1a7f37;}
+        .m-badge.rep{background:#fde8e8;color:#b42318;}
+        .m-foot{background:#f2f2f7;border-top:.5px solid #e5e5ea;padding:10px 14px;font-size:12.5px;color:#8e8e93;text-align:center;}
+
+        /* message view */
+        .e-hdr{padding:12px 14px 10px;border-bottom:.5px solid #e5e5ea;}
         .e-srow{display:flex;align-items:flex-start;gap:10px;margin-bottom:6px;}
-        /* Avatar circle with inline SVG symbol */
-        .e-av{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;font-size:17px;font-weight:700;color:#fff;}
+        .e-av{width:42px;height:42px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;}
         .e-sinfo{flex:1;min-width:0;}
-        .e-name{font-size:14px;font-weight:600;color:#000;margin-bottom:1px;}
-        .e-addr{font-size:11.5px;color:#8e8e93;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-        .e-addr.bad{color:#c0392b;font-weight:600;}
-        .e-date{font-size:11.5px;color:#8e8e93;white-space:nowrap;margin-top:2px;flex-shrink:0;}
-        .e-subj{font-size:14px;font-weight:600;color:#000;margin-bottom:2px;}
-        .e-to{font-size:11.5px;color:#8e8e93;}
-        .e-body{background:#fff;padding:14px;font-size:13.5px;color:#1c1c1e;line-height:1.6;}
-
-        /* ── EMAIL BANNER with logo ── */
-
-
-
-
-
-
-        .e-ibox{border-radius:10px;padding:11px;margin:10px 0;}
-        .e-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:.5px solid rgba(0,0,0,.07);}
+        .e-name{font-size:16.5px;font-weight:600;margin-bottom:1px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+        .e-addr{font-size:13px;color:#8e8e93;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+        .e-date{font-size:13px;color:#8e8e93;white-space:nowrap;margin-top:2px;flex-shrink:0;}
+        .e-subj{font-size:17.5px;font-weight:700;margin:2px 0 4px;line-height:1.3;}
+        .e-to{font-size:13px;color:#8e8e93;display:flex;gap:8px;align-items:center;}
+        .e-detailsbtn{color:#007aff;background:none;border:none;font-size:13px;padding:6px 0;cursor:pointer;font-family:inherit;}
+        .e-details{display:none;margin-top:6px;background:#f6f6f8;border-radius:10px;padding:9px 11px;font-size:13px;line-height:1.7;color:#3a3a3c;word-break:break-all;}
+        .e-details.open{display:block;}
+        .e-details b{color:#8e8e93;font-weight:600;display:inline-block;min-width:62px;}
+        .pill{font-size:11.5px;font-weight:700;padding:1px 7px;border-radius:9px;letter-spacing:.02em;}
+        .pill.ext{background:#fff1dd;color:#a15c00;}
+        .e-ext-banner{background:#fff8ec;border-bottom:.5px solid #f3dcb0;color:#7a5200;font-size:12.5px;padding:6px 14px;display:flex;gap:6px;align-items:center;}
+        .e-body{padding:14px;font-size:15.5px;color:#1c1c1e;line-height:1.6;}
+        .e-banner{margin:-14px -14px 12px;padding:12px 14px;font-weight:800;font-size:18.5px;letter-spacing:.01em;}
+        .e-body p{margin-bottom:10px;}
+        .e-ibox{border-radius:10px;padding:10px 11px;margin:10px 0;}
+        .e-row{display:flex;justify-content:space-between;gap:10px;font-size:14.5px;padding:4px 0;border-bottom:.5px solid rgba(0,0,0,.07);}
         .e-row:last-child{border:none;}
         .e-lbl{color:#8e8e93;}
-        .e-btn{display:block;margin:14px auto 4px;padding:12px 24px;border-radius:10px;text-align:center;font-size:14px;font-weight:700;text-decoration:none;border:none;width:100%;}
-        .e-div{height:.5px;background:#e5e5ea;margin:11px 0;}
-        .e-sm{font-size:11.5px;color:#8e8e93;line-height:1.5;}
-        .e-warn{background:#fff9e6;border:1px solid #f0c040;border-radius:8px;padding:8px 11px;margin-bottom:11px;font-size:12.5px;color:#7c5800;display:flex;gap:7px;align-items:flex-start;}
+        .e-btn{display:block;margin:14px auto 6px;padding:13px 24px;border-radius:10px;text-align:center;font-size:16px;font-weight:700;border:none;width:100%;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;}
+        .e-btn:active{filter:brightness(.92);}
+        .e-hint{font-size:12px;color:#8e8e93;text-align:center;margin-bottom:8px;}
+        .e-warn{background:#fff9e6;border:1px solid #f0c040;border-radius:8px;padding:8px 11px;margin-bottom:11px;font-size:14.5px;color:#7c5800;display:flex;gap:7px;align-items:flex-start;}
         .e-warn.red{background:#fde8e8;border-color:#f5a0a0;color:#7c0000;}
-        .e-wi{flex-shrink:0;font-size:14px;}
-        .e-foot{background:#f2f2f7;border-top:.5px solid #e5e5ea;padding:9px 14px;font-size:11px;color:#8e8e93;text-align:center;line-height:1.6;}
-        .e-link{color:#007aff;}
-        .e-purl{font-size:10.5px;color:#c0392b;word-break:break-all;line-height:1.4;margin-top:6px;}
+        .e-small{font-size:13px;color:#8e8e93;line-height:1.5;margin-top:8px;}
+        .e-link{color:#007aff;text-decoration:underline;cursor:pointer;background:none;border:none;padding:0;font:inherit;}
+        .e-attach{display:flex;align-items:center;gap:10px;margin:12px 0 4px;padding:10px 12px;border:1px solid #e1e1e6;border-radius:12px;background:#fafafa;cursor:pointer;width:100%;text-align:left;font-family:inherit;-webkit-tap-highlight-color:transparent;}
+        .e-attach:active{background:#eeeef3;}
+        .e-attach .ic{width:34px;height:40px;border-radius:6px;background:#e5484d;color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+        .e-attach .nm{font-size:15px;font-weight:600;word-break:break-all;color:#1c1c1e;}
+        .e-attach .sz{font-size:12.5px;color:#8e8e93;}
+        .e-foot{background:#f2f2f7;border-top:.5px solid #e5e5ea;padding:10px 14px;font-size:12px;color:#8e8e93;text-align:center;line-height:1.6;}
+        .e-toolbar{display:flex;justify-content:space-around;padding:10px 0 12px;border-top:.5px solid #e5e5ea;background:#f9f9fb;color:#007aff;}
+        .e-toolbar svg{width:22px;height:22px;stroke:#007aff;fill:none;}
 
         /* ── ASSESS BUTTONS ── */
         .btn-grp{display:flex;gap:16px;justify-content:center;width:100%;max-width:400px;}
-        .abtn{flex:1;padding:16px 20px;border:2px solid var(--border);border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:21px;font-weight:700;letter-spacing:.12em;color:var(--text);text-transform:uppercase;cursor:pointer;transition:background .15s,border-color .15s,color .15s,transform .1s;-webkit-tap-highlight-color:transparent;background:transparent;}
+        .abtn{flex:1;padding:16px 12px;border:2px solid var(--border);border-radius:10px;font-family:var(--font);font-size:21px;font-weight:700;letter-spacing:.1em;color:var(--text);text-transform:uppercase;cursor:pointer;transition:background .15s,border-color .15s,color .15s,transform .1s;-webkit-tap-highlight-color:transparent;background:transparent;}
         .abtn:active{transform:scale(.98);}
         .abtn:disabled{opacity:.5;pointer-events:none;}
         .gbtn{border-color:var(--green);color:var(--green);}
-        .gbtn:hover{background:rgba(68,255,68,.1);}
         .sbtn{border-color:var(--red);color:var(--red);}
-        .sbtn:hover{background:rgba(255,68,68,.1);}
+        .btn-note{font-size:12.5px;color:var(--text-dim);text-align:center;margin:10px 0 0;max-width:400px;}
+
+        /* ── BOTTOM SHEET (link / attachment preview) ── */
+        .sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:900;display:none;}
+        .sheet-bg.show{display:block;}
+        .sheet{position:fixed;left:0;right:0;bottom:0;z-index:901;background:#f2f2f7;border-radius:18px 18px 0 0;padding:16px 18px 22px;max-width:480px;margin:0 auto;transform:translateY(105%);transition:transform .22s ease;font-family:-apple-system,'SF Pro Text','Helvetica Neue',Arial,sans-serif;color:#000;box-shadow:0 -10px 40px rgba(0,0,0,.5);}
+        .sheet.show{transform:translateY(0);}
+        .sheet-grab{width:38px;height:5px;border-radius:3px;background:#c7c7cc;margin:0 auto 12px;}
+        .sheet-ttl{font-size:14px;font-weight:700;color:#8e8e93;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
+        .sheet-url{background:#fff;border-radius:12px;padding:12px 14px;font-size:16px;line-height:1.5;word-break:break-all;margin-bottom:10px;font-family:ui-monospace,'SF Mono',Menlo,monospace;color:#8e8e93;}
+        .sheet-url b{color:#000;font-weight:800;}
+        .sheet-url .proto.bad{color:#c0392b;font-weight:700;}
+        .sheet-note{font-size:14px;color:#3a3a3c;line-height:1.5;margin-bottom:14px;}
+        .sheet-close{width:100%;padding:14px;border:none;border-radius:12px;background:#007aff;color:#fff;font-size:17.5px;font-weight:600;cursor:pointer;font-family:inherit;}
+        .sheet-kv{background:#fff;border-radius:12px;padding:4px 14px;margin-bottom:10px;}
+        .sheet-kv div{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:.5px solid #e5e5ea;font-size:15px;}
+        .sheet-kv div:last-child{border:none;}
+        .sheet-kv span:first-child{color:#8e8e93;flex-shrink:0;}
+        .sheet-kv span:last-child{text-align:right;overflow-wrap:anywhere;font-weight:600;}
+
+        /* ── RESULT CARD (after a correct answer) ── */
+        .result-ov{z-index:1000;}
+        .result-box{background:var(--surface2);border:2px solid rgba(68,255,68,.4);box-shadow:0 0 30px rgba(68,255,68,.1);padding:26px 22px;}
+        .result-ttl{font-family:var(--font);font-size:24px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--green);margin-bottom:4px;}
+        .result-sub{font-family:var(--font);font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:14px;}
+        .flag-list{list-style:none;text-align:left;margin:0 0 18px;}
+        .flag-list li{font-size:15px;line-height:1.5;color:var(--text);padding:8px 0 8px 26px;position:relative;border-top:1px solid rgba(255,255,255,.07);}
+        .flag-list li:first-child{border-top:none;}
+        .flag-list li::before{content:'🚩';position:absolute;left:0;top:8px;font-size:14px;}
+        .flag-list.genuine li::before{content:'✔';color:var(--green);font-weight:700;font-size:15px;}
 
         /* ── BACK ── */
         .back-wrap{position:fixed;bottom:0;left:0;width:100%;padding:12px 16px 16px;display:flex;justify-content:center;z-index:100;background:linear-gradient(to top,#050b14 60%,transparent);opacity:0;animation:fadeIn .4s ease 1.2s forwards;}
-        .back-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;max-width:420px;padding:14px 20px;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--text-dim);font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all .15s;}
+        .back-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;max-width:420px;padding:14px 20px;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--text-dim);font-family:var(--font);font-size:15px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all .15s;}
         .back-btn svg{stroke:var(--text-dim);transition:stroke .15s;flex-shrink:0;}
         .back-btn:hover,.back-btn:active{background:rgba(30,143,255,.14);border-color:var(--blue);color:var(--blue);}
         .back-btn:hover svg,.back-btn:active svg{stroke:var(--blue);}
-
         #confettiCanvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1001;display:none;}
         @keyframes fadeIn{to{opacity:1;}}
         .abtn.err{animation:shake .4s ease;border-color:var(--red)!important;background:var(--red-dim)!important;}
         @keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-10px);}40%{transform:translateX(10px);}60%{transform:translateX(-8px);}80%{transform:translateX(8px);}}
         .abtn.ok{animation:okf .35s ease;}
         @keyframes okf{0%{transform:scale(1);}50%{transform:scale(1.07);background:rgba(68,255,68,.25);border-color:var(--green);}100%{transform:scale(1);}}
-        @media(max-width:360px){.abtn{font-size:18px;padding:14px 10px;}.pin-val{font-size:42px;}}
+        @media(max-width:360px){.abtn{font-size:18px;padding:14px 8px;}.pin-val{font-size:42px;}}
+
+        /* ── full-screen mail (no logo header) ── */
+        body{padding:env(safe-area-inset-top) 0 160px !important;align-items:stretch !important;}
+        .viewer{padding-top:0 !important;}
+        .viewer-box{padding:0 !important;}
+        .counter{margin:12px 0 6px;font-size:14px;}
+        .float-timer{width:calc(100% - 24px) !important;max-width:none !important;margin:0 12px 10px !important;top:8px !important;}
+        .mailapp{max-width:none !important;width:100%;border-radius:0 !important;margin:0 !important;box-shadow:none !important;min-height:calc(100vh - 150px);}
+        #decision{position:fixed;left:0;right:0;bottom:74px;z-index:150;padding:10px 12px 8px;background:linear-gradient(to top,var(--bg) 78%,rgba(11,15,23,0));}
+        #decision .btn-grp{max-width:none !important;}
+        .btn-note{display:none;}
+        .back-wrap{background:none !important;padding:10px 16px max(14px,env(safe-area-inset-bottom)) !important;pointer-events:none;}
+        .back-btn{pointer-events:auto;background:rgba(20,26,38,.94) !important;border-radius:16px !important;box-shadow:0 10px 28px rgba(0,0,0,.45);color:#fff !important;font-weight:700 !important;}
+        body.in-msg #pHintBtn{bottom:150px !important;}
+        @media (min-width:700px){
+            .mailapp{max-width:520px !important;border-radius:18px !important;margin:14px auto !important;min-height:0;}
+            #decision{max-width:520px;left:50%;right:auto;width:100%;transform:translateX(-50%);}
+        }
+
+        /* ── original assessment type: Exo 2 for UI chrome, Exo 2 for body; emails keep the phone's native font ── */
+        html.native-ui{--font:'Exo 2',-apple-system,sans-serif;}
+        html.native-ui body{font-family:'Exo 2',-apple-system,sans-serif !important;}
+        html.native-ui .ttl,html.native-ui .start-btn,html.native-ui .restart-btn,html.native-ui .cont-btn,html.native-ui .abtn,html.native-ui .counter,html.native-ui .ft-label,html.native-ui .pin-lbl,html.native-ui .p-timer-lbl,html.native-ui .result-ttl,html.native-ui .result-sub,html.native-ui .welcome-sub,html.native-ui .back-btn,html.native-ui .fb-ttl,html.native-ui .ft-secs,html.native-ui .p-timer,html.native-ui .pin-val{font-family:'Exo 2',-apple-system,sans-serif !important;letter-spacing:.08em !important;}
+        html.native-ui .msg,html.native-ui .timeout-msg,html.native-ui .pin-note,html.native-ui .flag-list li,html.native-ui .btn-note{font-family:'Exo 2',-apple-system,sans-serif !important;}
+
+        /* ── "Handled 0 of 6": flat bar fixed to the very top; timer fixed just under it ── */
+        .counter{position:fixed !important;top:0;left:0;right:0;z-index:210;margin:0 !important;padding:calc(env(safe-area-inset-top) + 10px) 12px 9px;background:var(--bg);border-bottom:1px solid rgba(255,255,255,.07);font-size:15px !important;}
+        .float-timer{position:fixed !important;top:calc(env(safe-area-inset-top) + 42px) !important;left:12px;right:12px;width:auto !important;margin:0 !important;z-index:205;}
+        body{padding-top:calc(env(safe-area-inset-top) + 42px) !important;}
+        body.in-msg{padding-top:calc(env(safe-area-inset-top) + 104px) !important;}
+        @media (min-width:700px){ .float-timer{left:50%;right:auto;width:496px !important;transform:translateX(-50%);} }
+
+        /* ── big tick / cross in the answer pop-ups ── */
+        .big-icon{width:108px;height:108px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;animation:bigpop .45s cubic-bezier(.2,1.5,.4,1) both;}
+        .big-icon svg{width:62px;height:62px;stroke:#fff;fill:none;stroke-width:3.6;stroke-linecap:round;stroke-linejoin:round;}
+        .big-icon.ok{background:linear-gradient(145deg,#3ddc6e,#16a34a);box-shadow:0 0 0 8px rgba(34,197,94,.18),0 14px 34px rgba(34,197,94,.45);}
+        .big-icon.bad{background:linear-gradient(145deg,#ff6b6b,#dc2626);box-shadow:0 0 0 8px rgba(239,68,68,.18),0 14px 34px rgba(239,68,68,.45);}
+        @keyframes bigpop{from{transform:scale(.3);opacity:0;}to{transform:scale(1);opacity:1;}}
+        .result-ttl,.penalty-ttl{font-size:30px !important;}
+        .flag-list li{font-size:17px !important;}
     </style>
+    <link rel="stylesheet" href="/css/autostore-theme.css?v=20261119a">
 </head>
 <body>
-
-
-<div class="header">
-    <div class="logo-wrap"><img src="ashomelogo.png" alt="AutoStore Logo"></div>
-    <div class="hdr-div"></div>
-    <div class="hdr-sub">myMail — Email Portal</div>
-</div>
 
 <!-- ═══ WELCOME ═══ -->
 <div class="ov welcome-ov" id="welcomeOverlay">
@@ -215,9 +286,9 @@
                 <rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/>
             </svg>
         </div>
-        <div class="ttl welcome-ttl">5 Unread Emails</div>
+        <div class="ttl welcome-ttl">6 Unread Emails</div>
         <div class="welcome-sub">Assessment Required</div>
-        <div class="msg">Review each email and decide whether it is genuine or spam. You have 15 seconds per email — get them all right to unlock your secret PIN.</div>
+        <div class="msg">Open each email and decide whether it is genuine or phishing. Check the sender's <strong>Details</strong> and tap any link to <strong>preview</strong> where it goes. You have 30 seconds per email. Get them all right to unlock your secret PIN.</div>
         <button class="start-btn" id="startBtn">Begin Assessment</button>
     </div>
 </div>
@@ -225,20 +296,24 @@
 <!-- ═══ PENALTY (wrong answer) ═══ -->
 <div class="ov gone penalty-ov" id="penaltyOverlay">
     <div class="box penalty-box">
-        <div class="ico penalty-ico">
-            <svg viewBox="0 0 24 24" width="38" height="38" stroke="var(--red)" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-            </svg>
-        </div>
-        <div class="ttl penalty-ttl">Wrong Assessment</div>
-        <div class="msg">Look carefully — here's what you missed:</div>
-        <div class="fb">
-            <div class="fb-ttl">🔍 Why?</div>
-            <p class="fb-single" id="fb1"></p>
-        </div>
+        <div class="big-icon bad"><svg viewBox="0 0 24 24"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></div>
+        <div class="ttl penalty-ttl">Wrong!</div>
+        <div class="msg">Here's why:</div>
+        <ul class="flag-list" id="fbList"></ul>
         <div class="p-timer" id="pTimer">10</div>
         <div class="p-timer-lbl">Seconds Remaining</div>
         <div class="tbar"><div class="tbar-fill" id="tbarFill"></div></div>
+    </div>
+</div>
+
+<!-- ═══ CORRECT (explanation) ═══ -->
+<div class="ov gone result-ov" id="resultOverlay">
+    <div class="box result-box">
+        <div class="big-icon ok"><svg viewBox="0 0 24 24"><polyline points="5 12.5 10 17.5 19 7"/></svg></div>
+        <div class="result-ttl" id="resultTtl">Correct</div>
+        <div class="result-sub" id="resultSub"></div>
+        <ul class="flag-list" id="resultList"></ul>
+        <button class="start-btn" id="resultBtn">Continue</button>
     </div>
 </div>
 
@@ -251,159 +326,56 @@
             </svg>
         </div>
         <div class="ttl timeout-ttl">⏱ TIME OUT!</div>
-        <div class="timeout-msg">You ran out of time on email <strong id="timeoutEmailNum">1</strong>. You must start the assessment again from the beginning.</div>
-        <div class="timeout-score">Progress lost — <span id="timeoutProgress">0 of 5</span> correct</div>
+        <div class="timeout-msg">You ran out of time on email <strong id="timeoutEmailNum">1</strong>. You must start the assessment again, with a fresh set of emails.</div>
+        <div class="timeout-score">Progress lost — <span id="timeoutProgress">0 of 6</span> correct</div>
         <button class="restart-btn" id="restartBtn">↺ &nbsp;Start Again</button>
     </div>
 </div>
 
-<!-- ═══ EMAIL VIEWER ═══ -->
+<!-- ═══ MAIL APP ═══ -->
 <div class="viewer" id="viewer">
   <div class="viewer-box">
-    <div class="counter" id="counter">Email 1 of 5</div>
+    <div class="counter" id="counter">Handled 0 of 6</div>
 
-    <!-- ── FLOATING STICKY TIMER ── -->
-    <div class="float-timer" id="floatTimer">
+    <div class="float-timer" id="floatTimer" style="display:none">
         <span class="ft-label">Time</span>
         <div class="ft-bg"><div class="ft-fill" id="ftFill" style="background:linear-gradient(90deg,var(--blue-dark),var(--blue));"></div></div>
-        <div class="ft-secs" id="ftSecs">15</div>
+        <div class="ft-secs" id="ftSecs">30</div>
     </div>
 
-    <!-- EMAIL 1: GENUINE — Barclays -->
-    <div class="ec active" id="email-0">
-        <div class="e-nav"><div class="e-nav-back"><svg viewBox="0 0 9 15" stroke="#007aff" stroke-width="2" stroke-linecap="round" fill="none"><polyline points="8,1 1,7.5 8,14"/></svg>&nbsp;Inbox</div><div class="e-nav-title">Mail</div><div class="e-nav-action">···</div></div>
-        <div class="e-hdr">
-            <div class="e-srow">
-                <div class="e-av" style="background:#00aeef;">B</div>
-                <div class="e-sinfo"><div class="e-name">Barclays Bank</div><div class="e-addr">no-reply@barclays.co.uk</div></div>
-                <div class="e-date">10:14 AM</div>
-            </div>
-            <div class="e-subj">Your latest statement is ready</div>
-            <div class="e-to">To: Marcus@autostore.co.uk</div>
+    <div class="mailapp">
+
+        <div id="inboxView">
+            <div class="m-nav"><div class="m-nav-back"><svg viewBox="0 0 9 15" width="9" height="15" stroke="#007aff" stroke-width="2" fill="none"><polyline points="8,1 1,7.5 8,14"/></svg>Mailboxes</div><div class="m-nav-act">Edit</div></div>
+            <div class="m-inbox-title">Inbox</div>
+            <div class="m-search">🔍 Search</div>
+            <ul class="m-list" id="mList"></ul>
+            <div class="m-foot"><span id="inboxUnread">6 unread</span> · Updated just now</div>
         </div>
-        <div class="e-body">
-            <p style="margin-bottom:9px;">Dear Marcus,</p>
-            <p style="margin-bottom:11px;">Your monthly statement for March is now available to view securely in the Barclays app or Online Banking.</p>
-            <div class="e-ibox" style="background:#f0f8ff;border:1px solid #cce4ff;">
-                <div class="e-row"><span class="e-lbl">Account</span><span>Current Account ••••4821</span></div>
-                <div class="e-row"><span class="e-lbl">Period</span><span>Last 30 days</span></div>
-                <div class="e-row"><span class="e-lbl">Closing balance</span><span style="font-weight:700;">£2,348.50</span></div>
+
+        <div id="msgView" style="display:none">
+            <div class="m-nav"><div class="m-nav-back off"><svg viewBox="0 0 9 15" width="9" height="15" stroke="#007aff" stroke-width="2" fill="none"><polyline points="8,1 1,7.5 8,14"/></svg>Inbox</div><div class="m-nav-title">Message</div><div class="m-nav-act">▲ ▼</div></div>
+            <div id="msgBody"></div>
+            <div class="e-toolbar" aria-hidden="true">
+                <svg viewBox="0 0 24 24" stroke-width="1.8"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>
+                <svg viewBox="0 0 24 24" stroke-width="1.8"><path d="M9 14L4 9l5-5M4 9h10a6 6 0 0 1 6 6v3"/></svg>
+                <svg viewBox="0 0 24 24" stroke-width="1.8"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
             </div>
-            <a class="e-btn" style="background:#00aeef;color:#fff;">View Statement</a>
-            <div class="e-div"></div>
-            <p class="e-sm">We will never ask for your full PIN or password by email. Questions? Call <strong>0800 400 100</strong>.</p>
         </div>
-        <div class="e-foot">Barclays Bank UK PLC · 1 Churchill Place, London E14 5HP<br>Company No. 9740322 · <span class="e-link">Unsubscribe</span></div>
     </div>
 
-    <!-- EMAIL 2: PHISHING — Fake HMRC -->
-    <div class="ec" id="email-1">
-        <div class="e-nav"><div class="e-nav-back"><svg viewBox="0 0 9 15" stroke="#007aff" stroke-width="2" stroke-linecap="round" fill="none"><polyline points="8,1 1,7.5 8,14"/></svg>&nbsp;Inbox</div><div class="e-nav-title">Mail</div><div class="e-nav-action">···</div></div>
-        <div class="e-hdr">
-            <div class="e-srow">
-                <div class="e-av" style="background:#1d4228;">H</div>
-                <div class="e-sinfo"><div class="e-name">HMRC Tax Refunds</div><div class="e-addr bad">refunds@hmrc-gov.support-uk.com</div></div>
-                <div class="e-date">8:03 AM</div>
-            </div>
-            <div class="e-subj">⚠️ TAX REFUND: £312.47 — ACTION REQUIRED</div>
-            <div class="e-to">To: undisclosed-recipients</div>
+    <div id="decision" style="display:none">
+        <div class="btn-grp">
+            <button class="abtn gbtn" id="genuineBtn">✔ Genuine</button>
+            <button class="abtn sbtn" id="spamBtn">⚑ Phishing</button>
         </div>
-        <div class="e-body">
-            <div class="e-warn"><span class="e-wi">⚠️</span><span><strong>Your refund will EXPIRE in 24 hours.</strong> Verify your details immediately or forfeit this payment.</span></div>
-            <p style="margin-bottom:9px;">Dear Taxpayer,</p>
-            <p style="margin-bottom:11px;">Our records show you are owed a tax refund of <strong style="color:#c0392b;">£312.47</strong>. To release this payment confirm your bank details and National Insurance number via the link below.</p>
-            <a class="e-btn" style="background:#c0392b;color:#fff;">Claim Your Refund Now →</a>
-            <div class="e-div"></div>
-            <div class="e-purl">http://hmrc-refund-claim.taxback-verify.net/secure/claim?ref=UK2024&amp;token=xP9mQ</div>
-        </div>
-        <div class="e-foot" style="background:#fdf0f0;">© HMRC 2025 · Government Gateway Services · <span class="e-link">Contact</span></div>
-    </div>
-
-    <!-- EMAIL 3: GENUINE — Amazon dispatch -->
-    <div class="ec" id="email-2">
-        <div class="e-nav"><div class="e-nav-back"><svg viewBox="0 0 9 15" stroke="#007aff" stroke-width="2" stroke-linecap="round" fill="none"><polyline points="8,1 1,7.5 8,14"/></svg>&nbsp;Inbox</div><div class="e-nav-title">Mail</div><div class="e-nav-action">···</div></div>
-        <div class="e-hdr">
-            <div class="e-srow">
-                <div class="e-av" style="background:#ff9900;color:#111;">A</div>
-                <div class="e-sinfo"><div class="e-name">Amazon</div><div class="e-addr">shipment-tracking@amazon.co.uk</div></div>
-                <div class="e-date">Yesterday</div>
-            </div>
-            <div class="e-subj">Your order has been dispatched!</div>
-            <div class="e-to">To: marcus.t@autostore.co.uk</div>
-        </div>
-        <div class="e-body">
-            <p style="margin-bottom:9px;">Hi Marcus,</p>
-            <p style="margin-bottom:11px;">Great news — your order has been collected by the courier and is now on its way to you.</p>
-            <div class="e-ibox" style="background:#fffbf0;border:1px solid #ffe082;">
-                <div class="e-row"><span class="e-lbl">Order</span><span style="font-size:12px;">#205-8841762-0034561</span></div>
-                <div class="e-row"><span class="e-lbl">Item</span><span>Mini Tracker and Audio Recorder</span></div>
-                <div class="e-row"><span class="e-lbl">Courier</span><span>Royal Mail Tracked 24</span></div>
-                <div class="e-row"><span class="e-lbl">Delivery</span><span style="font-weight:700;">Tomorrow by 9pm</span></div>
-            </div>
-            <a class="e-btn" style="background:#ff9900;color:#111;">Track Your Package</a>
-            <div class="e-div"></div>
-            <p class="e-sm">Questions? Visit <span class="e-link">amazon.co.uk/help</span> or contact Customer Service.</p>
-        </div>
-        <div class="e-foot">Amazon EU S.à r.l. · 38 avenue John F. Kennedy, L-1855 Luxembourg<br><span class="e-link">Your Account</span> · <span class="e-link">Unsubscribe</span></div>
-    </div>
-
-    <!-- EMAIL 4: PHISHING — Fake PayPal -->
-    <div class="ec" id="email-3">
-        <div class="e-nav"><div class="e-nav-back"><svg viewBox="0 0 9 15" stroke="#007aff" stroke-width="2" stroke-linecap="round" fill="none"><polyline points="8,1 1,7.5 8,14"/></svg>&nbsp;Inbox</div><div class="e-nav-title">Mail</div><div class="e-nav-action">···</div></div>
-        <div class="e-hdr">
-            <div class="e-srow">
-                <div class="e-av" style="background:#003087;">P</div>
-                <div class="e-sinfo"><div class="e-name">PayPaI Security Team</div><div class="e-addr bad">service@paypa1-secure-login.com</div></div>
-                <div class="e-date">6:47 AM</div>
-            </div>
-            <div class="e-subj">🔒 Your account has been LIMITED</div>
-            <div class="e-to">To: customer@email.com</div>
-        </div>
-        <div class="e-body">
-            <div class="e-warn red"><span class="e-wi">🔴</span><span><strong>URGENT:</strong> Your account access has been suspended. Failure to act within 12 hours will result in permanent closure.</span></div>
-            <p style="margin-bottom:9px;">Dear Valued Customer,</p>
-            <p style="margin-bottom:11px;">We have detected <strong>unusual login activity</strong> from an unrecognised device. You must verify your identity and update your payment informations immediately.</p>
-            <a class="e-btn" style="background:#0070ba;color:#fff;">Verify My Account →</a>
-            <div class="e-div"></div>
-            <div class="e-purl">https://www.paypa1-secure-login.com/verify/account?token=xG7hQ2mP9&amp;redirect=true</div>
-        </div>
-        <div class="e-foot" style="background:#eef0fa;">PayPaI Holdings, Inc. · 2211 North First Street, San Jose, CA</div>
-    </div>
-
-    <!-- EMAIL 5: GENUINE — Microsoft 365 -->
-    <div class="ec" id="email-4">
-        <div class="e-nav"><div class="e-nav-back"><svg viewBox="0 0 9 15" stroke="#007aff" stroke-width="2" stroke-linecap="round" fill="none"><polyline points="8,1 1,7.5 8,14"/></svg>&nbsp;Inbox</div><div class="e-nav-title">Mail</div><div class="e-nav-action">···</div></div>
-        <div class="e-hdr">
-            <div class="e-srow">
-                <div class="e-av" style="background:#0078d4;">M</div>
-                <div class="e-sinfo"><div class="e-name">Microsoft 365</div><div class="e-addr">microsoft365@email.microsoft.com</div></div>
-                <div class="e-date">Mon</div>
-            </div>
-            <div class="e-subj">Your Microsoft 365 subscription renews soon</div>
-            <div class="e-to">To: marcus@autostore.co.uk</div>
-        </div>
-        <div class="e-body">
-            <p style="margin-bottom:9px;">Hi Marcus,</p>
-            <p style="margin-bottom:11px;">Your Microsoft 365 account has had an unexpected <strong>log in attempt</strong>. No action is needed — your saved payment method will not be charged.</p>
-            <div class="e-ibox" style="background:#f0f6ff;border:1px solid #bdd7f5;">
-                <div class="e-row"><span class="e-lbl">Plan</span><span>Microsoft 365 Personal</span></div>
-                <div class="e-row"><span class="e-lbl">Renews</span><span>Annual</span></div>
-                <div class="e-row"><span class="e-lbl">Payment</span><span>Visa ••••3847</span></div>
-                <div class="e-row"><span class="e-lbl">Amount</span><span style="font-weight:700;">£59.99 / year</span></div>
-            </div>
-            <a class="e-btn" style="background:#0078d4;color:#fff;">Manage Subscription</a>
-            <div class="e-div"></div>
-            <p class="e-sm">You're receiving this because you subscribed to Microsoft 365. <span class="e-link">Manage email preferences</span></p>
-        </div>
-        <div class="e-foot">Microsoft Corporation · One Microsoft Way, Redmond, WA 98052<br><span class="e-link">Privacy Statement</span> · <span class="e-link">Unsubscribe</span></div>
-    </div>
-
-    <div class="btn-grp" style="margin-top:4px;">
-        <button class="abtn gbtn" id="genuineBtn">✔ Genuine</button>
-        <button class="abtn sbtn" id="spamBtn">✖ Spam</button>
+        <p class="btn-note">Not sure? Open <strong>Details</strong> and preview the link before you decide.</p>
     </div>
   </div>
 </div>
+
+<div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet" id="sheet" role="dialog" aria-label="Preview"></div>
 
 <!-- ═══ SUCCESS ═══ -->
 <div class="ov gone success-ov" id="successOverlay">
@@ -412,7 +384,7 @@
             <svg viewBox="0 0 24 24" width="42" height="42" stroke="var(--green)" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
         <div class="ttl success-ttl">Verification Complete!</div>
-        <div class="msg">Outstanding — you correctly identified all five emails.</div>
+        <div class="msg">Outstanding — you correctly identified all six emails.</div>
         <div class="pin-box">
             <div class="pin-lbl">Your Secret PIN</div>
             <div class="pin-val">1486</div>
@@ -431,23 +403,6 @@
 </div>
 
 <script>
-/* ── LOGO FALLBACK ── */
-// Called when a banner PNG fails to load (remote URL or local backup both fail)
-// imgId format: blogo-barclays → fallback text id: btext-barclays
-function logoFail(img, imgId) {
-    var key = imgId.replace('blogo-', '');
-    var localSrc = 'img/logo-' + key + '.png';
-    // First failure: try local backup PNG
-    if (img.src.indexOf('img/logo-') === -1) {
-        img.src = localSrc;
-    } else {
-        // Second failure: hide image, show text fallback
-        img.style.display = 'none';
-        var textEl = document.getElementById('btext-' + key);
-        if (textEl) textEl.style.display = 'block';
-    }
-}
-
 /* ── AUDIO ── */
 const AudioCtx=window.AudioContext||window.webkitAudioContext;
 let actx=null;
@@ -463,158 +418,426 @@ function playCelebration(){const c=gctx(),t=c.currentTime;[{freq:523.25,s:0,d:.1
 const cnv=document.getElementById('confettiCanvas'),cc=cnv.getContext('2d');
 function launchConfetti(){cnv.style.display='block';cnv.width=window.innerWidth;cnv.height=window.innerHeight;const cols=['#1e8fff','#44ff44','#ffdd44','#ff4444','#fff','#ff88cc','#88ffcc'];let p=Array.from({length:130},()=>({x:Math.random()*cnv.width,y:-10-Math.random()*120,w:7+Math.random()*9,h:4+Math.random()*5,color:cols[Math.floor(Math.random()*cols.length)],angle:Math.random()*Math.PI*2,spin:(Math.random()-.5)*.18,vx:(Math.random()-.5)*3,vy:2.5+Math.random()*3.5,alpha:1}));function draw(){cc.clearRect(0,0,cnv.width,cnv.height);p.forEach(pt=>{cc.save();cc.globalAlpha=pt.alpha;cc.translate(pt.x,pt.y);cc.rotate(pt.angle);cc.fillStyle=pt.color;cc.fillRect(-pt.w/2,-pt.h/2,pt.w,pt.h);cc.restore();pt.x+=pt.vx;pt.y+=pt.vy;pt.angle+=pt.spin;if(pt.y>cnv.height*.72)pt.alpha-=.018;});p=p.filter(pt=>pt.alpha>0);if(p.length>0)requestAnimationFrame(draw);else cnv.style.display='none';}draw();}
 
-/* ── FLOATING TIMER (15s) ── */
-const SECS=15;
-let rtLeft=SECS,rtInt=null;
-const floatTimer=document.getElementById('floatTimer');
+/* ── SETTINGS ── */
+const SECS = 30;              // seconds allowed per email
+const PENALTY_SECS = 10;      // cooldown after a wrong answer
+const DRAW_GENUINE = 3, DRAW_PHISH = 3;
+const PIN_CODE = '1486';
+const COMPANY_DOMAIN = 'autostore.co.uk';
 
-function startRT(){
-    stopRT();
-    rtLeft=SECS;
-    const secsEl=document.getElementById('ftSecs');
-    secsEl.textContent=SECS;
-    secsEl.className='ft-secs';
-    floatTimer.className='float-timer';
-    // Clone fill to restart animation
-    const old=document.getElementById('ftFill');
-    const nw=old.cloneNode(true);
-    nw.style.background='linear-gradient(90deg,var(--blue-dark),var(--blue))';
-    nw.classList.remove('run');
-    old.parentNode.replaceChild(nw,old);
-    void nw.offsetWidth;
-    nw.classList.add('run');
+/* ── EMAIL BANK ─────────────────────────────────────────────
+   13 emails (6 genuine, 7 phishing). Each attempt draws 3 + 3 at random,
+   so teams in the same room see different emails in a different order.
+   To add one: copy an entry. `explain` is what the player is shown. */
+const BANK = [
+  { id:'barclays', genuine:true,
+    short:["Real Barclays address and link.", "Uses your name and real account details."],
+    from:{name:'Barclays Bank', addr:'no-reply@barclays.co.uk', color:'#00aeef', initial:'B'},
+    to:'marcus@autostore.co.uk', date:'Today, 10:14', subject:'Your latest statement is ready',
+    preview:'Your monthly statement for March is now available to view securely in the Barclays app.',
+    banner:{text:'Barclays', bg:'#00aeef', color:'#fff'},
+    body:[
+      {p:'Dear Marcus,'},
+      {p:'Your monthly statement for March is now available to view securely in the Barclays app or Online Banking.'},
+      {box:[['Account','Current Account ••••4821'],['Period','Last 30 days'],['Closing balance','£2,348.50']], bg:'#f0f8ff', border:'#cce4ff'},
+      {btn:{label:'View Statement', url:'https://www.barclays.co.uk/ways-to-bank/online-banking/', bg:'#00aeef', color:'#fff'}},
+      {small:'We will never ask for your full PIN or password by email. Questions? Call 0800 400 100.'}
+    ],
+    foot:'Barclays Bank UK PLC · 1 Churchill Place, London E14 5HP',
+    explain:['The sender address is exactly no-reply@barclays.co.uk, Barclays\' real domain.','It uses your real name and the last four digits of your account.','The link goes to barclays.co.uk and it does not ask you to enter any details.'] },
 
-    rtInt=setInterval(()=>{
-        rtLeft--;
-        const secsEl=document.getElementById('ftSecs');
-        const bar=document.getElementById('ftFill');
-        secsEl.textContent=rtLeft;
-        if(rtLeft<=4){
-            bar.style.background='linear-gradient(90deg,#990000,var(--red))';
-            secsEl.className='ft-secs danger';
-            floatTimer.className='float-timer danger';
-            playTick();
-        } else if(rtLeft<=7){
-            bar.style.background='linear-gradient(90deg,#886600,var(--yellow))';
-            secsEl.className='ft-secs warn';
-            floatTimer.className='float-timer warn';
-        }
-        if(rtLeft<=0){
-            stopRT();
-            if(penActive) return; // don't timeout while penalty is showing
-            document.getElementById('genuineBtn').classList.add('err');
-            document.getElementById('spamBtn').classList.add('err');
-            playTimeoutSound();
-            setTimeout(()=>{
-                document.getElementById('genuineBtn').classList.remove('err');
-                document.getElementById('spamBtn').classList.remove('err');
-                showTimeout();
-            },500);
-        }
-    },1000);
-}
+  { id:'amazon', genuine:true,
+    short:["Sent from amazon.co.uk.", "Real order details, no payment asked."],
+    from:{name:'Amazon', addr:'shipment-tracking@amazon.co.uk', color:'#ff9900', initial:'A', dark:true},
+    to:'marcus.t@autostore.co.uk', date:'Yesterday', subject:'Your order has been dispatched!',
+    preview:'Great news — your order has been collected by the courier and is now on its way to you.',
+    banner:{text:'amazon.co.uk', bg:'#232f3e', color:'#ff9900'},
+    body:[
+      {p:'Hi Marcus,'},
+      {p:'Great news — your order has been collected by the courier and is now on its way to you.'},
+      {box:[['Order','#205-8841762-0034561'],['Item','Mini Tracker and Audio Recorder'],['Courier','Royal Mail Tracked 24'],['Delivery','Tomorrow by 9pm']], bg:'#fffbf0', border:'#ffe082'},
+      {btn:{label:'Track Your Package', url:'https://www.amazon.co.uk/progress-tracker/package/ref=ppx_yo_dt_b_track_package', bg:'#ff9900', color:'#111'}},
+      {small:'Questions? Visit amazon.co.uk/help or contact Customer Service.'}
+    ],
+    foot:'Amazon EU S.à r.l. · 38 avenue John F. Kennedy, L-1855 Luxembourg',
+    explain:['It comes from amazon.co.uk, a verified Amazon domain.','It includes a real order number and the exact item you ordered.','The tracking link points to amazon.co.uk, and nothing asks for payment or a password.'] },
 
-function stopRT(){
-    if(rtInt){clearInterval(rtInt);rtInt=null;}
-    const bar=document.getElementById('ftFill');
-    if(bar)bar.style.animationPlayState='paused';
-}
+  { id:'microsoft', genuine:true,
+    short:["Real microsoft.com address and link.", "Only a notice, nothing urgent."],
+    from:{name:'Microsoft 365', addr:'microsoft365@email.microsoft.com', color:'#0078d4', initial:'M'},
+    to:'marcus@autostore.co.uk', date:'Mon', subject:'Your Microsoft 365 subscription renews soon',
+    preview:'Your Microsoft 365 account has had an unexpected log in attempt. No action is needed.',
+    banner:{text:'Microsoft', bg:'#0078d4', color:'#fff'},
+    body:[
+      {p:'Hi Marcus,'},
+      {p:'Your Microsoft 365 account has had an unexpected log in attempt. No action is needed, and your saved payment method will not be charged.'},
+      {box:[['Plan','Microsoft 365 Personal'],['Renews','Annual'],['Payment','Visa ••••3847'],['Amount','£59.99 / year']], bg:'#f0f6ff', border:'#bdd7f5'},
+      {btn:{label:'Manage Subscription', url:'https://account.microsoft.com/services', bg:'#0078d4', color:'#fff'}},
+      {small:'You\'re receiving this because you subscribed to Microsoft 365.'}
+    ],
+    foot:'Microsoft Corporation · One Microsoft Way, Redmond, WA 98052',
+    explain:['The sender is on microsoft.com and the link goes to account.microsoft.com.','It includes details only Microsoft would hold: your plan, renewal and the card ending 3847.','No action is demanded and nothing is urgent. It is just a notice.'] },
 
-/* ── GAME DATA ── */
-const emails=[
-    {isGenuine:true,  fb:'This was a genuine Barclays email. The sender address (no-reply@barclays.co.uk) matches the official domain exactly, and it uses your real name and account details — something a scammer would not have.'},
-    {isGenuine:false, fb:'This was a phishing email. The sender domain "hmrc-gov.support-uk.com" is not HMRC\'s real domain (hmrc.gov.uk), and HMRC never emails you to offer refunds or ask for bank details.'},
-    {isGenuine:true,  fb:'This was a genuine Amazon email. It came from the verified domain amazon.co.uk, included your real order number and item, and all links pointed back to Amazon\'s own website.'},
-    {isGenuine:false, fb:'This was a phishing email. Look closely — the sender name says "PayPaI" (capital I, not l) and the domain is "paypa1-secure-login.com". PayPal\'s only real domain is paypal.com.'},
-    {isGenuine:true,  fb:'This was a genuine Microsoft email. It came from microsoft365@email.microsoft.com and included your exact subscription details — plan, renewal date and card — that only Microsoft would hold.'}
+  { id:'servicedesk', genuine:true,
+    short:["From your own company address.", "Asks you for nothing."],
+    from:{name:'AutoStore IT Service Desk', addr:'servicedesk@autostore.co.uk', color:'#1e8fff', initial:'IT'},
+    to:'All staff', date:'Yesterday', subject:'Planned maintenance: Saturday 22:00–23:30',
+    preview:'The stock system and myMail will be unavailable on Saturday evening while we apply updates.',
+    banner:{text:'AutoStore IT', bg:'#0a6fcf', color:'#fff'},
+    body:[
+      {p:'Hi all,'},
+      {p:'The stock system and myMail will be unavailable this Saturday between 22:00 and 23:30 while we apply security updates. No action is needed from you.'},
+      {btn:{label:'View maintenance schedule', url:'https://intranet.autostore.co.uk/it/maintenance', bg:'#0a6fcf', color:'#fff'}},
+      {small:'Remember: IT will never ask for your password by email, text or phone.'}
+    ],
+    foot:'AutoStore IT Service Desk · Internal use only',
+    explain:['It comes from your own company domain, autostore.co.uk, so there is no "External" warning.','It asks for nothing: no login, no password, no payment.','The link goes to the company intranet, and IT itself reminds you it never asks for passwords.'] },
+
+  { id:'hmrc', genuine:false,
+    short:["Fake address: support-uk.com, not gov.uk.", "Urgent deadline and a suspicious link."],
+    from:{name:'HMRC Tax Refunds', addr:'refunds@hmrc-gov.support-uk.com', color:'#1d4228', initial:'H'},
+    to:'undisclosed-recipients', date:'Today, 8:03 AM', subject:'⚠️ TAX REFUND: £312.47 — ACTION REQUIRED',
+    preview:'Our records show you are owed a tax refund. Your refund will EXPIRE in 24 hours.',
+    banner:{text:'HM Revenue & Customs', bg:'#1d4228', color:'#fff'},
+    body:[
+      {warn:'Your refund will EXPIRE in 24 hours. Verify your details immediately or forfeit this payment.', red:false},
+      {p:'Dear Taxpayer,'},
+      {p:'Our records show you are owed a tax refund of £312.47. To release this payment, confirm your bank details and National Insurance number using the link below.'},
+      {btn:{label:'Claim Your Refund Now →', url:'http://hmrc-refund-claim.taxback-verify.net/secure/claim?ref=UK2024&token=xP9mQ', bg:'#c0392b', color:'#fff'}}
+    ],
+    foot:'© HMRC 2025 · Government Gateway Services',
+    explain:['The sender domain is support-uk.com. HMRC only uses gov.uk.','"Dear Taxpayer" and "undisclosed recipients": it was sent to many people, not you.','A 24-hour deadline is pressure. The link goes to taxback-verify.net, not gov.uk, and uses http instead of https.','HMRC never emails to offer refunds or to ask for bank details.'] },
+
+  { id:'paypal', genuine:false,
+    short:["Fake address: paypa1 with a number 1.", "Threats and \"Dear Valued Customer\"."],
+    from:{name:'PayPaI Security Team', addr:'service@paypa1-secure-login.com', color:'#003087', initial:'P'},
+    to:'customer@email.com', date:'Today, 6:47 AM', subject:'🔒 Your account has been LIMITED',
+    preview:'URGENT: Your account access has been suspended. Failure to act within 12 hours…',
+    banner:{text:'PayPal', bg:'#003087', color:'#fff'},
+    body:[
+      {warn:'URGENT: Your account access has been suspended. Failure to act within 12 hours will result in permanent closure.', red:true},
+      {p:'Dear Valued Customer,'},
+      {p:'We have detected unusual login activity from an unrecognised device. You must verify your identity and update your payment informations immediately.'},
+      {btn:{label:'Verify My Account →', url:'https://www.paypa1-secure-login.com/verify/account?token=xG7hQ2mP9&redirect=true', bg:'#0070ba', color:'#fff'}}
+    ],
+    foot:'PayPaI Holdings, Inc. · 2211 North First Street, San Jose, CA',
+    explain:['Look closely: the name says "PayPaI" with a capital I, and the domain is paypa1-secure-login.com with a number 1. PayPal only uses paypal.com.','"Dear Valued Customer" and a different recipient address: it does not know who you are.','Threats ("permanent closure in 12 hours") and a spelling error ("informations") are classic warning signs.'] },
+
+  { id:'itphish', genuine:false,
+    short:["Wrong domain: autostore-helpdesk.com.", "Asks for your password."],
+    from:{name:'AutoStore IT Support', addr:'it-support@autostore-helpdesk.com', color:'#1e8fff', initial:'IT'},
+    to:'marcus@autostore.co.uk', date:'Today, 7:41 AM', subject:'Your password expires today',
+    preview:'Your mailbox password expires at 17:00. Keep your password to avoid being locked out.',
+    banner:{text:'AutoStore IT Support', bg:'#0a6fcf', color:'#fff'},
+    body:[
+      {warn:'Your mailbox will be locked at 17:00 today.', red:false},
+      {p:'Hi,'},
+      {p:'Your password expires today. To avoid losing access to your email and the stock system, confirm your current password using the button below.'},
+      {btn:{label:'Keep my password', url:'https://autostore-helpdesk.com/login?user=marcus&redirect=mail', bg:'#0a6fcf', color:'#fff'}}
+    ],
+    foot:'AutoStore IT Support',
+    explain:['Your real IT team is autostore.co.uk. This one is autostore-helpdesk.com, which is why it is marked "External".','It asks you to type your current password into a page behind a link. IT never needs that.','A same-day lockout deadline is there to make you rush.'] },
+
+  { id:'invoice', genuine:false,
+    short:["Fake address: ends in invoice-portal.net.", "The \"PDF\" is really a .html file."],
+    from:{name:'Clarks Motor Parts Accounts', addr:'accounts@clarks-motorparts.co.uk.invoice-portal.net', color:'#c2410c', initial:'C'},
+    to:'marcus@autostore.co.uk', date:'Today, 8:50 AM', subject:'Invoice INV-44712 overdue — final reminder',
+    preview:'Please find attached invoice INV-44712 which is now 14 days overdue. Open to view and pay.',
+    body:[
+      {p:'Hi Marcus,'},
+      {p:'Please find attached invoice INV-44712 (£1,284.00), which is now 14 days overdue. Open the attachment to view the invoice and pay online today to avoid further charges.'},
+      {p:'Regards,'},
+      {p:'Accounts Department'}
+    ],
+    attach:{name:'INV-44712.pdf.html', size:'3 KB', looksLike:'PDF document', real:'HTML web page (opens in a browser)'},
+    foot:'Clarks Motor Parts Ltd',
+    explain:['The real domain is invoice-portal.net. "clarks-motorparts.co.uk" is just a prefix to fool you. Read the address from the right.','The attachment is called .pdf.html. It is really a web page, not a PDF, and would open a fake login page.','"Final reminder" and "further charges" are pressure tactics.'] },
+
+{ id:'apple', genuine:true,
+    short:["Real apple.com address and link.", "Says nothing more is needed."],
+    from:{name:'Apple', addr:'no_reply@email.apple.com', color:'#1d1d1f', initial:'A'},
+    to:'marcus@autostore.co.uk', date:'Yesterday', subject:'Your Apple ID was used to sign in',
+    preview:"Your Apple ID was used to sign in to iCloud on an iPhone. If this was you, there is nothing to do.",
+    banner:{text:'Apple', bg:'#1d1d1f', color:'#fff'},
+    body:[
+      {p:'Hello Marcus,'},
+      {p:'Your Apple ID was used to sign in to iCloud on an iPhone. If this was you, there is nothing more to do.'},
+      {box:[['Device','iPhone'],['Place','Birmingham, UK']], bg:'#f5f5f7', border:'#d2d2d7'},
+      {p:'If this was not you, go to appleid.apple.com or the Settings app on your device to change your password.'},
+      {btn:{label:'Manage my Apple ID', url:'https://appleid.apple.com/', bg:'#0071e3', color:'#fff'}}
+    ],
+    foot:'Apple Distribution International Ltd · Hollyhill Industrial Estate, Cork, Ireland',
+    explain:["The sender is on apple.com and the link goes to appleid.apple.com.", "It uses your name and tells you nothing is needed if it was you.", "It does not ask you to type a password into the email or a link."] },
+
+  { id:'respect', genuine:true,
+    short:["From your own company address.", "Asks you for nothing today."],
+    from:{name:'AutoStore HR', addr:'hr@autostore.co.uk', color:'#7a4fe0', initial:'HR'},
+    to:'All staff', date:'Mon', subject:'New e-learning: Respect at work (10 minutes)',
+    preview:'Please complete the new Respect at Work module by the end of the month.',
+    banner:{text:'AutoStore HR', bg:'#5b2fd6', color:'#fff'},
+    body:[
+      {p:'Hi all,'},
+      {p:'Please complete the new 10-minute "Respect at work" module by the end of the month. It covers how to spot and report harassment and abuse, including online and phone-based abuse, and where to get support. No action is needed today.'},
+      {btn:{label:'Open the module', url:'https://intranet.autostore.co.uk/hr/respect-at-work', bg:'#5b2fd6', color:'#fff'}},
+      {small:'If you or someone you know needs support, you can speak to HR in confidence.'}
+    ],
+    foot:'AutoStore HR · Internal use only',
+    explain:["It comes from your own company domain, autostore.co.uk, so there is no External warning.", "The link goes to the company intranet, and it asks for no login or personal details.", "There is no threat or countdown. It is just a normal reminder."] },
+
+  { id:'trackmate', genuine:false,
+    short:["Look-alike billing site: trackmate-pro-renew.com.", "Countdown, and wants your card details."],
+    from:{name:'TrackMate Pro Billing', addr:'billing@trackmate-pro-renew.com', color:'#d6246e', initial:'T'},
+    to:'marcus@autostore.co.uk', date:'Today, 7:12 AM', subject:'Your phone tracker has been switched OFF',
+    preview:'Your TrackMate Pro subscription has expired. Renew now to keep live location and messages.',
+    banner:{text:'TrackMate Pro', bg:'#a21856', color:'#fff'},
+    body:[
+      {warn:'Live tracking stops in 2 hours unless you renew.', red:true},
+      {p:'Dear Customer,'},
+      {p:'Your TrackMate Pro subscription has expired. To keep your live location and message feed, confirm your card details using the button below.'},
+      {btn:{label:'Renew and keep tracking →', url:'https://trackmate-pro-renew.com/billing/update?id=88213', bg:'#d6246e', color:'#fff'}}
+    ],
+    foot:'TrackMate Pro Ltd',
+    explain:["The sender is trackmate-pro-renew.com, a billing look-alike, and you cannot check who is behind it.", "\"Dear Customer\", a 2-hour countdown and a request for card details through a link are classic scam signs.", "Secretly tracking another person's phone is stalking, and it is a crime."] },
+
+  { id:'cloudalert', genuine:false,
+    short:["Fake address: mycloud-secure-verify.net.", "Threat to suspend, wants you to log in."],
+    from:{name:'myCloud Security', addr:'alerts@mycloud-secure-verify.net', color:'#6a47ea', initial:'M'},
+    to:'marcus@autostore.co.uk', date:'Today, 6:30 AM', subject:'⚠️ New login to your account: verify now',
+    preview:'We noticed a login from a new device. Verify within 12 hours or your account will be suspended.',
+    banner:{text:'myCloud', bg:'#4a2fb0', color:'#fff'},
+    body:[
+      {warn:'Verify within 12 hours or your account will be suspended.', red:true},
+      {p:'Hi,'},
+      {p:'We noticed a login to your account from a new device in another city. If this was not you, verify your account now by entering your username and password.'},
+      {btn:{label:'Verify my account →', url:'https://mycloud-secure-verify.net/verify?user=marcus&token=Zk3p91', bg:'#6a47ea', color:'#fff'}}
+    ],
+    foot:'myCloud remote network solutions LLC',
+    explain:["The sender domain is mycloud-secure-verify.net. A real service would use its own website address.", "A 12-hour threat of suspension is pressure to make you act without thinking.", "It asks you to type your username and password into a page behind a link. Go to the real site yourself instead."] },
+
+  { id:'locshare', genuine:false,
+    short:["Unknown sender and an odd .co address.", "A link to \"view their live location\"."],
+    from:{name:'Live Location', addr:'share@livelocation-share.co', color:'#0f9d6b', initial:'L'},
+    to:'marcus@autostore.co.uk', date:'Today, 9:48 AM', subject:'Sam has shared their live location with you',
+    preview:'Tap to see where Sam is right now and reply.',
+    body:[
+      {p:'Hi,'},
+      {p:'Sam has shared their live location with you. Tap the link below to see exactly where they are right now and send them a message.'},
+      {btn:{label:'View live location', url:'http://livelocation-share.co/view/s/9f3Qx', bg:'#0f9d6b', color:'#fff'}},
+      {small:'You are receiving this because someone entered your email address.'}
+    ],
+    foot:'',
+    explain:["You do not know the sender and the address ends in .co, not a real maps or phone company.", "Real location sharing happens inside your phone's own apps, not through emailed links.", "Links like this can steal your login or install tracking. Never share or follow anyone's location because you are pressured to."] }
 ];
 
-let idx=0,penActive=false,penLeft=0,penInt=null;
-const welcomeOv=document.getElementById('welcomeOverlay');
-const penOv=document.getElementById('penaltyOverlay');
-const timeoutOv=document.getElementById('timeoutOverlay');
-const succOv=document.getElementById('successOverlay');
-const gbtn=document.getElementById('genuineBtn');
-const sbtn=document.getElementById('spamBtn');
-const ctrEl=document.getElementById('counter');
-const pTimEl=document.getElementById('pTimer');
+/* ── STATE ── */
+let quiz = [];            // the 6 emails drawn for this attempt
+let results = {};         // id -> 'genuine' | 'phish' (answered correctly)
+let current = null;       // email open right now
+let penActive = false, penLeft = 0, penInt = null;
+let rtLeft = SECS, rtInt = null;
 
-function showOv(el){el.classList.remove('gone');el.classList.add('show');}
-function hideOv(el){el.classList.remove('show');el.classList.add('gone');}
+const $ = id => document.getElementById(id);
+const welcomeOv = $('welcomeOverlay'), penOv = $('penaltyOverlay'), timeoutOv = $('timeoutOverlay'),
+      succOv = $('successOverlay'), resultOv = $('resultOverlay');
+const gbtn = $('genuineBtn'), sbtn = $('spamBtn'), ctrEl = $('counter'), floatTimer = $('floatTimer');
 
-document.getElementById('startBtn').addEventListener('click',()=>{
-    playStartup();
-    welcomeOv.style.display='none';
-    startRT();
-});
+function showOv(el){ el.classList.remove('gone'); el.classList.add('show'); }
+function hideOv(el){ el.classList.remove('show'); el.classList.add('gone'); }
+function shuffle(a){ a = a.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function mk(tag, cls, text){ const e=document.createElement(tag); if(cls) e.className=cls; if(text!==undefined) e.textContent=text; return e; }
+function isExternal(e){ return !e.from.addr.toLowerCase().endsWith('@'+COMPANY_DOMAIN); }
 
-document.getElementById('restartBtn').addEventListener('click',()=>{
-    hideOv(timeoutOv);resetGame();
-});
-
-gbtn.addEventListener('click',()=>{
-    if(penActive)return;
-    stopRT();
-    if(emails[idx].isGenuine){playCorrect();gbtn.classList.add('ok');setTimeout(()=>{gbtn.classList.remove('ok');nextEmail();},280);}
-    else{penActive=true;playBuzzer();gbtn.classList.add('err');setTimeout(()=>{gbtn.classList.remove('err');showPenalty();},400);}
-});
-
-sbtn.addEventListener('click',()=>{
-    if(penActive)return;
-    stopRT();
-    if(!emails[idx].isGenuine){playCorrect();sbtn.classList.add('ok');setTimeout(()=>{sbtn.classList.remove('ok');nextEmail();},280);}
-    else{penActive=true;playBuzzer();sbtn.classList.add('err');setTimeout(()=>{sbtn.classList.remove('err');showPenalty();},400);}
-});
-
-function showPenalty(){
-    penActive=true;penLeft=10;
-    gbtn.disabled=true;sbtn.disabled=true;
-    showOv(penOv);
-    const fb=emails[idx].fb;
-    document.getElementById('fb1').textContent=fb;
-    pTimEl.textContent='10';
-    const old=document.getElementById('tbarFill'),nw=old.cloneNode(true);
-     old.parentNode.replaceChild(nw,old);
-    if(penInt)clearInterval(penInt);
-    penInt=setInterval(()=>{
-        penLeft--;pTimEl.textContent=penLeft;
-        if(penLeft<=0){
-            clearInterval(penInt);hideOv(penOv);
-            penActive=false;gbtn.disabled=false;sbtn.disabled=false;
-            startRT();
-        }
-    },1000);
+function drawQuiz(){
+  const g = shuffle(BANK.filter(e=>e.genuine)).slice(0,DRAW_GENUINE);
+  const p = shuffle(BANK.filter(e=>!e.genuine)).slice(0,DRAW_PHISH);
+  return shuffle(g.concat(p));
 }
+
+/* ── INBOX ── */
+function renderInbox(){
+  const list = $('mList'); list.textContent = '';
+  const left = quiz.filter(e=>!results[e.id]).length;
+  $('inboxUnread').textContent = left ? left + ' unread' : 'All handled';
+  quiz.forEach(e=>{
+    const done = !!results[e.id];
+    const li = mk('li','m-item'+(done?' done':''));
+    const dot = mk('div','m-dot'); dot.appendChild(mk('i'));
+    const av = mk('div','m-av', e.from.initial); av.style.background = e.from.color; if(e.from.dark) av.style.color='#111';
+    const main = mk('div','m-main');
+    const top = mk('div','m-top'); top.appendChild(mk('span','m-from',e.from.name)); top.appendChild(mk('span','m-when',e.date.replace('Today, ','')));
+    main.appendChild(top); main.appendChild(mk('div','m-subj',e.subject)); main.appendChild(mk('div','m-prev',e.preview));
+    li.append(dot,av,main);
+    if(done){ const b = mk('span','m-badge '+(results[e.id]==='phish'?'rep':'ok'), results[e.id]==='phish'?'Reported':'Kept'); li.appendChild(b); }
+    else li.addEventListener('click',()=>openEmail(e));
+    list.appendChild(li);
+  });
+  ctrEl.textContent = 'Handled ' + (quiz.length-left) + ' of ' + quiz.length;
+}
+function showInbox(){
+  document.body.classList.remove('in-msg');
+  $('msgView').style.display='none'; $('decision').style.display='none';
+  $('inboxView').style.display='block'; floatTimer.style.display='none';
+  renderInbox(); window.scrollTo({top:0});
+}
+
+/* ── MESSAGE ── */
+function renderMessage(e){
+  const v = $('msgBody'); v.textContent='';
+  const ext = isExternal(e);
+
+  const hdr = mk('div','e-hdr');
+  const row = mk('div','e-srow');
+  const av = mk('div','e-av',e.from.initial); av.style.background=e.from.color; if(e.from.dark) av.style.color='#111';
+  const info = mk('div','e-sinfo');
+  const nm = mk('div','e-name',e.from.name); if(ext) nm.appendChild(mk('span','pill ext','External'));
+  info.appendChild(nm); info.appendChild(mk('div','e-addr','to ' + (e.to.length>34 ? e.to.slice(0,32)+'…' : e.to)));
+  row.append(av,info,mk('div','e-date',e.date));
+  hdr.appendChild(row);
+  hdr.appendChild(mk('div','e-subj',e.subject));
+
+  const det = mk('div','e-details');
+  [['From', e.from.name+' <'+e.from.addr+'>'],['Reply-To', e.replyTo || e.from.addr],['To', e.to],['Date', e.date]].forEach(([k,val])=>{
+    const d=mk('div'); d.appendChild(mk('b',null,k)); d.appendChild(document.createTextNode(' '+val)); det.appendChild(d);
+  });
+  const tbtn = mk('button','e-detailsbtn','Details ▾'); tbtn.type='button';
+  tbtn.addEventListener('click',()=>{ const o=det.classList.toggle('open'); tbtn.textContent = o?'Hide ▴':'Details ▾'; });
+  hdr.appendChild(tbtn); hdr.appendChild(det);
+  v.appendChild(hdr);
+
+  if(ext){ const b=mk('div','e-ext-banner'); b.appendChild(mk('span',null,'⚠️')); b.appendChild(mk('span',null,'This email came from outside AutoStore. Be careful with links and attachments.')); v.appendChild(b); }
+
+  const body = mk('div','e-body');
+  if(e.banner){ const bn=mk('div','e-banner',e.banner.text); bn.style.background=e.banner.bg; bn.style.color=e.banner.color; body.appendChild(bn); }
+  let sawBtn=false;
+  e.body.forEach(b=>{
+    if(b.p!==undefined) body.appendChild(mk('p',null,b.p));
+    else if(b.small!==undefined) body.appendChild(mk('div','e-small',b.small));
+    else if(b.warn!==undefined){ const w=mk('div','e-warn'+(b.red?' red':'')); w.appendChild(mk('span',null,b.red?'🔴':'⚠️')); w.appendChild(mk('span',null,b.warn)); body.appendChild(w); }
+    else if(b.box){ const bx=mk('div','e-ibox'); bx.style.background=b.bg; bx.style.border='1px solid '+b.border; b.box.forEach(([l,val])=>{ const r=mk('div','e-row'); r.appendChild(mk('span','e-lbl',l)); r.appendChild(mk('span',null,val)); bx.appendChild(r); }); body.appendChild(bx); }
+    else if(b.btn){ const bt=mk('button','e-btn',b.btn.label); bt.type='button'; bt.style.background=b.btn.bg; bt.style.color=b.btn.color; bt.addEventListener('click',()=>openLinkSheet(b.btn.url)); body.appendChild(bt); if(!sawBtn){ body.appendChild(mk('div','e-hint','🔒 Links are never opened here. Tap one to preview where it really goes.')); sawBtn=true; } }
+  });
+  if(e.attach){ const at=mk('button','e-attach'); at.type='button'; at.appendChild(mk('div','ic','PDF')); const t=mk('div'); t.appendChild(mk('div','nm',e.attach.name)); t.appendChild(mk('div','sz',e.attach.size+' · Tap for details')); at.appendChild(t); at.addEventListener('click',()=>openAttachSheet(e.attach)); body.appendChild(at); }
+  v.appendChild(body);
+  if(e.foot) v.appendChild(mk('div','e-foot',e.foot));
+}
+
+function openEmail(e){
+  document.body.classList.add('in-msg');
+  current = e; renderMessage(e);
+  $('inboxView').style.display='none'; $('msgView').style.display='block';
+  $('decision').style.display='block'; floatTimer.style.display='flex';
+  ctrEl.textContent = 'Email ' + (quiz.indexOf(e)+1) + ' of ' + quiz.length;
+  window.scrollTo({top:0}); startRT();
+}
+
+/* ── BOTTOM SHEETS ── */
+function openSheet(html){ const s=$('sheet'); s.textContent=''; s.appendChild(mk('div','sheet-grab')); html(s); s.appendChild(Object.assign(mk('button','sheet-close','Close'),{type:'button',onclick:closeSheet})); $('sheetBg').classList.add('show'); void s.offsetWidth; s.classList.add('show'); }
+function closeSheet(){ $('sheet').classList.remove('show'); $('sheetBg').classList.remove('show'); }
+function openLinkSheet(url){
+  openSheet(s=>{
+    s.appendChild(mk('div','sheet-ttl','Link preview'));
+    const box=mk('div','sheet-url'); let u; try{ u=new URL(url); }catch(e){ u=null; }
+    if(u){ const bad=u.protocol==='http:'; box.appendChild(mk('span','proto'+(bad?' bad':''),u.protocol+'//')); box.appendChild(mk('b',null,u.host)); box.appendChild(document.createTextNode(u.pathname+u.search)); }
+    else box.textContent=url;
+    s.appendChild(box);
+    s.appendChild(mk('div','sheet-note','You have not opened this link. Look at the bold part: does that domain belong to the company the email claims to be from? Read it from right to left.'));
+  });
+}
+function openAttachSheet(a){
+  openSheet(s=>{
+    s.appendChild(mk('div','sheet-ttl','Attachment details'));
+    const kv=mk('div','sheet-kv');
+    [['File name',a.name],['Looks like',a.looksLike],['Actually is',a.real],['Size',a.size]].forEach(([k,val])=>{ const r=mk('div'); r.appendChild(mk('span',null,k)); r.appendChild(mk('span',null,val)); kv.appendChild(r); });
+    s.appendChild(kv);
+    s.appendChild(mk('div','sheet-note','Attachments are not opened in this training. Check the whole file name, including what comes after the last dot.'));
+  });
+}
+$('sheetBg').addEventListener('click',closeSheet);
+
+/* ── ANSWERING ── */
+function fillList(ul, items, genuine){ ul.textContent=''; ul.className='flag-list'+(genuine?' genuine':''); items.forEach(t=>ul.appendChild(mk('li',null,t))); }
+
+function answer(says){            // says: 'genuine' | 'phish'
+  if(penActive||!current) return;
+  stopRT(); closeSheet();
+  const e = current, correct = (says==='genuine') === e.genuine, btn = says==='genuine'?gbtn:sbtn;
+  if(correct){
+    playCorrect(); btn.classList.add('ok');
+    setTimeout(()=>{ btn.classList.remove('ok'); showResult(e,says); },280);
+  } else {
+    penActive=true; playBuzzer(); btn.classList.add('err');
+    setTimeout(()=>{ btn.classList.remove('err'); showPenalty(e); },400);
+  }
+}
+gbtn.addEventListener('click',()=>answer('genuine'));
+sbtn.addEventListener('click',()=>answer('phish'));
+
+function showResult(e,says){
+  $('resultTtl').textContent = 'Correct!';
+  $('resultSub').textContent = e.genuine ? 'It is genuine' : 'It is phishing';
+  fillList($('resultList'), e.short || e.explain, e.genuine);
+  showOv(resultOv);
+}
+$('resultBtn').addEventListener('click',()=>{
+  hideOv(resultOv);
+  results[current.id] = current.genuine ? 'genuine' : 'phish'; current = null;
+  if(quiz.every(x=>results[x.id])){ floatTimer.style.display='none'; renderInbox(); playCelebration(); launchConfetti(); showOv(succOv); }
+  else showInbox();
+});
+
+function showPenalty(e){
+  penLeft=PENALTY_SECS; gbtn.disabled=true; sbtn.disabled=true;
+  fillList($('fbList'), e.short || e.explain, false);
+  $('pTimer').textContent=penLeft;
+  const old=$('tbarFill'), nw=old.cloneNode(true); old.parentNode.replaceChild(nw,old);
+  showOv(penOv);
+  if(penInt) clearInterval(penInt);
+  penInt=setInterval(()=>{
+    penLeft--; $('pTimer').textContent=penLeft;
+    if(penLeft<=0){ clearInterval(penInt); hideOv(penOv); penActive=false; gbtn.disabled=false; sbtn.disabled=false; startRT(); }
+  },1000);
+}
+
+/* ── PER-EMAIL TIMER ── */
+function startRT(){
+  stopRT(); rtLeft=SECS;
+  const secsEl=$('ftSecs'); secsEl.textContent=SECS; secsEl.className='ft-secs'; floatTimer.className='float-timer';
+  const old=$('ftFill'), nw=old.cloneNode(true);
+  nw.style.background='linear-gradient(90deg,var(--blue-dark),var(--blue))'; nw.style.setProperty('--secs',SECS+'s'); nw.classList.remove('run');
+  old.parentNode.replaceChild(nw,old); void nw.offsetWidth; nw.classList.add('run');
+  rtInt=setInterval(()=>{
+    rtLeft--; const s=$('ftSecs'), bar=$('ftFill'); s.textContent=rtLeft;
+    if(rtLeft<=7){ bar.style.background='linear-gradient(90deg,#990000,var(--red))'; s.className='ft-secs danger'; floatTimer.className='float-timer danger'; playTick(); }
+    else if(rtLeft<=12){ bar.style.background='linear-gradient(90deg,#886600,var(--yellow))'; s.className='ft-secs warn'; floatTimer.className='float-timer warn'; }
+    if(rtLeft<=0){
+      stopRT(); if(penActive) return; closeSheet();
+      gbtn.classList.add('err'); sbtn.classList.add('err'); playTimeoutSound();
+      setTimeout(()=>{ gbtn.classList.remove('err'); sbtn.classList.remove('err'); showTimeout(); },500);
+    }
+  },1000);
+}
+function stopRT(){ if(rtInt){clearInterval(rtInt);rtInt=null;} const bar=$('ftFill'); if(bar) bar.style.animationPlayState='paused'; }
 
 function showTimeout(){
-    document.getElementById('timeoutEmailNum').textContent=idx+1;
-    document.getElementById('timeoutProgress').textContent=idx+' of '+emails.length;
-    showOv(timeoutOv);
+  const done=Object.keys(results).length;
+  $('timeoutEmailNum').textContent = current ? quiz.indexOf(current)+1 : '?';
+  $('timeoutProgress').textContent = done+' of '+quiz.length;
+  showOv(timeoutOv);
 }
 
-function resetGame(){
-    document.querySelectorAll('.ec').forEach(e=>e.classList.remove('active'));
-    idx=0;
-    document.getElementById('email-0').classList.add('active');
-    ctrEl.textContent='Email 1 of 5';
-    floatTimer.className='float-timer';
-    floatTimer.style.opacity='1';
-    startRT();
+/* ── FLOW ── */
+function startAssessment(){
+  quiz = drawQuiz(); results = {}; current = null; penActive = false;
+  hideOv(timeoutOv); hideOv(resultOv); hideOv(penOv); gbtn.disabled=false; sbtn.disabled=false;
+  showInbox();
 }
+$('startBtn').addEventListener('click',()=>{ playStartup(); welcomeOv.style.display='none'; startAssessment(); });
+$('restartBtn').addEventListener('click',startAssessment);
 
-function nextEmail(){
-    document.getElementById('email-'+idx).classList.remove('active');
-    idx++;
-    if(idx>=emails.length){
-        stopRT();
-        floatTimer.style.opacity='0';
-        playCelebration();launchConfetti();showOv(succOv);
-    } else {
-        document.getElementById('email-'+idx).classList.add('active');
-        ctrEl.textContent='Email '+(idx+1)+' of '+emails.length;
-        startRT();
-    }
-}
+/* initial render so the page is never empty behind the welcome screen */
+quiz = drawQuiz(); showInbox();
+
 </script>
+    <script src="/js/hints.js?v=20261119a" defer></script>
 </body>
 </html>

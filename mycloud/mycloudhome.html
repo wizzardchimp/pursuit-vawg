@@ -2,11 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="preload" href="/fonts/exo-2-300.woff2?v=20261119a" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/fonts/fonts.css?v=20261119a">
+    <link rel="stylesheet" href="/css/base.css?v=20261119a">
+    <link rel="stylesheet" href="/mycloud/css/all.min.css?v=20261119a">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=20261119a">
     <title>MyCloudHome</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
         * {
             margin: 0;
@@ -22,7 +25,7 @@
             overflow-x: hidden;
             position: relative;
             -webkit-text-size-adjust: 100%;
-            padding-bottom: 160px;
+            padding-bottom: 40px;
         }
 
         body::before {
@@ -316,6 +319,39 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* ── livelier dashboard ── */
+        .hero{width:100%;margin-bottom:18px;border-radius:22px;padding:16px 18px 14px;background:linear-gradient(150deg,rgba(20,8,40,.62),rgba(60,20,100,.5));border:1px solid rgba(255,255,255,.22);box-shadow:0 16px 36px rgba(20,5,40,.35);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);position:relative;overflow:hidden;opacity:0;animation:fadeInUp .5s ease-out .15s forwards;}
+        .hero-top{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+        .hero-label{font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;opacity:.75;}
+        .live{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:800;color:#b8ffd9;background:rgba(52,211,153,.18);padding:6px 11px;border-radius:20px;}
+        .live i{width:8px;height:8px;border-radius:50%;background:#34d399;box-shadow:0 0 0 0 rgba(52,211,153,.7);animation:pulse 1.8s infinite;}
+        @keyframes pulse{70%{box-shadow:0 0 0 9px rgba(52,211,153,0);}100%{box-shadow:0 0 0 0 rgba(52,211,153,0);}}
+        .hero h2{font-size:23px;font-weight:800;letter-spacing:-.02em;margin:8px 0 12px;line-height:1.2;}
+        .chips{display:flex;gap:8px;flex-wrap:wrap;}
+        .chip{font-size:13px;font-weight:600;padding:7px 12px;border-radius:20px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);}
+        .chip b{color:#ffd1f0;}
+        .sec{width:100%;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.75;margin:22px 4px 10px;}
+        .feed{width:100%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:20px;overflow:hidden;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
+        .fi{display:flex;align-items:center;gap:12px;padding:12px 14px;animation:fin .45s ease;}
+        .fi + .fi{border-top:1px solid rgba(255,255,255,.14);}
+        @keyframes fin{from{opacity:0;transform:translateY(-10px);background:rgba(255,255,255,.2);}to{opacity:1;transform:none;background:transparent;}}
+        .fi .d{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0;}
+        .fi .t{flex:1;min-width:0;font-size:14.5px;font-weight:600;line-height:1.3;overflow-wrap:anywhere;}
+        .fi .t small{display:block;font-weight:500;opacity:.7;font-size:12.5px;margin-top:1px;}
+        .d-pink{background:linear-gradient(145deg,#ff7ab8,#d6246e);} .d-blue{background:linear-gradient(145deg,#5aa2ff,#2160e0);} .d-red{background:linear-gradient(145deg,#ff7a6b,#d93025);} .d-gold{background:linear-gradient(145deg,#ffc94d,#f08a00);}
+        /* coloured icon badges on the tiles */
+        .icon{border-radius:16px;padding:11px;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 6px 14px rgba(0,0,0,.22);}
+        .icon i{font-size:inherit !important;line-height:1;}
+        .card:nth-child(1) .icon{background:linear-gradient(145deg,#ff7ab8,#d6246e);}
+        .card:nth-child(2) .icon{background:linear-gradient(145deg,#5aa2ff,#2160e0);}
+        .card:nth-child(3) .icon{background:linear-gradient(145deg,#34d399,#0f9d6b);}
+        .card:nth-child(4) .icon{background:linear-gradient(145deg,#ffc94d,#f08a00);}
+        .card:nth-child(5) .icon{background:linear-gradient(145deg,#ff7a6b,#d93025);}
+        .card:nth-child(6) .icon{background:linear-gradient(145deg,#2ee0d0,#0c8f95);}
+        .card:nth-child(7) .icon{background:linear-gradient(145deg,#aab2c0,#6b7486);}
+        .card p small{display:block;font-size:12.5px;font-weight:500;opacity:.75;margin-top:2px;}
+        @media (prefers-reduced-motion:reduce){ .live i,.fi,.hero{animation:none;opacity:1;} }
     </style>
 </head>
 <body>
@@ -323,6 +359,12 @@
         <!-- Banner -->
         <div class="banner">
             <img src="./images/mycloudbanner.png" alt="MyCloudHome Banner" loading="lazy">
+        </div>
+
+        <div class="hero">
+            <div class="hero-top"><span class="hero-label">Device tracked</span><span class="live"><i></i>LIVE</span></div>
+            <h2>iPhone 15 Pro - ness phone</h2>
+            <div class="chips"><span class="chip"><b>29</b> photos</span><span class="chip"><b>43</b> contacts</span><span class="chip"><b>3</b> CCTV feeds</span></div>
         </div>
 
         <!-- Grid -->
@@ -333,7 +375,7 @@
                         <path d="M448 80c8.8 0 16 7.2 16 16V415.8l-5-6.5-136-176c-4.5-5.9-11.6-9.3-19-9.3s-14.4 3.4-19 9.3L202 340.7l-30.5-42.7C167 291.7 159.8 288 152 288s-15 3.7-19.5 10.1l-80 112L48 416.3l0-.3V96c0-8.8 7.2-16 16-16H448zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm80 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"/>
                     </svg>
                 </div>
-                <p>Photos</p>
+                <p>Photos<small>29 items</small></p>
             </a>
 
             <a href="contacts.html" class="card">
@@ -342,7 +384,7 @@
                         <path d="M96 0C60.7 0 32 28.7 32 64V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H96zM208 288h64c44.2 0 80 35.8 80 80c0 8.8-7.2 16-16 16H144c-8.8 0-16-7.2-16-16c0-44.2 35.8-80 80-80zm-32-96a64 64 0 1 1 128 0 64 64 0 1 1 -128 0zM512 80c0-8.8-7.2-16-16-16s-16 7.2-16 16v64c0 8.8 7.2 16 16 16s16-7.2 16-16V80zM496 192c-8.8 0-16 7.2-16 16v64c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm16 144c0-8.8-7.2-16-16-16s-16 7.2-16 16v64c0 8.8 7.2 16 16 16s16-7.2 16-16V336z"/>
                     </svg>
                 </div>
-                <p>Contacts</p>
+                <p>Contacts<small>43 people</small></p>
             </a>
 
             <a href="./map/map.html" class="card">
@@ -360,7 +402,7 @@
                         <path d="M0 128C0 92.7 28.7 64 64 64H320c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128zM559.1 99.8c10.4 5.6 16.9 16.4 16.9 28.2V384c0 11.8-6.5 22.6-16.9 28.2s-23 5-32.9-1.6l-96-64L416 337.1V320 192 174.9l14.2-9.5 96-64c9.8-6.5 22.4-7.2 32.9-1.6z"/>
                     </svg>
                 </div>
-                <p>CCTV</p>
+                <p>CCTV<small>3 cameras</small></p>
             </a>
 
             <a href="keylog.html" class="card">
@@ -369,7 +411,7 @@
                         <path d="M16 64C16 28.7 44.7 0 80 0H304c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H80c-35.3 0-64-28.7-64-64V64zm96 384c0 8.8 7.2 16 16 16H256c8.8 0 16-7.2 16-16s-7.2-16-16-16H128c-8.8 0-16 7.2-16 16z"/>
                     </svg>
                 </div>
-                <p>Keylogger</p>
+                <p>Keylogger<small>live</small></p>
             </a>
 
             <a href="finance.html" class="card">
@@ -390,21 +432,12 @@
                 <p>Settings</p>
             </a>
         </div>
+
+        <div class="sec">Live activity</div>
+        <div class="feed" id="feed" aria-live="polite"></div>
     </div>
 
-    <!-- Footer -->
-    <div class="footer">
-        <div class="footer-buttons">
-            <button class="logout-btn" onclick="location.href='login.html';">
-                <svg viewBox="0 0 512 512">
-                    <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"/>
-                </svg>
-                Log Out
-            </button>
-            
-        </div>
-        <p class="copyright">© 2025 myCloud remote network solutions LLC</p>
-    </div>
+    <p class="copyright" style="text-align:center;padding:18px 0 30px;position:relative;z-index:1;">© 2025 myCloud remote network solutions LLC</p>
 
     <script>
         // Add ripple effect to cards
@@ -452,6 +485,33 @@
             `;
             document.head.appendChild(style);
         });
+
+        // live activity feed: replays the sort of things the tracker picks up
+        (function(){
+            var items=[
+              ['d-red','fa-keyboard','Keylogger','typed: "summer dresses"'],
+              ['d-gold','fa-video','CCTV','Camera 2 motion detected'],
+              ['d-blue','fa-address-book','Contacts','Contact list synced'],
+              ['d-red','fa-keyboard','Keylogger','typed: "blue wedding guest dress"'],
+              ['d-pink','fa-image','Photos','New photo backed up'],
+              ['d-red','fa-keyboard','Keylogger','typed: "healthy lunch ideas for work"'],
+              ['d-gold','fa-video','CCTV','Camera 1 recording'],
+              ['d-pink','fa-image','Photos','New photo backed up']
+            ];
+            var feed=document.getElementById('feed'), n=0;
+            function add(){
+              var it=items[n++%items.length], row=document.createElement('div'); row.className='fi';
+              row.innerHTML='<div class="d '+it[0]+'"><i class="fas '+it[1]+'"></i></div><div class="t"></div>';
+              var t=row.querySelector('.t'); t.textContent=it[2]; var sm=document.createElement('small'); sm.textContent=it[3]+' · just now'; t.appendChild(sm);
+              feed.insertBefore(row,feed.firstChild);
+              while(feed.children.length>4) feed.removeChild(feed.lastChild);
+              var olds=feed.querySelectorAll('small'); for(var k=1;k<olds.length;k++) olds[k].textContent=olds[k].textContent.replace('just now',(k*4)+' sec ago').replace(/\d+ sec ago/,(k*4)+' sec ago');
+            }
+            add();add();add();
+            setInterval(add,4000);
+        })();
     </script>
+    <script src="/js/hints.js?v=20261119a" defer></script>
+    <script src="/js/backbar.js?v=20261119a" defer></script>
 </body>
 </html>

@@ -1,11 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="autostore-ui">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="preload" href="/fonts/exo-2-300.woff2?v=20261119a" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/fonts/fonts.css?v=20261119a">
+    <link rel="stylesheet" href="/css/base.css?v=20261119a">
+    <link rel="stylesheet" href="/mycloud/css/all.min.css?v=20261119a">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=20261119a">
     <title>Personal Drive — AutoStore</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Exo+2:wght@300;400;600&display=swap');
 
         * {
             margin: 0;
@@ -721,7 +725,20 @@
             text-transform: uppercase;
             margin-top: 12px;
         }
+    
+        /* ── fix: long words pushed the right column out of its container on iPhones ── */
+        .tile-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}
+        .tile{min-width:0;}
+        .tile-icon{flex-shrink:0;}
+        .tile-text{min-width:0;flex:1;}
+        .tile-label,.tile-deleted{overflow-wrap:anywhere;word-break:normal;hyphens:auto;}
+        @media (max-width:430px){
+            .tile{padding:12px !important;gap:10px !important;}
+            .tile-icon{width:40px !important;height:40px !important;}
+            .tile-label{font-size:14px !important;letter-spacing:.03em !important;}
+        }
     </style>
+    <link rel="stylesheet" href="/css/autostore-theme.css?v=20261119a">
 </head>
 <body>
 
@@ -773,7 +790,7 @@
             <!-- Tile 1: MyCloud (Direct Link) -->
             <a class="tile" href="../mycloud/login.html">
                 <div class="tile-icon green">
-                    <i class="fas fa-cloud" style="font-size: 26px; stroke: none; fill: #0a2418;"></i>
+                    <i class="fas fa-cloud" style="font-size: 26px; color: #0a2418;"></i>
                 </div>
                 <div class="tile-text">
                     <div class="tile-label">MyCloud</div>
@@ -940,7 +957,6 @@
         </a>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
     <script>
         const pin1 = document.getElementById('pin1');
         const pin2 = document.getElementById('pin2');
@@ -1127,5 +1143,6 @@
         }, 1000);
     </script>
 
+    <script src="/js/hints.js?v=20261119a" defer></script>
 </body>
 </html>

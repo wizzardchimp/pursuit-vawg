@@ -2,10 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="preload" href="/fonts/exo-2-300.woff2?v=20261119a" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/fonts/fonts.css?v=20261119a">
+    <link rel="stylesheet" href="/css/base.css?v=20261119a">
+    <link rel="stylesheet" href="/mycloud/css/all.min.css?v=20261119a">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=20261119a">
     <title>Birmingham Shops - Online</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./leaflet/leaflet.css" />
     <style>
         :root {
             --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -116,7 +120,7 @@
         <div id="shop-list"></div>
     </main>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="./leaflet/leaflet.js"></script>
     <script src="togeojson.js"></script>
     <script>
         // Set view to Birmingham with zoom level 13
@@ -188,5 +192,7 @@
             map.fitBounds(group.getBounds().pad(0.1));
         }
     </script>
+    <script src="/js/hints.js?v=20261119a" defer></script>
+    <script src="/js/backbar.js?v=20261119a" defer></script>
 </body>
 </html>

@@ -1,1058 +1,343 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="autostore-ui">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0b0f17">
+    <link rel="preload" href="/fonts/exo-2-300.woff2?v=20261119a" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/fonts/fonts.css?v=20261119a">
+    <link rel="stylesheet" href="/css/base.css?v=20261119a">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=20261119a">
     <title>AutoStore Home</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Exo+2:wght@300;400;600&display=swap');
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --blue:       #1e8fff;
-            --blue-dark:  #0a6fcf;
-            --blue-glow:  rgba(30, 143, 255, 0.35);
-            --bg:         #050b14;
-            --surface:    #0c1829;
-            --surface2:   #0f2040;
-            --border:     rgba(30, 143, 255, 0.2);
-            --text:       #e8f4ff;
-            --text-dim:   rgba(232, 244, 255, 0.45);
-        }
-
-        html, body {
-            height: 100%;
-            width: 100%;
-            overflow-x: hidden;
-        }
-
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Exo 2', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0 0 28px 0;
-            opacity: 0;
-            animation: pageIn 0.6s ease forwards;
-        }
-
-        @keyframes pageIn {
-            to { opacity: 1; }
-        }
-
-        /* === BACKGROUND GRID === */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(30, 143, 255, 0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(30, 143, 255, 0.04) 1px, transparent 1px);
-            background-size: 32px 32px;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* === HEADER === */
-        .header {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 28px 20px 0;
-            position: relative;
-            z-index: 1;
-        }
-
-        .logo-wrap {
-            width: 300px;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 6px;
-            opacity: 0;
-            transform: translateY(-12px);
-            animation: dropIn 0.5s ease 0.2s forwards;
-        }
-
-        .logo-wrap img {
-            width: 300px;
-            height: 80px;
-            object-fit: contain;
-        }
-
-        @keyframes dropIn {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .header-divider {
-            width: 90%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--blue), transparent);
-            margin: 14px 0 4px;
-            opacity: 0;
-            animation: fadeIn 0.4s ease 0.5s forwards;
-        }
-
-        .header-sub {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 28px;
-            letter-spacing: 0.22em;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            margin-bottom: 24px;
-            opacity: 0;
-            animation: fadeIn 0.4s ease 0.6s forwards;
-        }
-
-        /* === GRID === */
-        .tile-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: repeat(3, 1fr);
-            gap: 14px;
-            width: 100%;
-            padding: 0 16px;
-            position: relative;
-            z-index: 1;
-            flex: 1;
-        }
-
-        /* === TILE === */
-        .tile {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            padding: 24px 12px;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            -webkit-tap-highlight-color: transparent;
-            opacity: 0;
-            transform: translateY(16px) scale(0.97);
-            transition: border-color 0.2s, background 0.2s, transform 0.15s, box-shadow 0.2s;
-            text-decoration: none;
-            color: inherit;
-            min-height: 130px;
-        }
-
-        /* Staggered entrance */
-        .tile:nth-child(1) { animation: tileIn 0.4s ease 0.35s forwards; }
-        .tile:nth-child(2) { animation: tileIn 0.4s ease 0.45s forwards; }
-        .tile:nth-child(3) { animation: tileIn 0.4s ease 0.55s forwards; }
-        .tile:nth-child(4) { animation: tileIn 0.4s ease 0.65s forwards; }
-        .tile:nth-child(5) { animation: tileIn 0.4s ease 0.75s forwards; }
-        .tile:nth-child(6) { animation: tileIn 0.4s ease 0.85s forwards; }
-
-        @keyframes tileIn {
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        /* Glint line top */
-        .tile::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 15%; right: 15%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--blue), transparent);
-            opacity: 0.5;
-        }
-
-        /* Corner accent */
-        .tile::after {
-            content: '';
-            position: absolute;
-            bottom: 0; right: 0;
-            width: 36px; height: 36px;
-            border-bottom: 2px solid var(--blue-dark);
-            border-right: 2px solid var(--blue-dark);
-            border-bottom-right-radius: 14px;
-            opacity: 0.4;
-            transition: opacity 0.2s;
-        }
-
-        .tile:active,
-        .tile.tapped {
-            background: var(--surface2);
-            border-color: var(--blue);
-            transform: scale(0.96);
-            box-shadow: 0 0 24px var(--blue-glow), inset 0 0 16px rgba(30, 143, 255, 0.08);
-        }
-
-        .tile:active::after,
-        .tile.tapped::after {
-            opacity: 1;
-        }
-
-        .tile-icon {
-            width: 52px;
-            height: 52px;
-            background: rgba(30, 143, 255, 0.1);
-            border: 1px solid rgba(30, 143, 255, 0.25);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s, border-color 0.2s;
-        }
-
-        .tile:active .tile-icon,
-        .tile.tapped .tile-icon {
-            background: rgba(30, 143, 255, 0.22);
-            border-color: var(--blue);
-        }
-
-        .tile-icon svg {
-            width: 26px;
-            height: 26px;
-            stroke: var(--blue);
-            fill: none;
-            stroke-width: 1.7;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            transition: stroke 0.2s;
-        }
-
-        .tile:active .tile-icon svg,
-        .tile.tapped .tile-icon svg {
-            stroke: #7fd0ff;
-        }
-
-        .tile-label {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 20px;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-align: center;
-            color: var(--text);
-            line-height: 1.2;
-            text-transform: uppercase;
-        }
-
-        .tile-label span {
-            display: none;
-        }
-
-        /* === FOOTER === */
-        .footer {
-            margin-top: 20px;
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 10px;
-            letter-spacing: 0.2em;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            position: relative;
-            z-index: 1;
-            opacity: 0;
-            animation: fadeIn 0.4s ease 1.1s forwards;
-        }
-
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-
-        /* === RESPONSIVE === */
-        @media screen and (max-width: 360px) {
-            .tile {
-                min-height: 118px;
-                padding: 20px 10px;
-                gap: 11px;
-                border-radius: 12px;
-            }
-
-            .tile-icon {
-                width: 46px;
-                height: 46px;
-                border-radius: 11px;
-            }
-
-            .tile-icon svg {
-                width: 23px;
-                height: 23px;
-            }
-
-            .tile-grid {
-                gap: 11px;
-                padding: 0 13px;
-            }
-
-            .logo-wrap {
-                width: 240px;
-                height: 64px;
-            }
-
-            .logo-wrap img {
-                width: 240px;
-                height: 64px;
-            }
-        }
-
-        @media screen and (min-width: 420px) {
-            .tile {
-                min-height: 148px;
-                padding: 28px 14px;
-            }
-
-            .tile-icon {
-                width: 58px;
-                height: 58px;
-            }
-
-            .tile-icon svg {
-                width: 29px;
-                height: 29px;
-            }
-
-            .tile-grid {
-                padding: 0 20px;
-            }
-        }
-
-        /* Tall phones — space things out more */
-        @media screen and (min-height: 800px) {
-            .tile-grid {
-                gap: 16px;
-            }
-
-            .header {
-                padding-top: 36px;
-            }
-        }
-
-        /* === LOGOUT === */
-        .logout-wrap {
-            width: 100%;
-            padding: 18px 16px 0;
-            display: flex;
-            justify-content: center;
-            position: relative;
-            z-index: 1;
-            opacity: 0;
-            animation: fadeIn 0.4s ease 1.1s forwards;
-        }
-
-        .logout-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-            max-width: 420px;
-            padding: 14px 20px;
-            background: transparent;
-            border: 1px solid rgba(255, 60, 60, 0.35);
-            border-radius: 10px;
-            color: rgba(255, 100, 100, 0.75);
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 15px;
-            font-weight: 600;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            text-decoration: none;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-            transition: background 0.15s, border-color 0.15s, color 0.15s;
-        }
-
-        .logout-btn svg {
-            stroke: rgba(255, 100, 100, 0.75);
-            transition: stroke 0.15s;
-            flex-shrink: 0;
-        }
-
-        .logout-btn:hover {
-            background: rgba(255, 50, 50, 0.07);
-            border-color: rgba(255, 80, 80, 0.6);
-            color: #ff6464;
-        }
-
-        .logout-btn:active {
-            background: rgba(255, 50, 50, 0.15);
-            border-color: #ff4444;
-            color: #ff4444;
-        }
-
-        .logout-btn:active svg {
-            stroke: #ff4444;
-        }
-
-
-        /* === NOTEPAD POPUP === */
-        .notepad-overlay {
-            position: fixed;
-            inset: 0;
-            background: #1a1a2e;
-            display: none;
-            flex-direction: column;
-            z-index: 3000;
-            opacity: 0;
-            animation: fadeIn 0.3s ease forwards;
-        }
-
-        .notepad-overlay.show {
-            display: flex;
-        }
-
-        @keyframes popIn {
-            to { 
-                transform: scale(1); 
-            }
-        }
-
-        /* Notepad Header - App Style */
-        .notepad-header {
-            padding: 16px 16px 12px;
-            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-shrink: 0;
-            border-bottom: 2px solid #e94560;
-        }
-
-        .notepad-header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .notepad-header-icon {
-            width: 40px;
-            height: 40px;
-            background: #e94560;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .notepad-header-icon svg {
-            width: 22px;
-            height: 22px;
-            stroke: #fff;
-            fill: none;
-            stroke-width: 2;
-        }
-
-        .notepad-title {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 22px;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: 0.05em;
-        }
-
-        .notepad-subtitle {
-            font-family: 'Exo 2', sans-serif;
-            font-size: 11px;
-            color: rgba(255,255,255,0.5);
-            margin-top: 2px;
-        }
-
-        .notepad-close-btn {
-            width: 40px;
-            height: 40px;
-            background: rgba(255,255,255,0.1);
-            border: none;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .notepad-close-btn svg {
-            width: 20px;
-            height: 20px;
-            stroke: #fff;
-            fill: none;
-            stroke-width: 2;
-        }
-
-        .notepad-close-btn:active {
-            background: rgba(255,255,255,0.2);
-        }
-
-        /* Notepad Content Area */
-        .notepad-content-wrapper {
-            flex: 1;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            padding: 16px;
-            background: #0f0f23;
-        }
-
-        /* Note Cards */
-        .note-card {
-            background: #ffffff;
-            border-radius: 12px;
-            margin-bottom: 14px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
-
-        .note-card-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 10px 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .note-card-title {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 14px;
-            font-weight: 700;
-            color: #ffffff;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .note-card-date {
-            font-family: 'Exo 2', sans-serif;
-            font-size: 10px;
-            color: rgba(255,255,255,0.7);
-        }
-
-        .note-card-body {
-            padding: 14px;
-        }
-
-        .note-card-text {
-            font-family: 'Exo 2', sans-serif;
-            font-size: 14px;
-            line-height: 1.6;
-            color: #333;
-            margin-bottom: 12px;
-        }
-
-        .note-card-text:last-child {
-            margin-bottom: 0;
-        }
-
-        .note-card-text strong {
-            color: #e94560;
-            font-weight: 600;
-        }
-
-        .note-card-text .label {
-            display: inline-block;
-            background: #f0f0f0;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 6px;
-        }
-
-        .note-card-text .value {
-            display: block;
-            font-weight: 600;
-            color: #1a1a2e;
-            margin-bottom: 8px;
-        }
-
-        /* Note Images */
-        .note-card-image {
-            width: 100%;
-            margin-top: 10px;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .note-card-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-            object-fit: cover;
-            max-height: 200px;
-        }
-
-        .note-card-image-full {
-            margin: -14px -14px 0 -14px;
-            border-radius: 0;
-        }
-
-        .note-card-image-full img {
-            max-height: 250px;
-        }
-
-        /* Note Tags */
-        .note-card-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 10px;
-        }
-
-        .note-tag {
-            font-family: 'Exo 2', sans-serif;
-            font-size: 10px;
-            padding: 3px 8px;
-            border-radius: 4px;
-            background: #e8f4ff;
-            color: #1e8fff;
-            font-weight: 600;
-        }
-
-        .note-tag.urgent {
-            background: #ffe8e8;
-            color: #e94560;
-        }
-
-        .note-tag.done {
-            background: #e8ffe8;
-            color: #28a745;
-        }
-
-        /* Divider */
-        .note-divider {
-            height: 1px;
-            background: #e0e0e0;
-            margin: 10px 0;
-        }
-
-        /* Reminder style */
-        .note-reminder {
-            background: #fff9c4;
-            border-left: 3px solid #ffc107;
-            padding: 10px 12px;
-            border-radius: 0 6px 6px 0;
-            margin-top: 10px;
-        }
-
-        .note-reminder-text {
-            font-family: 'Exo 2', sans-serif;
-            font-size: 12px;
-            color: #856404;
-            font-style: italic;
-        }
-
-        /* Password style */
-        .note-password {
-            background: #f5f5f5;
-            border: 1px dashed #ccc;
-            padding: 8px 12px;
-            border-radius: 6px;
-            margin-top: 8px;
-        }
-
-        .note-password-label {
-            font-family: 'Exo 2', sans-serif;
-            font-size: 10px;
-            color: #888;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-
-        .note-password-value {
-            font-family: monospace;
-            font-size: 14px;
-            color: #333;
-            font-weight: 600;
-        }
-
-        /* Checklist */
-        .note-checklist {
-            list-style: none;
-            padding: 0;
-            margin: 8px 0 0 0;
-        }
-
-        .note-checklist li {
-            font-family: 'Exo 2', sans-serif;
-            font-size: 13px;
-            color: #333;
-            padding: 6px 0;
-            border-bottom: 1px solid #f0f0f0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .note-checklist li:last-child {
-            border-bottom: none;
-        }
-
-        .note-checklist li::before {
-            content: '';
-            width: 16px;
-            height: 16px;
-            border: 2px solid #ccc;
-            border-radius: 3px;
-            flex-shrink: 0;
-        }
-
-        .note-checklist li.checked::before {
-            background: #28a745;
-            border-color: #28a745;
-        }
-
-        .note-checklist li.checked {
-            text-decoration: line-through;
-            color: #888;
-        }
-
-        /* Responsive */
-        @media screen and (max-width: 360px) {
-            .notepad-header {
-                padding: 12px 12px 10px;
-            }
-
-            .notepad-title {
-                font-size: 18px;
-            }
-
-            .notepad-content-wrapper {
-                padding: 12px;
-            }
-
-            .note-card-body {
-                padding: 12px;
-            }
-
-            .note-card-text {
-                font-size: 13px;
-            }
-        }
-
-        @media screen and (min-width: 420px) {
-            .notepad-content-wrapper {
-                padding: 20px;
-                max-width: 500px;
-                margin: 0 auto;
-                width: 100%;
-            }
-        }
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+        :root{
+            --bg:#0b0f17; --surface:#141a26; --surface-2:#1b2332; --line:rgba(255,255,255,.08);
+            --text:#f2f5fa; --dim:#8b96a8; --blue:#3b9bff;
+            --font:'Exo 2',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+        }
+        html,body{min-height:100%;}
+        body{background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased;
+            background-image:radial-gradient(900px 500px at 85% -10%,rgba(59,155,255,.16),transparent 60%),radial-gradient(700px 420px at -10% 10%,rgba(120,90,255,.10),transparent 60%);
+            background-repeat:no-repeat;
+            padding:max(14px,env(safe-area-inset-top)) 16px max(28px,env(safe-area-inset-bottom));}
+        .wrap{max-width:520px;margin:0 auto;}
+
+        /* ── top bar ── */
+        .top{display:flex;align-items:center;justify-content:space-between;padding:6px 2px 18px;}
+        .top img{height:40px;width:auto;display:block;margin-left:-6px;}
+        .me{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#4aa3ff,#6a5cff);color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 2px 10px rgba(0,0,0,.35);}
+        .me::after{content:'';position:absolute;right:0;bottom:0;width:11px;height:11px;border-radius:50%;background:#30d158;border:2px solid var(--bg);}
+
+        /* ── greeting ── */
+        .hello h1{font-size:30px;line-height:1.15;font-weight:800;letter-spacing:-.02em;}
+        .hello p{color:var(--dim);font-size:15px;margin-top:4px;}
+
+        /* ── today widget ── */
+        .today{margin:20px 0 26px;background:linear-gradient(160deg,var(--surface-2),var(--surface));border:1px solid var(--line);border-radius:22px;padding:16px 8px 14px;display:grid;grid-template-columns:repeat(3,1fr);box-shadow:0 10px 30px rgba(0,0,0,.28);}
+        .stat{text-align:center;padding:2px 6px;text-decoration:none;color:inherit;}
+        .stat + .stat{border-left:1px solid var(--line);}
+        .stat b{display:block;font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1.1;}
+        .stat span{display:block;font-size:12.5px;color:var(--dim);margin-top:3px;}
+        .stat.hot b{color:#ff6b5e;}
+
+        /* ── section title ── */
+        .sec{font-size:13px;font-weight:700;color:var(--dim);letter-spacing:.06em;text-transform:uppercase;margin:0 4px 10px;}
+
+        /* ── app tiles: photo on top with a frosted-glass icon chip, label underneath ── */
+        .apps{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+        .app{--c1:#3b9bff;--c2:#1560f0;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:26px;overflow:hidden;text-decoration:none;color:var(--text);position:relative;box-shadow:0 14px 28px rgba(0,0,0,.35);transition:transform .14s ease,filter .14s;}
+        .app:active,.app.tapped{transform:scale(.96);filter:brightness(.94);}
+        .thumb{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--surface-2);}
+        .thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease;}
+        .app:hover .thumb img{transform:scale(1.06);}
+        /* colour wash so each app keeps its identity colour */
+        .thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 35%,var(--c2) 140%),linear-gradient(135deg,var(--c1) -40%,transparent 55%);mix-blend-mode:multiply;opacity:.55;pointer-events:none;}
+        /* frosted glass chip */
+        .glass{position:absolute;left:10px;bottom:10px;width:48px;height:48px;border-radius:15px;display:flex;align-items:center;justify-content:center;z-index:2;background:linear-gradient(145deg,rgba(255,255,255,.34),rgba(255,255,255,.10));border:1px solid rgba(255,255,255,.45);-webkit-backdrop-filter:blur(12px) saturate(1.6);backdrop-filter:blur(12px) saturate(1.6);box-shadow:0 6px 16px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.55);}
+        .glass svg{width:26px;height:26px;stroke:#fff;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 1px 3px rgba(0,0,0,.35));}
+        .meta{padding:11px 14px 14px;border-top:3px solid var(--c1);}
+        .app h2{font-size:18px;font-weight:800;letter-spacing:-.01em;line-height:1.2;}
+        .app p{font-size:13px;color:var(--dim);margin-top:2px;font-weight:500;}
+        .badge{position:absolute;top:10px;right:10px;min-width:28px;height:28px;border-radius:14px;background:#ff3b30;color:#fff;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 8px;box-shadow:0 4px 12px rgba(255,59,48,.5),0 0 0 3px rgba(255,255,255,.92);z-index:3;}
+        .c-stock{--c1:#ff8a1f;--c2:#d94f00;}
+        .c-fin{--c1:#27c76a;--c2:#0a7d3b;}
+        .c-hr{--c1:#a66bff;--c2:#5b2fd6;}
+        .c-mail{--c1:#3fa9ff;--c2:#0f4fd0;}
+        .c-drive{--c1:#1fd1d8;--c2:#0a7a90;}
+        .c-notes{--c1:#ffd23f;--c2:#c98a00;}
+
+        .foot{display:flex;justify-content:space-between;align-items:center;margin:26px 4px 0;color:var(--dim);font-size:12.5px;}
+        .logout{color:#ff6b5e;text-decoration:none;font-weight:600;font-size:15px;padding:10px 4px;display:inline-flex;gap:8px;align-items:center;}
+        .logout svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
+
+        /* desktop: keep the same design, give it room */
+        @media (min-width:900px){
+            body{padding-top:36px;}
+            .wrap{max-width:860px;}
+            .top{padding-bottom:28px;} .top img{height:36px;}
+            .hello h1{font-size:40px;} .hello p{font-size:17px;}
+            .today{grid-template-columns:repeat(3,1fr);padding:22px 12px;} .stat b{font-size:36px;} .stat span{font-size:14px;}
+            .apps{grid-template-columns:repeat(3,1fr);gap:16px;}
+            .app{border-radius:30px;} .app:hover{transform:translateY(-4px);}
+            .glass{width:56px;height:56px;border-radius:17px;left:14px;bottom:14px;}
+            .glass svg{width:30px;height:30px;}
+            .thumb{aspect-ratio:2/1;}
+            .meta{padding:14px 18px 18px;}
+            .app h2{font-size:22px;} .app p{font-size:15px;}
+        }
+
+        /* ═══════════ NOTES APP ═══════════ */
+        .notes{position:fixed;inset:0;z-index:3000;background:#000;display:none;color:#fff;}
+        .notes.show{display:block;}
+        .notes-panel{position:absolute;inset:0;background:#000;overflow:hidden;font-family:-apple-system,'SF Pro Text','Inter',Helvetica,Arial,sans-serif;}
+        @media (min-width:700px){
+            .notes{background:rgba(0,0,0,.72);backdrop-filter:blur(6px);}
+            .notes-panel{inset:5vh auto 5vh 50%;transform:translateX(-50%);width:460px;border-radius:26px;border:1px solid #2a2a2e;box-shadow:0 30px 80px rgba(0,0,0,.7);}
+        }
+        .nview{position:absolute;inset:0;display:flex;flex-direction:column;background:#000;transition:transform .25s ease;}
+        #nDetail{transform:translateX(100%);background:#000;}
+        .notes.detail #nDetail{transform:translateX(0);}
+        .notes.detail #nList{transform:translateX(-24%);}
+        .n-bar{display:flex;align-items:center;justify-content:space-between;padding:max(14px,env(safe-area-inset-top)) 14px 8px;min-height:52px;flex-shrink:0;}
+        .n-link{color:#ffd60a;font-size:17px;background:none;border:none;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:2px;padding:8px 4px;}
+        .n-link svg{width:11px;height:19px;stroke:#ffd60a;stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+        .n-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:30px;}
+        .n-title{font-size:34px;font-weight:800;padding:0 18px 6px;letter-spacing:-.01em;}
+        .n-search{margin:6px 16px 14px;background:#1c1c1e;border-radius:11px;display:flex;align-items:center;gap:7px;padding:0 10px;}
+        .n-search svg{width:16px;height:16px;stroke:#8e8e93;fill:none;stroke-width:2;flex-shrink:0;}
+        .n-search input{flex:1;background:none;border:none;outline:none;color:#fff;font-size:17px;padding:9px 0;font-family:inherit;min-width:0;}
+        .n-search input::placeholder{color:#8e8e93;}
+        .n-group{font-size:19px;font-weight:700;padding:8px 18px 8px;}
+        .n-card{margin:0 16px 14px;background:#1c1c1e;border-radius:12px;overflow:hidden;}
+        .n-row{display:flex;gap:12px;align-items:center;padding:11px 14px;position:relative;cursor:pointer;}
+        .n-row:active{background:#2c2c2e;}
+        .n-row + .n-row::before{content:'';position:absolute;top:0;left:14px;right:0;height:.5px;background:#38383a;}
+        .n-main{flex:1;min-width:0;}
+        .n-name{font-size:17px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .n-meta{font-size:15px;color:#8e8e93;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+        .n-meta b{color:#fff;font-weight:400;margin-right:8px;}
+        .n-thumb{width:52px;height:52px;border-radius:7px;object-fit:cover;flex-shrink:0;background:#2c2c2e;}
+        .n-count{text-align:center;color:#8e8e93;font-size:15px;padding:6px 0 4px;}
+        .n-empty{text-align:center;color:#8e8e93;padding:40px 20px;font-size:16px;}
+        .n-date{text-align:center;color:#8e8e93;font-size:13px;padding:2px 0 12px;}
+        .n-body{padding:0 20px 40px;font-size:18px;line-height:1.42;white-space:pre-wrap;word-wrap:break-word;}
+        .n-body h1{font-size:28px;font-weight:700;margin-bottom:10px;line-height:1.15;white-space:normal;}
+        .n-body .gap{height:14px;}
+        .n-check{display:flex;gap:12px;align-items:flex-start;padding:4px 0;white-space:normal;}
+        .n-check i{width:23px;height:23px;border-radius:50%;border:1.6px solid #8e8e93;flex-shrink:0;margin-top:2px;position:relative;}
+        .n-check.done i{background:#ffd60a;border-color:#ffd60a;}
+        .n-check.done i::after{content:'';position:absolute;left:7px;top:3px;width:6px;height:11px;border:solid #000;border-width:0 2.2px 2.2px 0;transform:rotate(40deg);}
+        .n-check.done span{color:#8e8e93;text-decoration:line-through;}
+        .n-photo{position:relative;margin:14px 0 6px;border-radius:12px;overflow:hidden;cursor:zoom-in;background:#1c1c1e;}
+        .n-photo img{width:100%;display:block;max-height:68vh;object-fit:cover;}
+        .n-photo::after{content:'Tap to enlarge';position:absolute;right:9px;bottom:9px;background:rgba(0,0,0,.62);color:#fff;font-size:12px;padding:4px 10px;border-radius:12px;font-family:inherit;}
+
+        /* floating back button (replaces the yellow "Home" link at the top) */
+        .n-bar-slim{min-height:max(18px,env(safe-area-inset-top));padding-bottom:0;}
+        .n-float{position:absolute;left:16px;right:16px;bottom:max(16px,env(safe-area-inset-bottom));z-index:20;display:flex;align-items:center;justify-content:center;gap:10px;padding:15px 20px;border:1px solid rgba(255,255,255,.16);border-radius:16px;background:rgba(28,28,30,.96);color:#fff;font:700 16px/1 'Exo 2',-apple-system,sans-serif;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.55);-webkit-tap-highlight-color:transparent;}
+        .n-float:active{transform:scale(.97);}
+        .n-float svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round;}
+        .n-scroll{padding-bottom:100px !important;}
+
+        /* ── photo lightbox ── */
+        .lightbox{position:fixed;inset:0;z-index:4000;background:rgba(0,0,0,.96);display:none;flex-direction:column;}
+        .lightbox.show{display:flex;}
+        .lightbox-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;color:rgba(255,255,255,.75);font-size:13px;flex-shrink:0;}
+        .lightbox-close{width:44px;height:44px;border:none;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:22px;line-height:1;cursor:pointer;}
+        .lightbox-scroll{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;display:flex;align-items:center;justify-content:center;}
+        .lightbox-scroll img{max-width:100%;max-height:100%;object-fit:contain;cursor:zoom-in;}
+        .lightbox-scroll.zoomed{display:block;}
+        .lightbox-scroll.zoomed img{max-width:none;max-height:none;width:250%;cursor:zoom-out;}
     </style>
 </head>
 <body>
+<div class="wrap">
 
-    <!-- HEADER -->
-    <div class="header">
-        <div class="logo-wrap">
-            <img src="ashomelogo.png" alt="AutoStore Logo">
-        </div>
-        <div class="header-divider"></div>
-        <div class="header-sub">Welcome Marcus</div>
+    <div class="top">
+        <img src="ashomelogo.png" alt="AutoStore">
+        <div class="me" aria-label="Signed in as Marcus Gibson">MG</div>
     </div>
 
-    <!-- TILE GRID -->
-    <div class="tile-grid">
-
-        <!-- 1. Stock Lists -->
-        <a class="tile" href="as_stock.html">
-            <div class="tile-icon">
-                <svg viewBox="0 0 24 24">
-                    <rect x="3" y="3" width="18" height="18" rx="2"/>
-                    <line x1="3" y1="9" x2="21" y2="9"/>
-                    <line x1="3" y1="15" x2="21" y2="15"/>
-                    <line x1="9" y1="9" x2="9" y2="21"/>
-                </svg>
-            </div>
-            <div class="tile-label">Stock Lists</div>
-        </a>
-
-        <!-- 2. Finance Calculator -->
-        <a class="tile" href="as_finance.html">
-            <div class="tile-icon">
-                <svg viewBox="0 0 24 24">
-                    <rect x="4" y="2" width="16" height="20" rx="2"/>
-                    <line x1="8" y1="7" x2="16" y2="7"/>
-                    <line x1="8" y1="11" x2="16" y2="11"/>
-                    <line x1="8" y1="15" x2="12" y2="15"/>
-                    <path d="M13 17 L15 19 L19 15"/>
-                </svg>
-            </div>
-            <div class="tile-label">Finance<br>Calculator</div>
-        </a>
-
-        <!-- 3. My HR Portal -->
-        <a class="tile" href="as_hr.html">
-            <div class="tile-icon">
-                <svg viewBox="0 0 24 24">
-                    <circle cx="12" cy="8" r="4"/>
-                    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-                    <path d="M16 11 L18 13 L22 9" stroke-width="1.5"/>
-                </svg>
-            </div>
-            <div class="tile-label">My HR<br>Portal</div>
-        </a>
-
-        <!-- 4. myMail -->
-        <a class="tile" href="as_mail.html">
-            <div class="tile-icon">
-                <svg viewBox="0 0 24 24">
-                    <rect x="2" y="4" width="20" height="16" rx="2"/>
-                    <polyline points="2,4 12,13 22,4"/>
-                    <line x1="2" y1="20" x2="8" y2="14"/>
-                    <line x1="22" y1="20" x2="16" y2="14"/>
-                </svg>
-            </div>
-            <div class="tile-label">myMail</div>
-        </a>
-
-        <!-- 5. Personal Drive -->
-        <a class="tile" href="as_drive.html">
-            <div class="tile-icon">
-                <svg viewBox="0 0 24 24">
-                    <ellipse cx="12" cy="17" rx="9" ry="3"/>
-                    <path d="M3 17V7c0-1.7 4-3 9-3s9 1.3 9 3v10"/>
-                    <path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/>
-                    <line x1="12" y1="9" x2="12" y2="11"/>
-                </svg>
-            </div>
-            <div class="tile-label">Personal<br>Drive</div>
-        </a>
-
-        <!-- 6. My Notepad -->
-        <a class="tile" href="#" id="notepadTile">
-            <div class="tile-icon">
-                <svg viewBox="0 0 24 24">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                    <line x1="8" y1="13" x2="16" y2="13"/>
-                    <line x1="8" y1="17" x2="16" y2="17"/>
-                    <line x1="8" y1="9" x2="10" y2="9"/>
-                </svg>
-            </div>
-            <div class="tile-label">My Notepad</div>
-        </a>
-
+    <div class="hello">
+        <h1 id="greet">Welcome, Marcus</h1>
+        <p>AutoStore · Birmingham branch</p>
     </div>
 
+    <div class="today" aria-label="Today at a glance">
+        <a class="stat" href="as_stock.html"><b>26</b><span>in stock</span></a>
+        <div class="stat"><b>3</b><span>test drives</span></div>
+        <a class="stat hot" href="as_mail.html"><b>5</b><span>unread</span></a>
+    </div>
 
-    <!-- NOTEPAD POPUP -->
-    <div class="notepad-overlay" id="notepadOverlay">
-        <div class="notepad-header">
-            <div class="notepad-header-left">
-                <div class="notepad-header-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                        <polyline points="14 2 14 8 20 8"/>
-                        <line x1="16" y1="13" x2="8" y2="13"/>
-                        <line x1="16" y1="17" x2="8" y2="17"/>
-                    </svg>
-                </div>
-                <div>
-                    <div class="notepad-title">My Notes</div>
-                    <div class="notepad-subtitle">Do not store customer information</div>
-                </div>
-            </div>
-            <button class="notepad-close-btn" id="notepadCloseBtn">
-                <svg viewBox="0 0 24 24">
-                    <line x1="18" y1="6" x2="6" y2="18"/>
-                    <line x1="6" y1="6" x2="18" y2="18"/>
-                </svg>
-            </button>
-        </div>
-        
-        <div class="notepad-content-wrapper">
+    <div class="sec">Your apps</div>
+    <div class="apps">
+        <a class="app c-stock" href="as_stock.html">
+            <div class="thumb"><img src="tiles/stock.jpg" alt="Cars on a dealership forecourt" loading="lazy" decoding="async"><div class="glass"><svg viewBox="0 0 24 24"><path d="M3 13l2-5a2 2 0 0 1 1.9-1.3h10.2A2 2 0 0 1 19 8l2 5v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><circle cx="7.5" cy="13.5" r="1"/><circle cx="16.5" cy="13.5" r="1"/></svg></div></div>
+            <div class="meta"><h2>Stock Lists</h2><p>26 vehicles</p></div>
+        </a>
+        <a class="app c-fin" href="as_finance.html">
+            <div class="thumb"><img src="tiles/finance.jpg" alt="Car keys, cash and a calculator" loading="lazy" decoding="async"><div class="glass"><svg viewBox="0 0 24 24"><rect x="4" y="2.5" width="16" height="19" rx="3"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="12" x2="8.01" y2="12"/><line x1="12" y1="12" x2="12.01" y2="12"/><line x1="16" y1="12" x2="16.01" y2="12"/><line x1="8" y1="16.5" x2="8.01" y2="16.5"/><line x1="12" y1="16.5" x2="12.01" y2="16.5"/><line x1="16" y1="16.5" x2="16.01" y2="16.5"/></svg></div></div>
+            <div class="meta"><h2>Finance</h2><p>Calculator</p></div>
+        </a>
+        <a class="app c-mail" href="as_mail.html">
+            <span class="badge">5</span>
+            <div class="thumb"><img src="tiles/mail.jpg" alt="A pile of opened envelopes" loading="lazy" decoding="async"><div class="glass"><svg viewBox="0 0 24 24"><rect x="2" y="4.5" width="20" height="15" rx="3"/><path d="M3 7l9 6.5L21 7"/></svg></div></div>
+            <div class="meta"><h2>myMail</h2><p>5 unread</p></div>
+        </a>
+        <a class="app c-hr" href="as_hr.html">
+            <div class="thumb"><img src="tiles/hr.jpg" alt="A meeting room" loading="lazy" decoding="async"><div class="glass"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg></div></div>
+            <div class="meta"><h2>My HR</h2><p>Payslips and leave</p></div>
+        </a>
+        <a class="app c-drive" href="as_drive.html">
+            <div class="thumb"><img src="tiles/drive.jpg" alt="A server rack with green lights" loading="lazy" decoding="async"><div class="glass"><svg viewBox="0 0 24 24"><path d="M18 10h-1.3A7 7 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg></div></div>
+            <div class="meta"><h2>Personal Drive</h2><p>PIN protected</p></div>
+        </a>
+        <a class="app c-notes" href="#" id="notepadTile">
+            <div class="thumb"><img src="tiles/notes.jpg" alt="A fountain pen on a notebook" loading="lazy" decoding="async"><div class="glass"><svg viewBox="0 0 24 24"><path d="M14 2.5H7a2.5 2.5 0 0 0-2.5 2.5v14A2.5 2.5 0 0 0 7 21.5h10a2.5 2.5 0 0 0 2.5-2.5V8z"/><polyline points="14 2.5 14 8 19.5 8"/><line x1="8.5" y1="13" x2="15.5" y2="13"/><line x1="8.5" y1="17" x2="13" y2="17"/></svg></div></div>
+            <div class="meta"><h2>Notes</h2><p>8 notes</p></div>
+        </a>
+    </div>
 
-            <!-- Note 1: Office Photo -->
-            <div class="note-card">
-                <div class="note-card-image note-card-image-full">
-                    <img src="notepad-photos/Photo3.jpg" alt="Office" loading="lazy">
-                </div>
-                <div class="note-card-body">
-                    <div class="note-card-text">
-                        Stock room - need to reorganize shelves this week. New stock arriving Tuesday.
-                    </div>
-                    <div class="note-card-tags">
-                        <span class="note-tag">Stock Room</span>
-                    </div>
-                </div>
-            </div>
+    <div class="foot">
+        <a class="logout" href="as_login.html"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Log out</a>
+        <span>Staff Hub 3.2.1</span>
+    </div>
+</div>
 
-            <!-- Note 2: Login Details -->
-            <div class="note-card">
-                <div class="note-card-header" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
-                    <div class="note-card-title">Login Details</div>
-                    <div class="note-card-date">Last week</div>
-                </div>
-                <div class="note-card-body">
-                    <div class="note-card-text">
-                        New PIN: <strong>1486</strong><br>
-                        New tracker app - "Mycloud"
-                    </div>
-                    <div class="note-password">
-                        <div class="note-password-label">Deliveroo</div>
-                        <div class="note-password-value">marcusg@autostore.co.uk</div>
-                    </div>
-                    <div class="note-password">
-                        <div class="note-password-label">Password</div>
-                        <div class="note-password-value">MadMax1486</div>
-                    </div>
-                    <div class="note-divider"></div>
-                    <div class="note-card-text" style="font-size: 12px; color: #888;">
-                        Just Eat: marcog.... | Morrisons: Marcus...
-                    </div>
-                </div>
-            </div>
-
-            <!-- Note 3: Hand Photo -->
-            <div class="note-card">
-                <div class="note-card-image note-card-image-full">
-                    <img src="notepad-photos/Photo5.jpg" alt="Photo" loading="lazy">
-                </div>
-                <div class="note-card-body">
-                    <div class="note-card-text">
-                        Customer came in with these tattoos - asked about fleet discount. Follow up with email.
-                    </div>
-                </div>
-            </div>
-
-            <!-- Note 4: Jenny Hyundai -->
-            <div class="note-card">
-                <div class="note-card-header" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
-                    <div class="note-card-title" style="color: #333;">Jenny - Hyundai</div>
-                    <div class="note-card-date" style="color: #666;">Tuesday</div>
-                </div>
-                <div class="note-card-body">
-                    <div class="note-card-text">
-                        <span class="label">Part Number</span>
-                        <span class="value">50938839903CC-090</span>
-                        Order placed - expected delivery 3-5 days.
-                    </div>
-                </div>
-            </div>
-
-            <!-- Note 5: Checklist -->
-            <div class="note-card">
-                <div class="note-card-header" style="background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);">
-                    <div class="note-card-title" style="color: #333;">Friday Checklist</div>
-                    <div class="note-card-date" style="color: #666;">This week</div>
-                </div>
-                <div class="note-card-body">
-                    <ul class="note-checklist">
-                        <li class="checked">Lock up showroom</li>
-                        <li class="checked">Check voicemails</li>
-                        <li>Process refund for Dave P.</li>
-                        <li>Email Denise insurance docs</li>
-                        <li>Update stock list</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Note 6: Street Photo -->
-            <div class="note-card">
-                <div class="note-card-image note-card-image-full">
-                    <img src="notepad-photos/Photo7.jpg" alt="Location" loading="lazy">
-                </div>
-                <div class="note-card-body">
-                    <div class="note-card-text">
-                        Met contact near this junction. Drop-off scheduled for next week. Need to confirm time.
-                    </div>
-                    <div class="note-card-tags">
-                        <span class="note-tag">Meeting</span>
-                        <span class="note-tag urgent">Confirm</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Note 7: Beach Photo -->
-            <div class="note-card">
-                <div class="note-card-image note-card-image-full">
-                    <img src="notepad-photos/Photo4.jpg" alt="Beach" loading="lazy">
-                </div>
-                <div class="note-card-body">
-                    <div class="note-card-text">
-                        Weekend photos - need to delete before anyone sees. Don't want personal stuff on work phone.
-                    </div>
-                    <div class="note-card-tags">
-                        <span class="note-tag urgent">Delete</span>
-                        <span class="note-tag">Personal</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Note 8: Indoor Photo -->
-            <div class="note-card">
-                <div class="note-card-image note-card-image-full">
-                    <img src="notepad-photos/Photo9.jpg" alt="Indoor" loading="lazy">
-                </div>
-                <div class="note-card-body">
-                    <div class="note-card-text">
-                        New office setup - need to finish cable management. Printer still not connected.
-                    </div>
-                    <div class="note-card-tags">
-                        <span class="note-tag">Office</span>
-                        <span class="note-tag done">In Progress</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Spacer for bottom padding -->
-            <div style="height: 20px;"></div>
-
+<!-- ═══════════ NOTES ═══════════ -->
+<div class="notes" id="notes" aria-hidden="true">
+  <div class="notes-panel">
+    <div class="nview" id="nList">
+        <div class="n-bar n-bar-slim"></div>
+        <div class="n-scroll">
+            <div class="n-title">Notes</div>
+            <label class="n-search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg><input id="nSearch" type="search" placeholder="Search" autocomplete="off" enterkeyhint="search"></label>
+            <div id="nGroups"></div>
+            <div class="n-count" id="nCount"></div>
         </div>
     </div>
-
-    <!-- LOGOUT -->
-    <div class="logout-wrap">
-        <a class="logout-btn" href="../autostore/as_login.html">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                <polyline points="16 17 21 12 16 7"/>
-                <line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
-            Log Out
-        </a>
+    <div class="nview" id="nDetail">
+        <div class="n-bar"><button class="n-link" id="nBack" type="button"><svg viewBox="0 0 11 19"><polyline points="9.5 1.5 2 9.5 9.5 17.5"/></svg>Notes</button><span></span></div>
+        <div class="n-scroll"><div class="n-date" id="nDate"></div><div class="n-body" id="nBody"></div></div>
     </div>
+    <button class="n-float" id="nClose" type="button"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/></svg>Back to AutoStore Home</button>
+  </div>
+</div>
 
-    <script>
-        // Touch feedback for tiles
-        document.querySelectorAll('.tile').forEach(tile => {
-            tile.addEventListener('touchstart', () => {
-                tile.classList.add('tapped');
-            }, { passive: true });
+<div class="lightbox" id="lightbox" aria-hidden="true">
+    <div class="lightbox-bar"><span id="lightboxHint">Tap the photo to zoom in</span><button class="lightbox-close" id="lightboxClose" aria-label="Close photo">&times;</button></div>
+    <div class="lightbox-scroll" id="lightboxScroll"><img id="lightboxImg" alt=""></div>
+</div>
 
-            tile.addEventListener('touchend', () => {
-                setTimeout(() => tile.classList.remove('tapped'), 300);
-            }, { passive: true });
+<script>
+    // greeting
+    (function(){ var h=new Date().getHours(); var g=h<12?'Good morning':(h<18?'Good afternoon':'Good evening'); document.getElementById('greet').textContent=g+', Marcus'; })();
+
+    // ── The notes. Written the way a real person types: shorthand, typos, no tidy headings. ──
+    // blocks: string = paragraph, '' = gap, {c:'text',d:true} = checklist line, {photo:'file.jpg',alt:'...'} = photo
+    var NOTES = [
+      { group:'Previous 7 Days', when:'Friday', title:'Friday Checklist', blocks:[
+          {c:'Lock up showroom',d:true},{c:'Check voicemails',d:true},{c:'Process refund for Dave P.'},{c:'Email Denise insurance docs'},{c:'Update stock list'} ] },
+      { group:'Previous 7 Days', when:'Wednesday', title:'Login Details', blocks:[
+          'New PIN: 1486', 'New tracker app - "Mycloud"', '',
+          'Deliveroo', 'marcusg@autostore.co.uk', 'Password', 'MadMax1486', '',
+          'Just Eat: marcog.... | Morrisons: Marcus...' ] },
+      { group:'Previous 7 Days', when:'Tuesday', title:'Jenny - Hyundai', blocks:[
+          'Part Number', '50938839903CC-090', 'Order placed - expected delivery 3-5 days.' ] },
+      { group:'Previous 7 Days', when:'Monday', title:'Stock room', blocks:[
+          'Stock room - need to reorganize shelves this week. New stock arriving Tuesday.', {photo:'Photo3.jpg',alt:'Stock room'} ] },
+      { group:'Previous 30 Days', when:'14/10/2026', title:'Fleet discount', blocks:[
+          'Customer came in with these tattoos - asked about fleet discount. Follow up with email.', {photo:'Photo5.jpg',alt:'Customer\'s hand'} ] },
+      { group:'Previous 30 Days', when:'09/10/2026', title:'Meeting', blocks:[
+          'Met contact near this junction. Drop-off scheduled for next week. Need to confirm time.', {photo:'Photo7.jpg',alt:'Street junction'} ] },
+      { group:'Previous 30 Days', when:'06/10/2026', title:'Delete', blocks:[
+          'Weekend photos - need to delete before anyone sees. Don\'t want personal stuff on work phone.', {photo:'Photo4.jpg',alt:'Beach'} ] },
+      { group:'Previous 30 Days', when:'02/10/2026', title:'Office setup', blocks:[
+          'New office setup - need to finish cable management. Printer still not connected.', {photo:'Photo9.jpg',alt:'Office'} ] }
+    ];
+
+    var notes = document.getElementById('notes');
+    var nGroups = document.getElementById('nGroups');
+    var nCount = document.getElementById('nCount');
+    var nSearch = document.getElementById('nSearch');
+
+    function textOf(n){ return (n.title+' '+n.blocks.map(function(b){return typeof b==='string'?b:(b.c||'');}).join(' ')).toLowerCase(); }
+    function snippet(n){
+      for (var i=0;i<n.blocks.length;i++){ var b=n.blocks[i]; if (typeof b==='string' && b) return b; if (b && b.c) return b.c; }
+      return 'No additional text';
+    }
+    function firstPhoto(n){ for (var i=0;i<n.blocks.length;i++) if (n.blocks[i] && n.blocks[i].photo) return n.blocks[i].photo; return null; }
+
+    function renderList(q){
+      q=(q||'').trim().toLowerCase(); nGroups.textContent='';
+      var shown=NOTES.filter(function(n){ return !q || textOf(n).indexOf(q)>-1; });
+      var order=[], seen={};
+      shown.forEach(function(n){ if(!seen[n.group]){seen[n.group]=[];order.push(n.group);} seen[n.group].push(n); });
+      order.forEach(function(g){
+        var h=document.createElement('div'); h.className='n-group'; h.textContent=g; nGroups.appendChild(h);
+        var card=document.createElement('div'); card.className='n-card';
+        seen[g].forEach(function(n){
+          var row=document.createElement('div'); row.className='n-row'; row.setAttribute('role','button');
+          var main=document.createElement('div'); main.className='n-main';
+          var nm=document.createElement('div'); nm.className='n-name'; nm.textContent=n.title;
+          var mt=document.createElement('div'); mt.className='n-meta'; var w=document.createElement('b'); w.textContent=n.when; mt.appendChild(w); mt.appendChild(document.createTextNode(snippet(n)));
+          main.appendChild(nm); main.appendChild(mt); row.appendChild(main);
+          var p=firstPhoto(n); if(p){ var im=document.createElement('img'); im.className='n-thumb'; im.src='notepad-photos/'+p; im.alt=''; im.loading='lazy'; row.appendChild(im); }
+          row.addEventListener('click',function(){ openNote(n); });
+          card.appendChild(row);
         });
+        nGroups.appendChild(card);
+      });
+      if(!shown.length){ var e=document.createElement('div'); e.className='n-empty'; e.textContent='No Results'; nGroups.appendChild(e); }
+      nCount.textContent = shown.length + (shown.length===1?' Note':' Notes');
+    }
 
-        // Notepad tile functionality
-        const notepadTile = document.getElementById('notepadTile');
-        const notepadOverlay = document.getElementById('notepadOverlay');
-        const notepadCloseBtn = document.getElementById('notepadCloseBtn');
-
-        if (notepadTile) {
-            notepadTile.addEventListener('click', (e) => {
-                e.preventDefault();
-                notepadOverlay.classList.add('show');
-            });
+    function openNote(n){
+      var body=document.getElementById('nBody'); body.textContent='';
+      document.getElementById('nDate').textContent = n.when.indexOf('/')>-1 ? n.when : n.when + ' at ' + (n.title.length%2?'17:42':'09:15');
+      var h=document.createElement('h1'); h.textContent=n.title; body.appendChild(h);
+      n.blocks.forEach(function(b){
+        if (b==='') { var g=document.createElement('div'); g.className='gap'; body.appendChild(g); }
+        else if (typeof b==='string') { body.appendChild(document.createTextNode(b+'\n')); }
+        else if (b.c) { var r=document.createElement('div'); r.className='n-check'+(b.d?' done':''); r.appendChild(document.createElement('i')); var s=document.createElement('span'); s.textContent=b.c; r.appendChild(s); body.appendChild(r); }
+        else if (b.photo) {
+          var box=document.createElement('div'); box.className='n-photo';
+          var im=document.createElement('img'); im.src='notepad-photos/'+b.photo; im.alt=b.alt||''; box.appendChild(im);
+          box.addEventListener('click',function(){ openLightbox(im.src, im.alt); });
+          body.appendChild(box);
         }
+      });
+      notes.classList.add('detail'); document.querySelector('#nDetail .n-scroll').scrollTop=0;
+    }
+    function backToList(){ notes.classList.remove('detail'); }
+    function openNotes(){ nSearch.value=''; renderList(''); notes.classList.remove('detail'); notes.classList.add('show'); notes.setAttribute('aria-hidden','false'); document.querySelector('#nList .n-scroll').scrollTop=0; }
+    function closeNotes(){ notes.classList.remove('show','detail'); notes.setAttribute('aria-hidden','true'); }
 
-        if (notepadCloseBtn) {
-            notepadCloseBtn.addEventListener('click', () => {
-                notepadOverlay.classList.remove('show');
-            });
-        }
+    document.getElementById('notepadTile').addEventListener('click',function(e){ e.preventDefault(); openNotes(); });
+    document.getElementById('nClose').addEventListener('click',closeNotes);
+    document.getElementById('nBack').addEventListener('click',backToList);
+    nSearch.addEventListener('input',function(){ renderList(nSearch.value); });
 
-        // Close on overlay background click
-        notepadOverlay.addEventListener('click', (e) => {
-            if (e.target === notepadOverlay) {
-                notepadOverlay.classList.remove('show');
-            }
-        });
+    // ── photo lightbox (tap to enlarge, tap again to zoom) ──
+    var lightbox=document.getElementById('lightbox'), lbImg=document.getElementById('lightboxImg'), lbScroll=document.getElementById('lightboxScroll'), lbHint=document.getElementById('lightboxHint');
+    function openLightbox(src,alt){ lbImg.src=src; lbImg.alt=alt||''; lbScroll.classList.remove('zoomed'); lbHint.textContent='Tap the photo to zoom in'; lightbox.classList.add('show'); lightbox.setAttribute('aria-hidden','false'); }
+    function closeLightbox(){ lightbox.classList.remove('show'); lightbox.setAttribute('aria-hidden','true'); }
+    lbImg.addEventListener('click',function(){
+      var z=lbScroll.classList.toggle('zoomed');
+      lbHint.textContent = z ? 'Drag to look around, tap to zoom out' : 'Tap the photo to zoom in';
+      if(z){ lbScroll.scrollLeft=(lbScroll.scrollWidth-lbScroll.clientWidth)/2; lbScroll.scrollTop=(lbScroll.scrollHeight-lbScroll.clientHeight)/2; }
+    });
+    document.getElementById('lightboxClose').addEventListener('click',closeLightbox);
+    lightbox.addEventListener('click',function(e){ if(e.target===lightbox) closeLightbox(); });
+    document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ if(lightbox.classList.contains('show')) closeLightbox(); else if(notes.classList.contains('detail')) backToList(); else if(notes.classList.contains('show')) closeNotes(); } });
 
-    </script>
-
+    // touch feedback on app cards
+    document.querySelectorAll('.app').forEach(function(a){
+      a.addEventListener('touchstart',function(){a.classList.add('tapped');},{passive:true});
+      a.addEventListener('touchend',function(){setTimeout(function(){a.classList.remove('tapped');},200);},{passive:true});
+    });
+</script>
+    <script src="/js/hints.js?v=20261119a" defer></script>
 </body>
 </html>

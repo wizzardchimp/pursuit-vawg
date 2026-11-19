@@ -1,8 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="autostore-ui">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="preload" href="/fonts/exo-2-300.woff2?v=20261119a" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/fonts/fonts.css?v=20261119a">
+    <link rel="stylesheet" href="/css/base.css?v=20261119a">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=20261119a">
     <title>as_login</title>
     <style>
         * {
@@ -295,6 +299,7 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="/css/autostore-theme.css?v=20261119a">
 </head>
 <body>
     <div class="logo-wrap">
@@ -304,7 +309,7 @@
     <div class="login-container">
         <div class="welcome-text">Welcome</div>
         
-        <form id="loginForm">
+        <form id="loginForm" autocomplete="off">
             <div class="input-group">
                 <label for="username">Username</label>
                 <input 
@@ -312,7 +317,7 @@
                     id="username" 
                     class="password-input" 
                     placeholder="Enter your username"
-                    autocomplete="username"
+                    autocomplete="off" data-noautofill
                     value="marcus@autostore.co.uk"
                 >
             </div>
@@ -325,7 +330,7 @@
                         id="password" 
                         class="password-input" 
                         placeholder="Enter your password"
-                        autocomplete="current-password"
+                        autocomplete="off" data-nosave
                     >
                     <button type="button" class="toggle-visibility" id="togglePassword" aria-label="Toggle password visibility">
                         <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -356,8 +361,7 @@
         const eyeIcon = document.getElementById('eyeIcon');
 
         togglePassword.addEventListener('click', () => {
-            const isPassword = passwordInput.type === 'password';
-            passwordInput.type = isPassword ? 'text' : 'password';
+            const isPassword = window.pwToggle(passwordInput);
             eyeIcon.innerHTML = isPassword 
                 ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>`
                 : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
@@ -374,7 +378,7 @@
             
             const username = usernameInput.value.toLowerCase().trim();
             const password = passwordInput.value.toLowerCase().trim();
-            const correctPassword = 'nandos.spicy.tango';
+            const correctPasswords = ['nandos.spicy.tango', 'nandosspicytango'];
             
             // Check if username contains "marcus" (case-insensitive)
             if (!username.includes('marcus')) {
@@ -391,7 +395,7 @@
                 setTimeout(() => {
                     container.style.animation = 'slideInUp 1.5s ease-out 0.5s forwards';
                 }, 500);
-            } else if (password !== correctPassword) {
+            } else if (!correctPasswords.includes(password)) {
                 // Username is correct, but password is wrong
                 errorMessage.textContent = 'Incorrect password. Please try again.';
                 errorMessage.classList.add('show');
@@ -412,7 +416,7 @@
                 
                 // Simulate brief loading then redirect
                 setTimeout(() => {
-                    window.location.href = 'as_home.html';
+                    location.replace('as_home.html');
                 }, 1500);
             }
         });
@@ -426,15 +430,8 @@
             errorMessage.classList.remove('show');
         });
 
-        // Prevent double-tap zoom on buttons
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', (e) => {
-            const now = Date.now();
-            if (now - lastTouchEnd <= 300) {
-                e.preventDefault();
-            }
-            lastTouchEnd = now;
-        }, false);
     </script>
+    <script src="/js/hints.js?v=20261119a" defer></script>
+    <script src="/js/nosave.js?v=20261119a" defer></script>
 </body>
 </html>

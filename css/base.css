@@ -1,0 +1,18 @@
+/* Shared base for every Pursuit page. */
+:root { --font-ui: 'Exo 2', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+
+/* touch-action: manipulation keeps taps instant (no 300ms double-tap-zoom delay)
+   while still letting players pinch-zoom. */
+html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+/* One clean modern sans-serif everywhere. Icon fonts are excluded so icons keep working. */
+html:not(.terminal-ui):not(.native-ui) body,
+html:not(.terminal-ui):not(.native-ui) body *:not(i):not([class*="fa-"]):not(.fa):not(.fas):not(.far):not(.fab):not(svg):not(svg *):not(.mono) {
+    font-family: var(--font-ui) !important;
+}
+
+/* AutoStore interface uses Exo 2 throughout */
+html.autostore-ui { --font-ui: 'Exo 2', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+
+/* masked text field used instead of type=password so browsers don't offer to save it (see js/nosave.js) */
+.pw-mask { -webkit-text-security: disc; text-security: disc; }

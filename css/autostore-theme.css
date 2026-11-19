@@ -1,0 +1,35 @@
+/* AutoStore shared theme: matches the redesigned home screen.
+   Loaded AFTER each page's own <style>, so it re-colours the pages through their
+   existing CSS variables and softens the old "terminal" look (tracking, caps, grid paper). */
+:root{
+    --bg:#0b0f17; --surface:#141a26; --surface2:#1b2332;
+    --border:rgba(255,255,255,.09); --text:#f2f5fa; --text-dim:#8b96a8;
+    --blue:#3b9bff; --blue-dark:#2276d6; --blue-glow:rgba(59,155,255,.30);
+    --font:'Exo 2',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+}
+body{
+    -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(900px 500px at 85% -10%,rgba(59,155,255,.14),transparent 60%),radial-gradient(700px 420px at -10% 10%,rgba(120,90,255,.09),transparent 60%) !important;
+    background-repeat:no-repeat !important;
+}
+body::before{display:none !important;}
+
+/* calmer typography: the old pages used wide-tracked condensed caps */
+body [class]{letter-spacing:.005em !important;}
+.hdr-sub,.header-sub{text-transform:none !important;font-size:20px !important;font-weight:700 !important;color:var(--text) !important;letter-spacing:-.01em !important;}
+.section-title{text-transform:none !important;font-size:15px !important;font-weight:700 !important;color:var(--dim,#8b96a8) !important;}
+body .pin-val,body .p-timer{letter-spacing:.12em !important;}
+
+/* rounder, softer surfaces */
+.logo-wrap img{filter:none;}
+[class*="card"],[class*="panel"],[class*="tile"],.box,.stock-item,.vehicle,.car-card{border-radius:18px;}
+input,button,select{font-family:var(--font) !important;}
+.back-btn{border-radius:14px !important;background:rgba(20,26,38,.9) !important;}
+
+/* page titles + list text read as sentence case, like a normal app */
+.header-sub{margin-bottom:18px !important;}
+.car-name{text-transform:none !important;font-size:17px !important;font-weight:700 !important;}
+.col-header{text-transform:none !important;font-size:12.5px !important;}
+.count-badge,.stock-count{text-transform:none !important;}
+
+html.autostore-ui{--font:'Exo 2',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;}

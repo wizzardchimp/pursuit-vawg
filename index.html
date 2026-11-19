@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="terminal-ui">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>System Boot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="preload" href="/fonts/exo-2-300.woff2?v=20261119a" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/fonts/fonts.css?v=20261119a">
+    <link rel="stylesheet" href="/css/base.css?v=20261119a">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=20261119a">
+    <title>The Pursuit - VAWG</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
 
         * {
             margin: 0;
@@ -16,7 +19,7 @@
         body {
             background: #000;
             color: #00ff00;
-            font-family: 'Courier Prime', monospace;
+            font-family: ui-monospace,'SF Mono',Menlo,Consolas,'Roboto Mono',monospace;
             font-size: 16px;
             line-height: 1.5;
             height: 100dvh;
@@ -108,7 +111,7 @@
             background: transparent;
             border: none;
             color: #00ff00;
-            font-family: 'Courier Prime', monospace;
+            font-family: ui-monospace,'SF Mono',Menlo,Consolas,'Roboto Mono',monospace;
             font-size: 18px;
             outline: none;
             flex: 1;
@@ -417,6 +420,7 @@
         ];
 
         function startLoader() {
+            try { localStorage.removeItem('pursuit-hints-v1'); } catch (e) {}
             const fill    = document.getElementById('progressFill');
             const track   = document.getElementById('progressTrack');
             const pct     = document.getElementById('pctLabel');
@@ -466,13 +470,6 @@
             }, TOTAL_MS + 400);
         }
 
-        // Prevent double-tap zoom
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', (e) => {
-            const now = Date.now();
-            if (now - lastTouchEnd <= 300) e.preventDefault();
-            lastTouchEnd = now;
-        }, false);
     </script>
 </body>
 </html>
