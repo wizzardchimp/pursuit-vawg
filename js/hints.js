@@ -20,7 +20,9 @@
       "Marcus keeps things in more than one place. Which apps haven't you opened yet?",
       "Open Notes, read every note, and tap the photos to enlarge them.",
       "The note called logins holds a tracker app name and a login. Personal Drive is protected by a 4-digit PIN.",
-      "myMail gives you the PIN once you sort the genuine emails from the scams. Use it on Personal Drive."
+      "myMail gives you the PIN once you sort the genuine emails from the scams. Use it on Personal Drive.",
+      "Learning point: Marcus keeps tracker logins in a plain note. Anyone who picks up his phone can read them, so check what is stored and synced on your own devices.",
+      "Need support? The National Domestic Abuse Helpline is free on 0808 2000 247. In an emergency call 999. Clare's Law lets you ask the police whether a partner has a violent past."
     ]},
     mail: { title: 'myMail assessment', hints: [
       "Tap an email's sender to see the real address, not just the display name.",
@@ -54,16 +56,19 @@
     ]},
     mcmap: { title: 'Map tracker', hints: [
       "The map needs the tracker login, which is stored in Settings.",
-      "Username: Loneranger. Password: Logman1."
+      "Username: Loneranger. Password: Logman1.",
+      "Learning point: location tracking and geofences can reveal safe places such as a friend's home or a refuge."
     ]},
     mcsettings: { title: 'MyCloud settings', hints: [
       "Read every field. Marcus has set this up to track one phone.",
-      "The phone number and the tracker login are in here. You need the login for the Map Tracker."
+      "The phone number and the tracker login are in here. You need the login for the Map Tracker.",
+      "Learning point: the notify-me setting means he is alerted when the account is accessed. Abusers use alerts like this to stay one step ahead."
     ]},
     mckeylog: { title: 'Keylogger', hints: [
       "Read what is being typed on this phone, both the messages and the searches.",
       "Look at the messages sent TO her. How would you describe that behaviour?",
-      "Controlling, jealous and monitoring messages are signs of coercive control."
+      "Controlling, jealous and monitoring messages are signs of coercive control.",
+      "Learning point: a keylogger records everything typed, including private searches and messages, and the victim never knows."
     ]},
     mcfinance: { title: 'Financial activity', hints: [
       "Look at the payments and when they happened. These are phone notifications.",
@@ -72,15 +77,18 @@
     ]},
     mccontacts: { title: 'Contacts', hints: [
       "Use Show All Contacts, then look at the notes on each person.",
-      "Who might the victim turn to for help?"
+      "Who might the victim turn to for help?",
+      "Learning point: cutting someone off from friends and family is a coercive control tactic."
     ]},
     mcphotos: { title: 'Photos', hints: [
       "Look closely at each photo for places and people.",
-      "Tap a photo to enlarge it."
+      "Tap a photo to enlarge it.",
+      "Learning point: private images can be used for blackmail or shared without consent. Sharing them is a criminal offence."
     ]},
     mccctv: { title: 'CCTV', hints: [
       "Watch each camera. Some files have been deleted.",
-      "A deleted file cannot be played, but its name and time still tell you something."
+      "A deleted file cannot be played, but its name and time still tell you something.",
+      "Learning point: deleting footage can hide evidence, but file names and times still show it existed."
     ]},
     sidearea: { title: 'AutoStore', hints: [
       "Not every section holds a puzzle. Which parts of the app haven't you opened yet?",
